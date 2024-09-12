@@ -74,7 +74,7 @@ export default function Navbar() {
           <div>
             <Image src={marz_logo} alt="logo" width={120} height={120} />
           </div>
-          <div className="font-extrabold text-2xl right-3 relative hidden lg:flex text-[#2799cb]">
+          <div className="font-extrabold text-2xl right-3 relative hidden lg:flex textLight">
             MMZ
           </div>
         </Link>
@@ -121,9 +121,9 @@ export default function Navbar() {
             <Tooltip label="search">
               <Search2Icon width={25} height={25} />
             </Tooltip>
-            <span className="shadow-sm shadow-white rounded-full py-1 px-4">
+            {/* <span className="shadow-sm shadow-white rounded-full py-1 px-4">
               <Kbd>ctrl</Kbd> + <Kbd>k</Kbd>
-            </span>
+            </span> */}
           </div>
           <Button className="hidden md:flex">
             <ButtonFilled title="subscribe" />

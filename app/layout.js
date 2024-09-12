@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
     <html lang="en" class="scroll-smooth">
       <body className={inter.className}>
         <Navbar />
-        <div className=" lg:py-16 lg:px-[180px] p-4">{children}</div>
+        <div className=" lg:py-16 lg:px-[150px] p-4">{children}</div>
       </body>
     </html>
   );
