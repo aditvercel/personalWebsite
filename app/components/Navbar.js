@@ -74,7 +74,7 @@ export default function Navbar() {
           <div>
             <Image src={marz_logo} alt="logo" width={120} height={120} />
           </div>
-          <div className="font-extrabold text-2xl right-3 relative hidden lg:flex">
+          <div className="font-extrabold text-2xl right-3 relative hidden lg:flex text-[#2799cb]">
             MMZ
           </div>
         </Link>
@@ -92,7 +92,7 @@ export default function Navbar() {
                 </MenuButton>
               )}
               <Portal>
-                <MenuList className="bg-gray-400 w-40 px-0 py-0 rounded-md grid relative shadow-md shadow-black">
+                <MenuList className="bg-slate-700 w-40 px-0 py-0 rounded-md grid relative shadow-md shadow-black">
                   {item.child.map((childItem, childIndex) => (
                     <Link
                       href={childItem.link}
