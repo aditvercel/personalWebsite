@@ -97,7 +97,7 @@ export default function Navbar() {
                     <Link
                       href={childItem.link}
                       key={childIndex}
-                      className={`text-black p-2 px-5 text-sm text-ellipsis items-center h-12 hover:bg-slate-600 hover:text-white align-middle flex  
+                      className={` p-2 px-5 text-sm text-ellipsis items-center h-12 hover:bg-slate-600 hover:text-white align-middle flex  
                       ${childIndex === 0 ? "rounded-t-md" : ""} 
                       ${
                         childIndex === item.child.length - 1
