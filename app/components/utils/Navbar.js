@@ -33,7 +33,7 @@ import {
 import { Kbd } from "@chakra-ui/react";
 import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { Search2Icon } from "@chakra-ui/icons";
-import ButtonFilled from "./buttonFilled";
+import ButtonFilled from "../buttons/buttonFilled";
 
 export default function Navbar() {
   const {
@@ -62,7 +62,7 @@ export default function Navbar() {
     return () => {
       window.removeEventListener("keydown", handleShortcut);
     };
-  }, []);
+  });
 
   return (
     <>
@@ -181,7 +181,7 @@ export default function Navbar() {
                           </AccordionButton>
                         </h2>
                         {item.child.map((childItem, childIndex) => (
-                          <AccordionPanel pb={4}>
+                          <AccordionPanel pb={4} key={childIndex}>
                             <Link
                               href={childItem.link}
                               className={`text-slate-500 p-2 px-5 text-sm text-ellipsis items-center h-12 hover:bg-slate-600 hover:text-white align-middle flex ${
