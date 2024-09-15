@@ -8,6 +8,8 @@ import { Button } from "@chakra-ui/react";
 import ScrollOnTop from "./components/utils/ScrollOnTop.js";
 import LatestProjectCards from "./components/cards/latestProjectCards.js";
 import { AnimatePresence } from "framer-motion";
+import WorkSolutionCards from "./components/cards/WorkSolutionCards.js";
+import Link from "next/link.js";
 
 export default function Home() {
   const [selectedFilter, setSelectedFilter] = useState("All");
@@ -27,6 +29,16 @@ export default function Home() {
 
   const handleFilterClick = (category) => {
     setSelectedFilter(category);
+  };
+
+  const handleDownload = () => {
+    // Create a temporary link element
+    const link = document.createElement("a");
+    link.href = "/data/pdf/aditya_frontend.pdf"; // Correct path to the PDF
+    link.download = "aditya_frontend.pdf"; // Filename to download
+    document.body.appendChild(link);
+    link.click(); // Trigger the download
+    document.body.removeChild(link); // Clean up
   };
 
   return (
@@ -60,9 +72,22 @@ export default function Home() {
           <Image src={photosaya} alt="me" width={210} height={200} />
         </div>
       </div>
-      <Button className="hidden md:flex">
-        <ButtonFilled title="Download CV" />
-      </Button>
+      <div className="flex gap-5 mt-10 md:mt-0">
+        <Button onClick={handleDownload}>
+          <ButtonFilled title="Download CV" color="#00ffffaf" />
+        </Button>
+        <a
+          href="https://teer.id/aditya_marzuk"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <ButtonFilled
+            title="Buy me a Coffe"
+            color="#ffde07"
+            textTitleColor="black"
+          />
+        </a>
+      </div>
 
       <div className="mt-10 w-full bg-[#131b2e] p-2 md:p-10 grid md:grid-cols-3 grid-cols-2 justify-center items-center align-middle gap-5 rounded-lg border-[10px] border-[#111a2d]">
         {aboutDatas.map((item, index) => (
@@ -90,7 +115,7 @@ export default function Home() {
       {/* Latest project content  */}
       <div className=" mt-16  items-center grid justify-center align-middle py-5">
         <div className=" text-center grid items-center justify-center">
-          <div className="font-bold text-2xl textLight">My Latest Project</div>
+          <div className="font-bold text-4xl textLight">My Latest Project</div>
           <div className=" mt-5 md:w-[400px] ">
             The convention is the main event of the year for professionals in
             the world of design and architecture
@@ -131,6 +156,76 @@ export default function Home() {
                 <LatestProjectCards key={index} item={item} />
               ))}
             </AnimatePresence>
+          </div>
+        </div>
+      </div>
+      {/* Latest project content  */}
+
+      <div className=" mt-16 items-center grid justify-center align-middle self-center py-5">
+        <div className="flex justify-center align-middle">
+          <div className="font-bold text-4xl textLight md:w-[480px] text-center">
+            The best work solution,
+            <br />
+            for the best price.
+          </div>
+        </div>
+        <div className="grid md:grid-cols-3 gap-x-5">
+          <WorkSolutionCards
+            title="Standard"
+            price={600000}
+            discount={10 / 100}
+            whatYouGet={[
+              "2 Days delivery time",
+              "1 pages",
+              "1 Revisions",
+              "static website",
+              "Design Customization",
+              "Content Upload",
+              "Responsive Design",
+              "Source Code",
+            ]}
+          />
+          <WorkSolutionCards
+            popular={true}
+            title="Business"
+            price={1500000}
+            discount={10 / 100}
+            whatYouGet={[
+              "3 Days delivery time",
+              "3 pages",
+              "3 Revisions",
+              "static website",
+              "Design Customization",
+              "Content Upload",
+              "Responsive Design",
+              "Source Code",
+            ]}
+          />
+          <WorkSolutionCards
+            premium={true}
+            title="Enterprise"
+            price={5000000}
+            discount={10 / 100}
+            whatYouGet={[
+              "3 Days delivery time",
+              "5 pages",
+              "3 Revisions",
+              "Dynamic website",
+              "Design Customization",
+              "Content Upload",
+              "Responsive Design",
+              "Source Code",
+            ]}
+          />
+        </div>
+      </div>
+
+      {/* Latest project */}
+
+      <div className=" mt-16 items-center grid justify-center align-middle self-center py-5">
+        <div className="flex justify-center align-middle">
+          <div className="font-bold text-4xl textLight md:w-[480px] text-center">
+            FAQs
           </div>
         </div>
       </div>

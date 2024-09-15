@@ -126,7 +126,7 @@ export default function Navbar() {
             </span> */}
           </div>
           <Button className="hidden md:flex">
-            <ButtonFilled title="subscribe" />
+            <ButtonFilled title="subscribe" color="#00ffffaf" />
           </Button>
         </div>
         <Button

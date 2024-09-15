@@ -12,8 +12,14 @@ function LatestProjectCards({ item, ...props }) {
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="w-[170px] h-[160px] md:w-[300px] md:h-[280px] bg-red-500 rounded-xl">
-          {item.category}
+        <div className="w-[200px] h-[160px] md:w-[300px] md:h-[280px] bg-blue-950 rounded-xl p-5 grid items-end">
+          <div>
+            <div className="mb-3 font-bold text-xl md:text-2xl">Item title</div>
+            <div className=" hidden md:flex">
+              In et non laborum aute laborum. Qui non amet ad Lorem id anim
+              culpa pariatur nisi Lorem. Eu irure mollit do aliquip ea nulla
+            </div>
+          </div>
         </div>
       </motion.div>
     </>
