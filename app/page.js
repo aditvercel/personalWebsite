@@ -4,7 +4,17 @@ import Image from "next/image";
 import photosaya from "@/public/images/photo_saya.png";
 import ButtonFilled from "./components/buttons/buttonFilled.js";
 import aboutDatas from "@/public/data/aboutData";
-import { Button } from "@chakra-ui/react";
+import {
+  Button,
+  Accordion,
+  Box,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+} from "@chakra-ui/react";
+import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+
 import ScrollOnTop from "./components/utils/ScrollOnTop.js";
 import LatestProjectCards from "./components/cards/latestProjectCards.js";
 import { AnimatePresence } from "framer-motion";
@@ -222,10 +232,61 @@ export default function Home() {
 
       {/* Latest project */}
 
-      <div className=" mt-16 items-center grid justify-center align-middle self-center py-5">
-        <div className="flex justify-center align-middle">
-          <div className="font-bold text-4xl textLight md:w-[480px] text-center">
-            FAQs
+      <div className=" mt-16  justify-center  py-5">
+        <div>
+          <div className="font-bold text-4xl textLight text-center">FAQs</div>
+          <div className="m-w-full">
+            <Accordion allowMultiple className="gap-y-5 grid mt-10 ">
+              {cardData.map((item, index) => {
+                return (
+                  <AccordionItem
+                    className="border-y border-[#131b2e] py-5"
+                    key={index}
+                  >
+                    {({ isExpanded }) => (
+                      <>
+                        <h2>
+                          <AccordionButton>
+                            <Box
+                              as="span"
+                              flex="1"
+                              textAlign="left"
+                              className=" font-medium text-lg text-gray-300"
+                            >
+                              Section 1 title
+                            </Box>
+                            {isExpanded ? (
+                              <div className="p-2 rounded-full border border-black h-10 w-10 flex items-center justify-center bg-[#0fbbcf]">
+                                <MinusIcon fontSize="12px" color={"black"} />
+                              </div>
+                            ) : (
+                              <div className="p-2 rounded-full border border-[#3c556c] h-10 w-10 flex items-center justify-center ">
+                                <AddIcon fontSize="12px" color={"#3c556c"} />
+                              </div>
+                            )}
+                          </AccordionButton>
+                        </h2>
+                        <AccordionPanel pb={4} className="mt-10 max-w-[90%]">
+                          Lorem ipsum dolor sit amet, consectetur adipiscing
+                          elit, sed do eiusmod tempor incididunt ut labore et
+                          dolore magna aliqua. Ut enim ad minim veniam, quis
+                          nostrud exercitation ullamco laboris nisi ut aliquip
+                          ex ea commodo consequat.
+                        </AccordionPanel>
+                      </>
+                    )}
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          </div>
+        </div>
+      </div>
+
+      <div className=" mt-16  justify-center  py-5">
+        <div>
+          <div className="font-bold text-4xl textLight text-center">
+            Testimonials
           </div>
         </div>
       </div>

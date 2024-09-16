@@ -5,12 +5,28 @@ import { formatCurrencyIDR } from "../utils/formatCurrency";
 
 function WorkSolutionCards(props) {
   const finalPriceProduct = props.price - props.price * props.discount || 0;
+  const phoneNumber = "6282320664029"; // Your phone number with country code
+  const message = `Hello, I would like to know more about your ${
+    props.title
+  } service
+Price: ${formatCurrencyIDR(finalPriceProduct)}
+List of Benefits:
+${props.whatYouGet.map((item) => `* ${item}`).join("\n")}
+
+I want to ask you about...
+`;
+
+  const encodedMessage = encodeURIComponent(message);
+  const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
   return (
     <>
       <div className="mt-10 w-full bg-[#131b2e] py-5 px-5 gap-5 rounded-lg border-[10px] border-[#111a2d]">
         <div className=" rounded-md mb-5">
           <div className="flex justify-between align-middle items-center">
-            <div className=" font-bold text-2xl">{props.title || "Title"}</div>
+            <div className=" font-bold text-2xl text-gray-300">
+              {props.title || "Title"}
+            </div>
             {props.popular && (
               <div className="px-3 py-1 rounded-full bg-[#75eebf] text-black">
                 Popular
@@ -33,10 +49,17 @@ function WorkSolutionCards(props) {
                 "Lorem ipsum Enim tempor ea nostrud duis ad ut officia quis voluptate velit aute. Enim duis cillum occaecat fugiat irure laboris cillum"}
             </div>
           </div>
+          <div className="flex mt-5 justify-between">
+            <Button className="px-2 font-medium py-1 rounded-full border-[#13a5d4] border w-[100px] text-center">
+              Buy service
+            </Button>
 
-          <Button className="px-2 font-medium mt-5 py-1 rounded-full border-[#13a5d4] border w-[100px] text-center">
-            Get Started
-          </Button>
+            <a href={url} target="_blank" rel="noopener noreferrer">
+              <Button className="py-1 border-b border-[#13a5d4]">
+                Ask me a question
+              </Button>
+            </a>
+          </div>
 
           <div className="font-medium mt-5 px-2 py-1 rounded-full border-gray-900 border  text-center shadow shadow-[#0f1628]"></div>
           <div className="mt-5">
