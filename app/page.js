@@ -1,9 +1,15 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import photosaya from "@/public/images/photo_saya.png";
 import ButtonFilled from "./components/buttons/buttonFilled.js";
 import aboutDatas from "@/public/data/aboutData";
+import skilldatas from "@/public/data/skillsData.js";
+import Typewriter from "typewriter-effect";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
+import quoteIcon from "@/public/icons/quote-close-editor-svgrepo-com.svg";
+import "@splidejs/react-splide/css/skyblue";
+import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 import {
   Button,
   Accordion,
@@ -12,6 +18,8 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  CircularProgress,
+  CircularProgressLabel,
 } from "@chakra-ui/react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 
@@ -22,7 +30,26 @@ import WorkSolutionCards from "./components/cards/WorkSolutionCards.js";
 import Link from "next/link.js";
 
 export default function Home() {
+  const splideRef = useRef(null);
   const [selectedFilter, setSelectedFilter] = useState("All");
+  const datas = [
+    { image: "https://picsum.photos/200?random=1", title: "Title 1" },
+    { image: "https://picsum.photos/200?random=2", title: "Title 2" },
+    { image: "https://picsum.photos/200?random=3", title: "Title 3" },
+    { image: "https://picsum.photos/200?random=4", title: "Title 4" },
+    { image: "https://picsum.photos/200?random=5", title: "Title 5" },
+    { image: "https://picsum.photos/200?random=6", title: "Title 6" },
+    { image: "https://picsum.photos/200?random=7", title: "Title 7" },
+    // Add more items as needed
+  ];
+  const chunkArray = (array, size) => {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
+      result.push(array.slice(i, i + size));
+    }
+    return result;
+  };
+  const slides = chunkArray(datas, 3);
 
   const cardData = [
     { id: 1, category: "Web Development", content: "Web Dev Card 1" },
@@ -67,14 +94,25 @@ export default function Home() {
               <Image src={photosaya} alt="me" width={210} height={200} />
             </div>
           </div>
-          <div className="mb-3">hello everyone...</div>
+          <div className="mb-3 h-5">
+            <Typewriter
+              onInit={(typewriter) => {
+                typewriter
+                  .typeString("hello everyone...")
+                  .pauseFor(2500)
+                  .start();
+              }}
+            />
+          </div>
           <div className=" text-4xl mb-5 font-bold textLight">
             I&apos;m Aditya Marzuk
           </div>
           <p>
-            Est ipsum Lorem occaecat sit minim officia anim ad reprehenderit.
-            Excepteur minim mollit officia duis. Velit aliquip qui labore irure
-            laboris. Consequat et aliquip tempor est consequat labore aute enim
+            a full-stack developer skilled in both front-end and back-end
+            technologies. I design user interfaces, build server-side logic, and
+            manage databases to create complete, efficient web applications. If
+            you need someone who can handle all aspects of development, I`m here
+            to help!
           </p>
         </div>
         <div className="bg-[#0f1628] relative rounded-md shadow-md shadow-black top-5 hidden md:flex">
@@ -121,6 +159,36 @@ export default function Home() {
         ))}
       </div>
       {/* About content*/}
+
+      <div className=" mt-16 justify-center items-center py-5">
+        <div>
+          <div className="font-bold text-4xl textLight text-center mb-20">
+            My Skill&apos;s
+          </div>
+          <div className="m-w-full grid grid-cols-4 md:grid-cols-5 mt-10 gap-x-5 md:gap-y-16 gap-y-10">
+            {skilldatas.map((item, index) => {
+              return (
+                <>
+                  <div className=" text-center grid" key={index}>
+                    <div>
+                      <CircularProgress
+                        value={item.progress}
+                        color="#149de3"
+                        size={60}
+                      >
+                        <CircularProgressLabel>
+                          {`${item.progress}%`}
+                        </CircularProgressLabel>
+                      </CircularProgress>
+                    </div>
+                    <div className="mt-3">{item.title}</div>
+                  </div>
+                </>
+              );
+            })}
+          </div>
+        </div>
+      </div>
 
       {/* Latest project content  */}
       <div className=" mt-16  items-center grid justify-center align-middle py-5">
@@ -217,10 +285,11 @@ export default function Home() {
             price={5000000}
             discount={10 / 100}
             whatYouGet={[
-              "3 Days delivery time",
-              "5 pages",
+              "5 Days delivery time",
+              "3 pages",
               "3 Revisions",
               "Dynamic website",
+              "Database",
               "Design Customization",
               "Content Upload",
               "Responsive Design",
@@ -282,12 +351,83 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      <div className=" mt-16  justify-center  py-5">
+      <div className="mt-16 py-5">
         <div>
           <div className="font-bold text-4xl textLight text-center">
             Testimonials
           </div>
+          <div>
+            <Splide aria-label="My Favorite Images" ref={splideRef}>
+              {slides.map((slide, index) => (
+                <SplideSlide key={index}>
+                  <div className="border-border-red-500 w-full grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {slide.map((item, itemIndex) => (
+                      <div
+                        className="flex items-center justify-center"
+                        key={itemIndex}
+                      >
+                        <div className="mt-10 w-full bg-[#131b2e] py-5 px-5 gap-5 rounded-lg border-[10px] border-[#111a2d] relative h-[250px]">
+                          <div className=" rounded-md mb-5 flex gap-5">
+                            <Image
+                              src={item.image}
+                              alt={item.title}
+                              width={50}
+                              height={50}
+                              className=" rounded-full"
+                            />
+                            <div className="grid">
+                              <div className=" text-md font-bold">
+                                Marlian martezze
+                              </div>
+                              <div className=" text-xs">
+                                Frontend developer at bina nusa
+                              </div>
+                            </div>
+                          </div>
+                          <div className="h-[80px] overflow-hidden text-ellipsis line-clamp-4 z-10">
+                            Ex culpa exercitation nulla magna consectetur. Ut
+                            voluptate sunt nulla ipsum cupidatat esse dolore sit
+                            veniam veniam esse reprehenderit cupidatat. Irure
+                            irure dolor incididunt sint laborum aute proident.
+                            Aute eiusmod irure sunt eiusmod. Officia anim et qui
+                            ad nostrud consectetur amet commodo elit incididunt.
+                            Dolore veniam anim qui nulla sint.
+                          </div>
+                          <Image
+                            src={quoteIcon}
+                            alt={"quote icon"}
+                            width={50}
+                            height={50}
+                            className="absolute right-0 bottom-0 "
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </SplideSlide>
+              ))}
+            </Splide>
+            <div className="flex justify-center items-center gap-10 mt-10">
+              <button
+                className="custom-arrow prev-arrow text-black bg-white rounded-full p-2 text-center align-middle"
+                onClick={() => splideRef.current.splide.go("<")}
+              >
+                <ArrowLeftIcon width={20} />
+              </button>
+              <button
+                className="custom-arrow next-arrow text-black bg-white rounded-full p-2 text-center align-middle"
+                onClick={() => splideRef.current.splide.go(">")}
+              >
+                <ArrowRightIcon width={20} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        {/* FOOT BAR */}
+        <div className="mt-10 w-full bg-[#131b2e] p-2 md:p-10 grid md:grid-cols-3 grid-cols-2 justify-center items-center align-middle gap-5 rounded-lg border-[10px] border-[#111a2d]">
+          <div>MMZ</div>
         </div>
       </div>
     </>

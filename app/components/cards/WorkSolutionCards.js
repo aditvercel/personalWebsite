@@ -38,8 +38,8 @@ I want to ask you about...
               </div>
             )}
           </div>
-          <div className=" justify-center items-center md:justify-start flex">
-            <div className=" font-medium mt-3 text-center md:text-left">
+          <div className="items-center md:justify-start flex">
+            <div className=" font-medium mt-3 text-left">
               {props.bestFor || "Best for personal use"}
             </div>
           </div>

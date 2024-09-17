@@ -36,6 +36,16 @@ body {
   /* border-radius: 6px; */
 }
 
+ul.splide__pagination {
+  display: none;
+}
+
+button.splide__arrow--next {
+  display: none;
+}
+button.splide__arrow--prev {
+  display: none;
+}
 /* ::-webkit-scrollbar-thumb:hover {
   background: darken(
     var(--scrollbar-thumb-bg),
