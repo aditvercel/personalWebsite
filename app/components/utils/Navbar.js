@@ -29,9 +29,11 @@ import {
   AccordionPanel,
   AccordionIcon,
   Box,
+  InputGroup,
+  InputLeftElement,
 } from "@chakra-ui/react";
 import { Kbd } from "@chakra-ui/react";
-import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, HamburgerIcon, SearchIcon } from "@chakra-ui/icons";
 import { Search2Icon } from "@chakra-ui/icons";
 import ButtonFilled from "../buttons/buttonFilled";
 
@@ -74,7 +76,7 @@ export default function Navbar() {
           <div>
             <Image src={marz_logo} alt="logo" width={120} height={120} />
           </div>
-          <div className="font-extrabold text-2xl right-3 relative hidden lg:flex textLight">
+          <div className="font-extrabold text-2xl right-3 relative hidden lg:flex text-gray-300">
             MMZ
           </div>
         </Link>
@@ -125,9 +127,9 @@ export default function Navbar() {
               <Kbd>ctrl</Kbd> + <Kbd>k</Kbd>
             </span> */}
           </div>
-          <Button className="hidden md:flex">
+          <div className="hidden md:flex cursor-pointer">
             <ButtonFilled title="subscribe" color="#00ffffaf" />
-          </Button>
+          </div>
         </div>
         <Button
           colorScheme="blue"
@@ -140,11 +142,16 @@ export default function Navbar() {
 
       <Modal onClose={onSearchClose} isOpen={isSearchOpen} isCentered>
         <ModalOverlay />
-        <ModalContent className=" justify-center align-middle items-center flex relative top-16">
+        <ModalContent className=" justify-center align-middle items-center flex relative max-h-[500px]">
           {/* <ModalHeader>Modal Title</ModalHeader> */}
-          <ModalBody className="bg-white text-black max-h-[400px] w-[60%] px-16 py-8 rounded-xl relative">
-            <ModalCloseButton className="absolute top-4 right-4 border border-black rounded-full p-2 bg-black text-white" />
-            <p>test</p>
+          <ModalBody className="bg-white text-black rounded-xl w-full ">
+            <ModalCloseButton className="absolute top-[-30px] right-[-30px] border border-black rounded-full p-2 bg-black text-white" />
+            <InputGroup>
+              <InputLeftElement pointerEvents="none">
+                <Search2Icon color="gray.300" />
+              </InputLeftElement>
+              <Input type="text" placeholder="Search..." />
+            </InputGroup>
             {/* <Button onClick={onClose}>Close</Button> */}
           </ModalBody>
         </ModalContent>

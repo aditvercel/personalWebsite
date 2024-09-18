@@ -50,14 +50,14 @@ I want to ask you about...
             </div>
           </div>
           <div className="flex mt-5 justify-between">
-            <Button className="px-2 font-medium py-1 rounded-full border-[#13a5d4] border w-[100px] text-center">
+            <button className="px-2 font-medium py-1 rounded-full border-[#13a5d4] border w-[100px] text-center">
               Buy service
-            </Button>
+            </button>
 
             <a href={url} target="_blank" rel="noopener noreferrer">
-              <Button className="py-1 border-b border-[#13a5d4]">
+              <button className="py-1 border-b border-[#13a5d4]">
                 Ask me a question
-              </Button>
+              </button>
             </a>
           </div>
 

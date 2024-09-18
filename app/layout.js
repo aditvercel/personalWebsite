@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/utils/Navbar";
+import ChakraWrapper from "./components/utils/ChakraWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,10 +12,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" class="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body className={inter.className}>
-        <Navbar />
-        <div className=" lg:py-16 lg:px-[150px] p-4">{children}</div>
+        <ChakraWrapper>
+          <Navbar />
+          <div className=" lg:py-16 lg:px-[150px] p-4">{children}</div>
+        </ChakraWrapper>
       </body>
     </html>
   );

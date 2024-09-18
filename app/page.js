@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import Image from "next/image";
 import photosaya from "@/public/images/photo_saya.png";
 import ButtonFilled from "./components/buttons/buttonFilled.js";
@@ -9,28 +9,42 @@ import Typewriter from "typewriter-effect";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import quoteIcon from "@/public/icons/quote-close-editor-svgrepo-com.svg";
 import "@splidejs/react-splide/css/skyblue";
-import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 import {
-  Button,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
+} from "@chakra-ui/icons";
+
+import Footer from "./components/utils/Footer.js";
+import {
   Accordion,
   Box,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
-  AccordionIcon,
   CircularProgress,
   CircularProgressLabel,
 } from "@chakra-ui/react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
-
 import ScrollOnTop from "./components/utils/ScrollOnTop.js";
 import LatestProjectCards from "./components/cards/latestProjectCards.js";
 import { AnimatePresence } from "framer-motion";
 import WorkSolutionCards from "./components/cards/WorkSolutionCards.js";
-import Link from "next/link.js";
 
 export default function Home() {
+  const [renderCount, setRenderCount] = useState(0);
+
+  // Increment render count on every render
+  useEffect(() => {
+    setRenderCount((prevCount) => prevCount + 1);
+    console.log("rendered : ", renderCount);
+  }, []);
   const splideRef = useRef(null);
+  const config = {
+    readonly: false, // all options from https://xdsoft.net/jodit/docs/,
+    placeholder: "Messages ....",
+  };
   const [selectedFilter, setSelectedFilter] = useState("All");
   const datas = [
     { image: "https://picsum.photos/200?random=1", title: "Title 1" },
@@ -42,6 +56,7 @@ export default function Home() {
     { image: "https://picsum.photos/200?random=7", title: "Title 7" },
     // Add more items as needed
   ];
+
   const chunkArray = (array, size) => {
     const result = [];
     for (let i = 0; i < array.length; i += size) {
@@ -121,9 +136,9 @@ export default function Home() {
         </div>
       </div>
       <div className="flex gap-5 mt-10 md:mt-0">
-        <Button onClick={handleDownload}>
+        <div onClick={handleDownload} className=" cursor-pointer">
           <ButtonFilled title="Download CV" color="#00ffffaf" />
-        </Button>
+        </div>
         <a
           href="https://teer.id/aditya_marzuk"
           target="_blank"
@@ -165,27 +180,28 @@ export default function Home() {
           <div className="font-bold text-4xl textLight text-center mb-20">
             My Skill&apos;s
           </div>
-          <div className="m-w-full grid grid-cols-4 md:grid-cols-5 mt-10 gap-x-5 md:gap-y-16 gap-y-10">
-            {skilldatas.map((item, index) => {
-              return (
-                <>
-                  <div className=" text-center grid" key={index}>
-                    <div>
-                      <CircularProgress
-                        value={item.progress}
-                        color="#149de3"
-                        size={60}
-                      >
-                        <CircularProgressLabel>
-                          {`${item.progress}%`}
-                        </CircularProgressLabel>
-                      </CircularProgress>
-                    </div>
-                    <div className="mt-3">{item.title}</div>
-                  </div>
-                </>
-              );
-            })}
+          <div className="w-full grid grid-cols-4 md:grid-cols-5 mt-10 gap-x-5 md:gap-y-16 gap-y-10">
+            {skilldatas.map((item, index) => (
+              <div className="text-center grid" key={index}>
+                <div>
+                  <CircularProgress
+                    value={item.progress}
+                    color="teal.400" // Color of the progress ring
+                    trackColor="gray.200" // Color of the track (background of the progress ring)
+                    size={40}
+                    className=" scale-75"
+                  >
+                    <CircularProgressLabel
+                      color="white" // Color of the text inside the progress circle
+                      className=" text-xl"
+                    >
+                      {`${item.progress}%`}
+                    </CircularProgressLabel>
+                  </CircularProgress>
+                </div>
+                <div className="mt-3">{item.title}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -209,7 +225,7 @@ export default function Home() {
                 "Motion",
                 "Graphic Design",
               ].map((category) => (
-                <div
+                <button
                   key={category}
                   className={`border border-blue-300 py-2 px-4 rounded-3xl md:min-w-[100px]  min-w-[150px] text-center ${
                     selectedFilter === category
@@ -221,7 +237,7 @@ export default function Home() {
                   onClick={() => handleFilterClick(category)}
                 >
                   {category}
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -305,7 +321,7 @@ export default function Home() {
         <div>
           <div className="font-bold text-4xl textLight text-center">FAQs</div>
           <div className="m-w-full">
-            <Accordion allowMultiple className="gap-y-5 grid mt-10 ">
+            <Accordion allowMultiple className="gap-y-1 grid mt-10 ">
               {cardData.map((item, index) => {
                 return (
                   <AccordionItem
@@ -412,24 +428,21 @@ export default function Home() {
                 className="custom-arrow prev-arrow text-black bg-white rounded-full p-2 text-center align-middle"
                 onClick={() => splideRef.current.splide.go("<")}
               >
-                <ArrowLeftIcon width={20} />
+                <ChevronLeftIcon width={8} height={8} />
               </button>
               <button
                 className="custom-arrow next-arrow text-black bg-white rounded-full p-2 text-center align-middle"
                 onClick={() => splideRef.current.splide.go(">")}
               >
-                <ArrowRightIcon width={20} />
+                <ChevronRightIcon width={8} height={8} />
               </button>
             </div>
           </div>
         </div>
       </div>
-      <div>
-        {/* FOOT BAR */}
-        <div className="mt-10 w-full bg-[#131b2e] p-2 md:p-10 grid md:grid-cols-3 grid-cols-2 justify-center items-center align-middle gap-5 rounded-lg border-[10px] border-[#111a2d]">
-          <div>MMZ</div>
-        </div>
-      </div>
+      {/* FOOT BAR */}
+      <Footer />
+      {/* FOOT BAR */}
     </>
   );
 }
