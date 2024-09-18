@@ -7,12 +7,6 @@ import marz_logo from "@/public/images/logo.png";
 
 export default function Footer() {
   const [renderCount, setRenderCount] = useState(0);
-
-  // Increment render count on every render
-  useEffect(() => {
-    setRenderCount((prevCount) => prevCount + 1);
-    console.log("rendered : ", renderCount);
-  }, []);
   const editor = useRef(null);
   const [content, setContent] = useState("");
   const [fullName, setFullName] = useState("");
@@ -60,7 +54,7 @@ export default function Footer() {
           email: emailRegex.test(value),
         }));
       }
-      console.log(newForm);
+      // console.log(newForm);
       return newForm;
     });
   };
@@ -101,7 +95,7 @@ export default function Footer() {
               className="rounded-lg text-black bg-white"
               errorBorderColor="red.300"
               isInvalid={
-                letsConnectForm.fullName && !isInvalidConnectForm.fullName
+                letsConnectForm.fullName && isInvalidConnectForm.fullName
               }
               type="text"
               name="fullName"

@@ -48,6 +48,9 @@ a.jodit-status-bar-link {
   background-color: rgb(37, 37, 37) !important;
   border-radius: 10px;
 }
+.jodit-toolbar-button__text {
+  color: white !important;
+}
 
 ::-webkit-scrollbar-thumb {
   background-color: #131b2e !important;

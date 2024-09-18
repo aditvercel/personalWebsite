@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useRef, useMemo, useEffect } from "react";
+import * as React from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import Image from "next/image";
 import photosaya from "@/public/images/photo_saya.png";
 import ButtonFilled from "./components/buttons/buttonFilled.js";
@@ -9,6 +10,7 @@ import Typewriter from "typewriter-effect";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import quoteIcon from "@/public/icons/quote-close-editor-svgrepo-com.svg";
 import "@splidejs/react-splide/css/skyblue";
+
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -31,18 +33,13 @@ import ScrollOnTop from "./components/utils/ScrollOnTop.js";
 import LatestProjectCards from "./components/cards/latestProjectCards.js";
 import { AnimatePresence } from "framer-motion";
 import WorkSolutionCards from "./components/cards/WorkSolutionCards.js";
+import { Pagination, Stack, Switch } from "@mui/material";
 
 export default function Home() {
   const [renderCount, setRenderCount] = useState(0);
-
-  // Increment render count on every render
-  useEffect(() => {
-    setRenderCount((prevCount) => prevCount + 1);
-    console.log("rendered : ", renderCount);
-  }, []);
   const splideRef = useRef(null);
   const config = {
-    readonly: false, // all options from https://xdsoft.net/jodit/docs/,
+    readonly: false,
     placeholder: "Messages ....",
   };
   const [selectedFilter, setSelectedFilter] = useState("All");
@@ -252,9 +249,12 @@ export default function Home() {
             </AnimatePresence>
           </div>
         </div>
+
+        <Switch />
       </div>
       {/* Latest project content  */}
 
+      {/* Work solution*/}
       <div className=" mt-16 items-center grid justify-center align-middle self-center py-5">
         <div className="flex justify-center align-middle">
           <div className="font-bold text-4xl textLight md:w-[480px] text-center">
@@ -314,8 +314,7 @@ export default function Home() {
           />
         </div>
       </div>
-
-      {/* Latest project */}
+      {/* Work solution*/}
 
       <div className=" mt-16  justify-center  py-5">
         <div>
