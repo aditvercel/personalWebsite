@@ -14,11 +14,11 @@ const navbarMenuData = [
     ],
   },
   {
-    title: "About Me",
+    title: "About",
     link: "",
     child: [
       {
-        title: "About",
+        title: "About me",
         link: "/#about",
       },
       {
@@ -27,11 +27,19 @@ const navbarMenuData = [
       },
       {
         title: "Latest project",
-        link: "/#latest-project",
+        link: "/#latestProject",
       },
       {
         title: "Pricing",
         link: "/#pricing",
+      },
+      {
+        title: "Testimonial",
+        link: "/#testimonial",
+      },
+      {
+        title: "Connect",
+        link: "/#connect",
       },
       //   {
       //     title: "FAQ",
@@ -40,18 +48,8 @@ const navbarMenuData = [
     ],
   },
   {
-    title: "Category",
-    link: "/category",
-    child: [
-      //   {
-      //     title: "",
-      //     link: "",
-      //   },
-    ],
-  },
-  {
-    title: "Pages",
-    link: "/pages",
+    title: "Journey",
+    link: "/journey",
     child: [
       //   {
       //     title: "",
@@ -70,8 +68,8 @@ const navbarMenuData = [
     ],
   },
   {
-    title: "Home",
-    link: "/",
+    title: "CMS",
+    link: "/cms",
     child: [
       //   {
       //     title: "",

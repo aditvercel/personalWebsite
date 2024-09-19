@@ -152,19 +152,35 @@ export default function Navbar() {
         size={"xl"}
       >
         <ModalOverlay />
-        <ModalContent className="flex flex-col relative">
-          <ModalBody className="bg-white text-black rounded-xl w-full h-full overflow-auto">
+        <ModalContent className="flex flex-col relative bg-[#2e3748]">
+          <ModalBody className=" text-gray-300 rounded-xl w-full h-full overflow-auto">
             <ModalCloseButton className="absolute top-[-30px] right-[-30px] border border-black rounded-full p-2 bg-black text-white" />
             <InputGroup
               variant="flushed"
-              className="sticky top-0 bg-white z-10"
+              className="sticky top-0 bg-[#2e3748] z-10 text-gray-300"
             >
               <InputLeftElement pointerEvents="none">
                 <Search2Icon color="gray.300" />
               </InputLeftElement>
               <Input type="text" placeholder="Search..." />
             </InputGroup>
-            <div className="w-full border h-[700px] mt-4"></div>
+            <div className="w-full mt-4 p-4 cursor-pointer rounded-lg grid gap-5">
+              <div className="h-[60px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567] hover:bg-[#309794]">
+                <div>dsa</div>
+              </div>
+              <div className="h-[60px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567] hover:bg-[#309794]">
+                <div>dsa</div>
+              </div>
+              <div className="h-[60px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567] hover:bg-[#309794]">
+                <div>dsa</div>
+              </div>
+              <div className="h-[60px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567] hover:bg-[#309794]">
+                <div>dsa</div>
+              </div>
+              <div className="h-[60px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567] hover:bg-[#309794]">
+                <div>dsa</div>
+              </div>
+            </div>
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -100,7 +100,10 @@ export default function Home() {
       <div className="w-[500px] h-[500px] absolute top-[800px] right-[0px] -z-30 rounded-full circleLight"></div>
       {/* circle light  */}
       {/* About content*/}
-      <div className="flex justify-between align-middle items-center">
+      <div
+        className="flex justify-between align-middle items-center"
+        id="about"
+      >
         <div className="w-[500px]">
           <div className="bg-[#0f1628] relative rounded-md top-5 flex md:hidden shadow-sm shadow-white items-center align-middle justify-center overflow-hidden h-[180px] mb-10">
             <div className="relative top-5">
@@ -150,7 +153,10 @@ export default function Home() {
         </a>
       </div>
 
-      <div className="mt-10 w-full bg-[#131b2e] p-2 md:p-10 grid md:grid-cols-3 grid-cols-2 justify-center items-center align-middle gap-5 rounded-lg border-[10px] border-[#111a2d]">
+      <div
+        className="mt-10 w-full bg-[#131b2e] p-2 md:p-10 grid md:grid-cols-3 grid-cols-2 justify-center items-center align-middle gap-5 rounded-lg border-[10px] border-[#111a2d]"
+        id="keys"
+      >
         {aboutDatas.map((item, index) => (
           <div className=" grid p-2 rounded-md mb-5 min-h-[150px]" key={index}>
             <div className="flex align-middle justify-center md:justify-start">
@@ -207,7 +213,10 @@ export default function Home() {
       </div>
 
       {/* Latest project content  */}
-      <div className=" mt-16  items-center grid justify-center align-middle py-5">
+      <div
+        className=" mt-16  items-center grid justify-center align-middle py-5"
+        id="latestProject"
+      >
         <div className=" text-center grid items-center justify-center">
           <div className="font-bold text-4xl textLight">My Latest Project</div>
           <div className=" mt-5 md:w-[400px] ">
@@ -243,7 +252,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-10 ">
+        <div className="mt-10">
           <div className="grid grid-cols-2 md:grid-cols-3 align-middle justify-center items-center gap-y-2 md:gap-x-3 md:gap-y-5">
             <AnimatePresence>
               {filteredCards.map((item, index) => (
@@ -265,7 +274,10 @@ export default function Home() {
       {/* Latest project content  */}
 
       {/* Work solution*/}
-      <div className=" mt-16 items-center grid justify-center align-middle self-center py-5">
+      <div
+        className=" mt-16 items-center grid justify-center align-middle self-center py-5"
+        id="pricing"
+      >
         <div className="flex justify-center align-middle">
           <div className="font-bold text-4xl textLight md:w-[480px] text-center">
             The best work solution,
@@ -376,7 +388,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="mt-16 py-5">
+      <div className="mt-16 py-5" id="testimonial">
         <div>
           <div className="font-bold text-4xl textLight text-center">
             Testimonials
@@ -409,7 +421,7 @@ export default function Home() {
                               </div>
                             </div>
                           </div>
-                          <div className="h-[80px] overflow-hidden text-ellipsis line-clamp-4 z-10">
+                          <div className="h-[80px] overflow-hidden text-ellipsis line-clamp-4 z-10 text-xs">
                             Ex culpa exercitation nulla magna consectetur. Ut
                             voluptate sunt nulla ipsum cupidatat esse dolore sit
                             veniam veniam esse reprehenderit cupidatat. Irure
@@ -450,7 +462,9 @@ export default function Home() {
         </div>
       </div>
       {/* FOOT BAR */}
-      <Footer />
+      <div id="connect">
+        <Footer />
+      </div>
       {/* FOOT BAR */}
     </>
   );
