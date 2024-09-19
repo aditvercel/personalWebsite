@@ -16,12 +16,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body className={inter.className}>
-        <ChakraWrapper>
-          <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <ChakraWrapper>
             <Navbar />
             <div className="lg:py-16 lg:px-[150px] p-4">{children}</div>
-          </ThemeProvider>
-        </ChakraWrapper>
+          </ChakraWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );

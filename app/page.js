@@ -27,6 +27,7 @@ import {
   AccordionPanel,
   CircularProgress,
   CircularProgressLabel,
+  Center,
 } from "@chakra-ui/react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import ScrollOnTop from "./components/utils/ScrollOnTop.js";
@@ -172,32 +173,34 @@ export default function Home() {
       </div>
       {/* About content*/}
 
-      <div className=" mt-16 justify-center items-center py-5">
+      <div className=" mt-16 md:justify-center md:items-center py-5">
         <div>
-          <div className="font-bold text-4xl textLight text-center mb-20">
+          <div className="font-bold text-4xl textLight text-center md:mb-20">
             My Skill&apos;s
           </div>
-          <div className="w-full grid grid-cols-4 md:grid-cols-5 mt-10 gap-x-5 md:gap-y-16 gap-y-10">
+          <div className="w-full grid grid-cols-3 md:grid-cols-5 mt-10 gap-x-5 md:gap-y-16 gap-y-10">
             {skilldatas.map((item, index) => (
-              <div className="text-center grid" key={index}>
-                <div>
+              <>
+                <div className="flex items-center justify-center align-middle relative">
                   <CircularProgress
+                    key={index}
                     value={item.progress}
                     color="teal.400" // Color of the progress ring
                     trackColor="gray.200" // Color of the track (background of the progress ring)
-                    size={40}
-                    className=" scale-75"
+                    size={32}
                   >
                     <CircularProgressLabel
                       color="white" // Color of the text inside the progress circle
-                      className=" text-xl"
+                      className=" text-lg"
                     >
-                      {`${item.progress}%`}
+                      {item.progress}%
                     </CircularProgressLabel>
                   </CircularProgress>
+                  <div className="absolute bottom-[-30px] right-0 left-0 mr-auto text-lg text-center">
+                    {item.title}
+                  </div>
                 </div>
-                <div className="mt-3">{item.title}</div>
-              </div>
+              </>
             ))}
           </div>
         </div>
@@ -249,8 +252,15 @@ export default function Home() {
             </AnimatePresence>
           </div>
         </div>
-
-        <Switch />
+        <div className="flex items-center justify-center align-middle mt-10">
+          <Pagination
+            count={200}
+            color="primary"
+            size="large"
+            shape="rounded"
+            className="bg-gray-400 rounded-lg"
+          />
+        </div>
       </div>
       {/* Latest project content  */}
 

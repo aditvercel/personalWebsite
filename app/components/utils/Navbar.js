@@ -123,6 +123,9 @@ export default function Navbar() {
             <Tooltip label="search">
               <Search2Icon width={25} height={25} />
             </Tooltip>
+            <span>
+              <Kbd>ctrl</Kbd> <Kbd>K</Kbd>
+            </span>
             {/* <span className="shadow-sm shadow-white rounded-full py-1 px-4">
               <Kbd>ctrl</Kbd> + <Kbd>k</Kbd>
             </span> */}
@@ -134,29 +137,37 @@ export default function Navbar() {
         <Button
           colorScheme="blue"
           onClick={onDrawerOpen}
-          className="flex md:hidden pr-10"
+          className="flex md:hidden p-0 text-center justify-center items-center"
+          // Ensure padding is reset if you only want the icon centered
         >
           <HamburgerIcon w={30} h={30} />
         </Button>
       </div>
 
-      <Modal onClose={onSearchClose} isOpen={isSearchOpen} isCentered>
+      <Modal
+        onClose={onSearchClose}
+        isOpen={isSearchOpen}
+        isCentered
+        scrollBehavior="inside"
+        size={"xl"}
+      >
         <ModalOverlay />
-        <ModalContent className=" justify-center align-middle items-center flex relative max-h-[500px]">
-          {/* <ModalHeader>Modal Title</ModalHeader> */}
-          <ModalBody className="bg-white text-black rounded-xl w-full ">
+        <ModalContent className="flex flex-col relative">
+          <ModalBody className="bg-white text-black rounded-xl w-full h-full overflow-auto">
             <ModalCloseButton className="absolute top-[-30px] right-[-30px] border border-black rounded-full p-2 bg-black text-white" />
-            <InputGroup>
+            <InputGroup
+              variant="flushed"
+              className="sticky top-0 bg-white z-10"
+            >
               <InputLeftElement pointerEvents="none">
                 <Search2Icon color="gray.300" />
               </InputLeftElement>
               <Input type="text" placeholder="Search..." />
             </InputGroup>
-            {/* <Button onClick={onClose}>Close</Button> */}
+            <div className="w-full border h-[700px] mt-4"></div>
           </ModalBody>
         </ModalContent>
       </Modal>
-
       <Drawer
         placement="right"
         onClose={onDrawerClose}
