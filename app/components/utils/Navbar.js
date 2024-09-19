@@ -4,6 +4,7 @@ import marz_logo from "@/public/images/logo.png";
 import navbarMenuData from "@/public/data/navbarMenus";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import Hashtag from "@/public/icons/hashtag.svg";
 import {
   Menu,
   MenuButton,
@@ -34,8 +35,9 @@ import {
 } from "@chakra-ui/react";
 import { Kbd } from "@chakra-ui/react";
 import { ChevronDownIcon, HamburgerIcon, SearchIcon } from "@chakra-ui/icons";
-import { Search2Icon } from "@chakra-ui/icons";
+import { Search2Icon, ExternalLinkIcon } from "@chakra-ui/icons";
 import ButtonFilled from "../buttons/buttonFilled";
+import { grey } from "@mui/material/colors";
 
 export default function Navbar() {
   const {
@@ -165,20 +167,24 @@ export default function Navbar() {
               <Input type="text" placeholder="Search..." />
             </InputGroup>
             <div className="w-full mt-4 p-4 cursor-pointer rounded-lg grid gap-5">
-              <div className="h-[60px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567] hover:bg-[#309794]">
-                <div>dsa</div>
-              </div>
-              <div className="h-[60px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567] hover:bg-[#309794]">
-                <div>dsa</div>
-              </div>
-              <div className="h-[60px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567] hover:bg-[#309794]">
-                <div>dsa</div>
-              </div>
-              <div className="h-[60px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567] hover:bg-[#309794]">
-                <div>dsa</div>
-              </div>
-              <div className="h-[60px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567] hover:bg-[#309794]">
-                <div>dsa</div>
+              <div className="min-h-[80px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567] hover:bg-[#309794] flex justify-between align-middle text-black items-center">
+                <div className="flex gap-3 ">
+                  <Image
+                    src={Hashtag}
+                    alt="hashtag_icon"
+                    width={30}
+                    className=" text-gray-300"
+                  />
+                  <div>
+                    <div className=" text-sm">top title</div>
+                    <div className=" text-lg font-medium">bottom title</div>
+                  </div>
+                </div>
+                <ExternalLinkIcon
+                  width={15}
+                  height={15}
+                  className="text-gray-300"
+                />
               </div>
             </div>
           </ModalBody>

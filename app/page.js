@@ -37,12 +37,7 @@ import WorkSolutionCards from "./components/cards/WorkSolutionCards.js";
 import { Pagination, Stack, Switch } from "@mui/material";
 
 export default function Home() {
-  const [renderCount, setRenderCount] = useState(0);
   const splideRef = useRef(null);
-  const config = {
-    readonly: false,
-    placeholder: "Messages ....",
-  };
   const [selectedFilter, setSelectedFilter] = useState("All");
   const datas = [
     { image: "https://picsum.photos/200?random=1", title: "Title 1" },
@@ -256,7 +251,7 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-3 align-middle justify-center items-center gap-y-2 md:gap-x-3 md:gap-y-5">
             <AnimatePresence>
               {filteredCards.map((item, index) => (
-                <LatestProjectCards key={index} item={item} />
+                <LatestProjectCards key={index} item={item} description title />
               ))}
             </AnimatePresence>
           </div>
