@@ -35,8 +35,23 @@ import LatestProjectCards from "./components/cards/latestProjectCards.js";
 import { AnimatePresence } from "framer-motion";
 import WorkSolutionCards from "./components/cards/WorkSolutionCards.js";
 import { Pagination, Stack, Switch } from "@mui/material";
+import axios from "axios";
 
 export default function Home() {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService`
+        );
+        console.log(res.data); // Do something with the response
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   const splideRef = useRef(null);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const datas = [
