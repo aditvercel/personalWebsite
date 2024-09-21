@@ -10,6 +10,7 @@ import Typewriter from "typewriter-effect";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import quoteIcon from "@/public/icons/quote-close-editor-svgrepo-com.svg";
 import "@splidejs/react-splide/css/skyblue";
+import api from "@/utils/axiosInstance.js";
 
 import {
   ArrowLeftIcon,
@@ -41,10 +42,30 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService`
+        // const res = await api.get(
+        //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService`
+        // );
+        const tes = await api.post(
+          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService`,
+          {
+            namaService: "testing_2",
+            hargaService: 400000,
+            stock: 12,
+            title_1: "testing_title_2",
+            title_2: "testing_title_2",
+            deskripsi: "testing_deskripsi_2",
+            whatsappLink: "whatsapplink_2",
+            statusType: "status_2",
+            benefit: [
+              {
+                title: "test_2",
+              },
+              {
+                title: "test_3",
+              },
+            ],
+          }
         );
-        console.log(res.data); // Do something with the response
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -197,7 +218,10 @@ export default function Home() {
           <div className="w-full grid grid-cols-3 md:grid-cols-5 mt-10 gap-x-5 md:gap-y-16 gap-y-10">
             {skilldatas.map((item, index) => (
               <>
-                <div className="flex items-center justify-center align-middle relative">
+                <div
+                  className="flex items-center justify-center align-middle relative"
+                  key={index}
+                >
                   <CircularProgress
                     key={index}
                     value={item.progress}

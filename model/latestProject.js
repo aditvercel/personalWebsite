@@ -10,6 +10,7 @@ const latestProjectSchema = new Schema(
     image: { type: String, required: true },
     title_1: { type: String, required: true },
     description: { type: Number, required: true },
+    category: { type: String, required: true },
     // benefit: [
     //   { type: benefitSchema, required: true }, // Array of benefit objects with specified structure
     // ],

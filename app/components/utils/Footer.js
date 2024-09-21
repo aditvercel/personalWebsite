@@ -84,18 +84,20 @@ export default function Footer() {
               required
               label="Email"
             />
-            <JoditEditor
-              ref={editor}
-              value={content}
-              config={config}
-              tabIndex={1} // tabIndex of textarea
-              name="email"
-              onBlur={(newContent) => {
-                setLetsConnectForm((item) => {
-                  return { ...item, messages: newContent };
-                });
-              }}
-            />
+            <div className="max-w-[500px]">
+              <JoditEditor
+                ref={editor}
+                value={content}
+                config={config}
+                tabIndex={1} // tabIndex of textarea
+                name="email"
+                onBlur={(newContent) => {
+                  setLetsConnectForm((item) => {
+                    return { ...item, messages: newContent };
+                  });
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>

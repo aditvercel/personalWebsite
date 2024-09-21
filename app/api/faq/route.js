@@ -1,126 +1,199 @@
-// app/api/register_barang/route.js
 import { connectToDB } from "@/utils/ConnectDB";
-import faq from "@/model/faq";
+import testimonial from "@/model/testimonial";
 import { NextResponse } from "next/server";
+import { encrypt, decrypt } from "@/utils/axiosInstance";
 
 // GET request handler
 export async function GET(request) {
   await connectToDB();
 
   const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id"); // Extract the ID from query parameters
+  const id = searchParams.get("id");
 
   try {
     if (id) {
-      // If an ID is provided, return the single item
-      const item = await faq.findById(id);
-
+      const item = await testimonial.findById(id);
       if (!item) {
-        return NextResponse.json({
-          status: 404,
-          message: "Item not found",
-        });
+        return NextResponse.json(
+          {
+            status: "error",
+            statusCode: 404,
+            message: "Item not found",
+          },
+          { status: 404 }
+        );
       }
-
-      return NextResponse.json({
-        status: 200,
-        message: "Item retrieved successfully",
-        item,
-      });
+      return NextResponse.json(
+        {
+          status: "success",
+          statusCode: 200,
+          message: "Item retrieved successfully",
+          result: encrypt(item), // Encrypting single item
+        },
+        { status: 200 }
+      );
     } else {
-      // If no ID is provided, return all items
-      let res = await faq.find();
-      return NextResponse.json({
-        status: 200,
-        message: "Success",
-        items: res,
-      });
+      const items = await testimonial.find();
+      return NextResponse.json(
+        {
+          status: "success",
+          statusCode: 200,
+          message: "Items retrieved successfully",
+          result: encrypt(items), // Encrypting items correctly
+        },
+        { status: 200 }
+      );
     }
   } catch (error) {
-    console.log(error);
-    return NextResponse.json({
-      status: 500,
-      message: error._message || "Server error",
-    });
+    console.error(error);
+    return NextResponse.json(
+      {
+        status: "error",
+        statusCode: 500,
+        message: error.message || "Server error",
+      },
+      { status: 500 }
+    );
   }
 }
 
 // POST request handler
 export async function POST(request) {
+  console.log(request);
   await connectToDB();
   try {
-    const data = await request.json(); // Extract JSON data from the request
-    const newItem = await faq.create(data);
-    console.log(data);
-    return NextResponse.json({
-      status: 201,
-      message: "Item created successfully",
-      item: newItem,
-    });
+    // Extract the encrypted data from the request body
+    const { encryptedData } = await request.json(); // Assuming encryptedData is in the body
+
+    // Decrypt the data
+    const decryptedString = decrypt(encryptedData); // decryptedString will be a JSON string
+
+    // Parse the decrypted string into an object
+    const data = JSON.parse(decryptedString);
+
+    // Create new item with decrypted data
+    const newItem = await testimonial.create(data);
+
+    // Encrypt the response
+    return NextResponse.json(
+      {
+        status: "success",
+        statusCode: 200,
+        message: "Item created successfully",
+        result: encrypt(newItem), // Encrypting new item
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    console.log(error);
-    return NextResponse.json({
-      status: 500,
-      message: error._message || "Server error",
-    });
+    console.error(error);
+    return NextResponse.json(
+      {
+        status: "error",
+        statusCode: 500,
+        message: error.message || "Server error",
+      },
+      { status: 500 }
+    );
   }
 }
 
-// PUT request handler for updating an item
+// PUT request handler
 export async function PUT(request) {
   await connectToDB();
   try {
-    const { id, ...updateData } = await request.json(); // Extract JSON data from the request
-    const updatedItem = await faq.findByIdAndUpdate(id, updateData, {
+    // Extract the encrypted data from the request body
+    const { encryptedData } = await request.json(); // Assuming encryptedData is in the body
+
+    // Decrypt the data
+    const decryptedString = decrypt(encryptedData); // decryptedString will be a JSON string
+
+    // Parse the decrypted string into an object
+    const { id, ...updateData } = JSON.parse(decryptedString);
+
+    // Find and update the item
+    const updatedItem = await testimonial.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
     });
 
     if (!updatedItem) {
-      return NextResponse.json({
-        status: 404,
-        message: "Item not found",
-      });
+      return NextResponse.json(
+        {
+          status: "error",
+          statusCode: 404,
+          message: "Item not found",
+        },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json({
-      status: 200,
-      message: "Item updated successfully",
-      item: updatedItem,
-    });
+    return NextResponse.json(
+      {
+        status: "success",
+        statusCode: 200,
+        message: "Item updated successfully",
+        result: encrypt(updatedItem), // Encrypting updated item
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    console.log(error);
-    return NextResponse.json({
-      status: 500,
-      message: error._message || "Server error",
-    });
+    console.error(error);
+    return NextResponse.json(
+      {
+        status: "error",
+        statusCode: 500,
+        message: error.message || "Server error",
+      },
+      { status: 500 }
+    );
   }
 }
 
-// DELETE request handler for deleting an item
+// DELETE request handler
 export async function DELETE(request) {
   await connectToDB();
   try {
-    const { id } = await request.json(); // Extract JSON data from the request
-    const deletedItem = await faq.findByIdAndDelete(id);
+    // Extract the encrypted data from the request body
+    const { encryptedData } = await request.json(); // Assuming encryptedData is in the body
+
+    // Decrypt the data
+    const decryptedString = decrypt(encryptedData); // decryptedString will be a JSON string
+
+    // Parse the decrypted string into an object
+    const { id } = JSON.parse(decryptedString);
+
+    // Find and delete the item
+    const deletedItem = await testimonial.findByIdAndDelete(id);
 
     if (!deletedItem) {
-      return NextResponse.json({
-        status: 404,
-        message: "Item not found",
-      });
+      return NextResponse.json(
+        {
+          status: "error",
+          statusCode: 404,
+          message: "Item not found",
+        },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json({
-      status: 200,
-      message: "Item deleted successfully",
-      item: deletedItem,
-    });
+    return NextResponse.json(
+      {
+        status: "success",
+        statusCode: 200,
+        message: "Item deleted successfully",
+        result: encrypt(deletedItem), // Encrypting deleted item
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    console.log(error);
-    return NextResponse.json({
-      status: 500,
-      message: error._message || "Server error",
-    });
+    console.error(error);
+    return NextResponse.json(
+      {
+        status: "error",
+        statusCode: 500,
+        message: error.message || "Server error",
+      },
+      { status: 500 }
+    );
   }
 }
