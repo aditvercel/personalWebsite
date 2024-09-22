@@ -3,6 +3,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Textarea,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 
@@ -42,39 +43,64 @@ export default function ISinput(props) {
 
   return (
     <FormControl isInvalid={isError} isRequired={props.required}>
-      {props.label && <FormLabel>{props.label}</FormLabel>}
-      <Input
-        variant="filled"
-        placeholder={props.placeholder}
-        size="sm"
-        className="rounded-lg text-black bg-white"
-        errorBorderColor="red.300"
-        isInvalid={isError} // Use the combined error state
-        type={props.type}
-        name={props.name}
-        value={props.value}
-        onChange={handleChange}
-      />
-      <div className="grid grid-cols-2 gap-x-1 ">
-        {props.noNumber && validationState.hasNumber && (
-          <FormErrorMessage color={"red.300"}>
-            <div className="h-3 w-3 rounded-full bg-white mr-1"></div> Number
-            aren&apos;t allowed
-          </FormErrorMessage>
-        )}
-        {props.noSymbol && validationState.hasSymbol && (
-          <FormErrorMessage color={"red.300"}>
-            <div className="h-3 w-3 rounded-full bg-white mr-1"></div>
-            Symbols aren&apos;t allowed
-          </FormErrorMessage>
-        )}
-        {props.noSyntax && validationState.hasSyntax && (
-          <FormErrorMessage color={"red.300"}>
-            <div className="h-3 w-3 rounded-full bg-white mr-1"></div>
-            Syntax aren&apos;t allowed
-          </FormErrorMessage>
-        )}
-      </div>
+      {props.type === "textarea" && (
+        <>
+          <div className=" text-base font-medium mb-2">
+            {props.label}
+            {props.required && <span className="text-red-500 pl-1">*</span>}
+          </div>
+          <Textarea
+            variant="filled"
+            size="sm"
+            className="rounded-lg text-black bg-white "
+            type={props.type}
+            name={props.name}
+            value={props.value}
+            placeholder={props.placeholder}
+            onChange={handleChange}
+            errorBorderColor="red.300"
+            isInvalid={isError}
+          />
+        </>
+      )}
+
+      {(props.type === "email" || props.type === "text") && (
+        <>
+          {props.label && <FormLabel>{props.label}</FormLabel>}
+          <Input
+            variant="filled"
+            placeholder={props.placeholder}
+            size="sm"
+            className="rounded-lg text-black bg-white"
+            errorBorderColor="red.300"
+            isInvalid={isError} // Use the combined error state
+            type={props.type}
+            name={props.name}
+            value={props.value}
+            onChange={handleChange}
+          />
+          <div className="grid grid-cols-2 gap-x-1">
+            {props.noNumber && validationState.hasNumber && (
+              <FormErrorMessage color={"red.300"}>
+                <div className="h-3 w-3 rounded-full bg-white mr-1"></div>{" "}
+                Numbers aren&apos;t allowed
+              </FormErrorMessage>
+            )}
+            {props.noSymbol && validationState.hasSymbol && (
+              <FormErrorMessage color={"red.300"}>
+                <div className="h-3 w-3 rounded-full bg-white mr-1"></div>
+                Symbols aren&apos;t allowed
+              </FormErrorMessage>
+            )}
+            {props.noSyntax && validationState.hasSyntax && (
+              <FormErrorMessage color={"red.300"}>
+                <div className="h-3 w-3 rounded-full bg-white mr-1"></div>
+                Syntax isn&apos;t allowed
+              </FormErrorMessage>
+            )}
+          </div>
+        </>
+      )}
     </FormControl>
   );
 }

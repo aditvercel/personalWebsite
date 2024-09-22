@@ -27,12 +27,12 @@ I want to ask you about...
             <div className=" font-bold text-2xl text-gray-300">
               {props.title || "Title"}
             </div>
-            {props.popular && (
+            {props.statusType === "POPULAR" && (
               <div className="px-3 py-1 rounded-full bg-[#75eebf] text-black">
                 Popular
               </div>
             )}
-            {props.premium && (
+            {props.statusType === "PREMIUM" && (
               <div className="px-3 py-1 rounded-full bg-[#f3706a] text-black">
                 Premium
               </div>

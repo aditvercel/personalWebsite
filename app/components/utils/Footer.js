@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef, useMemo, useEffect } from "react";
-import { Input } from "@chakra-ui/react";
+import { Input, Textarea } from "@chakra-ui/react";
 import JoditEditor from "jodit-react";
 import Image from "next/image";
 import marz_logo from "@/public/images/logo.png";
@@ -55,7 +55,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="gap-x-1 md:relative md:left-[40px]  border border-white p-2 rounded-lg shadow-black shadow-md  md:md:max-w-full">
+        <div className="gap-x-1 md:relative md:left-[40px]  border border-white p-2 rounded-lg shadow-black shadow-md  md:max-w-full md:min-w-[400px]">
           <div className="flex justify-between">
             <div className="text-lg font-bold p-2 text-white">Lets connect</div>
             <ButtonFilled title="SEND" />
@@ -77,15 +77,22 @@ export default function Footer() {
             <ISinput
               onChange={handleInputChange}
               type="email"
-              name="Email"
+              name="email"
               placeholder="Write your email..."
               noNumber
               noSyntax
               required
               label="Email"
             />
-            <div className="max-w-[500px]">
-              <JoditEditor
+            <ISinput
+              onChange={handleInputChange}
+              type="textarea"
+              name="messages"
+              placeholder="Write your messages..."
+              required
+              label="Messages"
+            />
+            {/* <JoditEditor
                 ref={editor}
                 value={content}
                 config={config}
@@ -96,8 +103,7 @@ export default function Footer() {
                     return { ...item, messages: newContent };
                   });
                 }}
-              />
-            </div>
+              /> */}
           </div>
         </div>
       </div>

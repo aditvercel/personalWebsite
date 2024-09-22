@@ -25,4 +25,4 @@ if (mongoose.models.testimonial) {
   testimonial = mongoose.model("testimonial", testimonialSchema);
 }
 
-export default journey;
+export default testimonial;

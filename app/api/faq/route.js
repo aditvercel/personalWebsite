@@ -1,5 +1,5 @@
 import { connectToDB } from "@/utils/ConnectDB";
-import testimonial from "@/model/testimonial";
+import faq from "@/model/faq";
 import { NextResponse } from "next/server";
 import { encrypt, decrypt } from "@/utils/axiosInstance";
 
@@ -12,7 +12,7 @@ export async function GET(request) {
 
   try {
     if (id) {
-      const item = await testimonial.findById(id);
+      const item = await faq.findById(id);
       if (!item) {
         return NextResponse.json(
           {
@@ -33,7 +33,7 @@ export async function GET(request) {
         { status: 200 }
       );
     } else {
-      const items = await testimonial.find();
+      const items = await faq.find();
       return NextResponse.json(
         {
           status: "success",
@@ -62,6 +62,18 @@ export async function POST(request) {
   console.log(request);
   await connectToDB();
   try {
+    const itemCount = await faq.countDocuments();
+    if (itemCount >= 4) {
+      return NextResponse.json(
+        {
+          status: "error",
+          statusCode: 403,
+          message: "Cannot create more than 3 items",
+        },
+        { status: 403 }
+      );
+    }
+
     // Extract the encrypted data from the request body
     const { encryptedData } = await request.json(); // Assuming encryptedData is in the body
 
@@ -72,7 +84,7 @@ export async function POST(request) {
     const data = JSON.parse(decryptedString);
 
     // Create new item with decrypted data
-    const newItem = await testimonial.create(data);
+    const newItem = await faq.create(data);
 
     // Encrypt the response
     return NextResponse.json(
@@ -111,7 +123,7 @@ export async function PUT(request) {
     const { id, ...updateData } = JSON.parse(decryptedString);
 
     // Find and update the item
-    const updatedItem = await testimonial.findByIdAndUpdate(id, updateData, {
+    const updatedItem = await faq.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
     });
@@ -163,7 +175,7 @@ export async function DELETE(request) {
     const { id } = JSON.parse(decryptedString);
 
     // Find and delete the item
-    const deletedItem = await testimonial.findByIdAndDelete(id);
+    const deletedItem = await faq.findByIdAndDelete(id);
 
     if (!deletedItem) {
       return NextResponse.json(

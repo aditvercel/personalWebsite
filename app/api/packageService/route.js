@@ -57,11 +57,26 @@ export async function GET(request) {
   }
 }
 
-// POST request handler
 export async function POST(request) {
   console.log(request);
   await connectToDB();
+
   try {
+    // Query the current number of items in packageService
+    const itemCount = await packageService.countDocuments();
+
+    // Check if the item count is less than 3
+    if (itemCount >= 3) {
+      return NextResponse.json(
+        {
+          status: "error",
+          statusCode: 403,
+          message: "Cannot create more than 3 items",
+        },
+        { status: 403 }
+      );
+    }
+
     // Extract the encrypted data from the request body
     const { encryptedData } = await request.json(); // Assuming encryptedData is in the body
 

@@ -4,6 +4,7 @@ let Schema = mongoose.Schema;
 const benefitSchema = new Schema({
   title: { type: String, required: true },
 });
+// array of object Title example [{title : "String"},{title : "String"}]
 
 const packageServiceSchema = new Schema(
   {
@@ -15,9 +16,7 @@ const packageServiceSchema = new Schema(
     deskripsi: { type: String, required: true },
     whatsappLink: { type: String, required: true },
     statusType: { type: String, required: true },
-    benefit: [
-      { type: benefitSchema, required: false }, // Array of benefit objects with specified structure
-    ],
+    benefit: [{ type: String, required: false }], // Array of strings ["String","String"]
   },
   { timestamps: true }
 );

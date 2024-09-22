@@ -62,6 +62,18 @@ export async function POST(request) {
   console.log(request);
   await connectToDB();
   try {
+    const itemCount = await mySkills.countDocuments();
+    if (itemCount >= 10) {
+      return NextResponse.json(
+        {
+          status: "error",
+          statusCode: 403,
+          message: "Cannot create more than 10 items",
+        },
+        { status: 403 }
+      );
+    }
+
     // Extract the encrypted data from the request body
     const { encryptedData } = await request.json(); // Assuming encryptedData is in the body
 

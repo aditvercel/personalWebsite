@@ -39,40 +39,94 @@ import { Pagination, Stack, Switch } from "@mui/material";
 import axios from "axios";
 
 export default function Home() {
+  const [homePageDatas, setHomePageDatas] = useState({
+    packageService: [],
+    faqs: [],
+    mySkills: [],
+  });
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const res = await api.get(
-        //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService`
-        // );
-        const tes = await api.post(
-          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService`,
-          {
-            namaService: "testing_2",
-            hargaService: 400000,
-            stock: 12,
-            title_1: "testing_title_2",
-            title_2: "testing_title_2",
-            deskripsi: "testing_deskripsi_2",
-            whatsappLink: "whatsapplink_2",
-            statusType: "status_2",
-            benefit: [
-              {
-                title: "test_2",
-              },
-              {
-                title: "test_3",
-              },
-            ],
-          }
+        const res = await api.get(
+          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService`
         );
+        if (res.data.statusCode === 200) {
+          setHomePageDatas((item) => {
+            return { ...item, packageService: res.data.result };
+          });
+        }
+        const tes = await api.get(
+          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq`
+          // {
+          //   title_1: "test Title",
+          //   description: "test Description",
+          // }
+        );
+        if (tes.data.statusCode === 200) {
+          setHomePageDatas((item) => {
+            return { ...item, faqs: tes.data.result };
+          });
+        }
+
+        // const tes = await api.post(
+        //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService`,
+        //   {
+        //     namaService: "testing_2",
+        //     title_1: "testing_title_1",
+        //     title_2: "testing_title_2",
+        //     hargaService: 400000,
+        //     stock: 12,
+        //     deskripsi: "testing_deskripsi_2",
+        //     whatsappLink: "whatsapplink_2",
+        //     statusType: "POPULAR",
+        //     benefit: [
+        //       "3 Days delivery time",
+        //       "3 pages",
+        //       "3 Revisions",
+        //       "static website",
+        //       "Design Customization",
+        //       "Content Upload",
+        //       "Responsive Design",
+        //       "Source Code",
+        //     ],
+        //   }
+        // );
+
+        // const tes = await api.post(
+        //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq`,
+        //   {
+        //     title_1: "test Title",
+        //     description: "test Description",
+        //   }
+        // );
+        // const yes = await api.post(
+        //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills`,
+        //   {
+        //     title: "React",
+        //     percentage: 90,
+        //   }
+        // );
+        const ues = await api.get(
+          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills`
+        );
+        if (ues.data.statusCode === 200) {
+          setHomePageDatas((item) => {
+            return { ...item, mySkills: ues.data.result };
+          });
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
+    console.log(homePageDatas);
   }, []);
+  useEffect(() => {
+    // see updated datas
+    console.log("Updated homePageDatas", homePageDatas);
+  }, [homePageDatas]);
+
   const splideRef = useRef(null);
   const [selectedFilter, setSelectedFilter] = useState("All");
   const datas = [
@@ -216,31 +270,29 @@ export default function Home() {
             My Skill&apos;s
           </div>
           <div className="w-full grid grid-cols-3 md:grid-cols-5 mt-10 gap-x-5 md:gap-y-16 gap-y-10">
-            {skilldatas.map((item, index) => (
-              <>
-                <div
-                  className="flex items-center justify-center align-middle relative"
+            {homePageDatas.mySkills.map((item, index) => (
+              <div
+                className="flex items-center justify-center align-middle relative"
+                key={index}
+              >
+                <CircularProgress
                   key={index}
+                  value={item.percentage}
+                  color="teal.400" // Color of the progress ring
+                  trackColor="gray.200" // Color of the track (background of the progress ring)
+                  size={32}
                 >
-                  <CircularProgress
-                    key={index}
-                    value={item.progress}
-                    color="teal.400" // Color of the progress ring
-                    trackColor="gray.200" // Color of the track (background of the progress ring)
-                    size={32}
+                  <CircularProgressLabel
+                    color="white" // Color of the text inside the progress circle
+                    className=" text-lg"
                   >
-                    <CircularProgressLabel
-                      color="white" // Color of the text inside the progress circle
-                      className=" text-lg"
-                    >
-                      {item.progress}%
-                    </CircularProgressLabel>
-                  </CircularProgress>
-                  <div className="absolute bottom-[-30px] right-0 left-0 mr-auto text-lg text-center">
-                    {item.title}
-                  </div>
+                    {item.percentage}%
+                  </CircularProgressLabel>
+                </CircularProgress>
+                <div className="absolute bottom-[-30px] right-0 left-0 mr-auto text-lg text-center">
+                  {item.title}
                 </div>
-              </>
+              </div>
             ))}
           </div>
         </div>
@@ -320,54 +372,20 @@ export default function Home() {
           </div>
         </div>
         <div className="grid md:grid-cols-3 gap-x-5">
-          <WorkSolutionCards
-            title="Standard"
-            price={600000}
-            discount={10 / 100}
-            whatYouGet={[
-              "2 Days delivery time",
-              "1 pages",
-              "1 Revisions",
-              "static website",
-              "Design Customization",
-              "Content Upload",
-              "Responsive Design",
-              "Source Code",
-            ]}
-          />
-          <WorkSolutionCards
-            popular={true}
-            title="Business"
-            price={1500000}
-            discount={10 / 100}
-            whatYouGet={[
-              "3 Days delivery time",
-              "3 pages",
-              "3 Revisions",
-              "static website",
-              "Design Customization",
-              "Content Upload",
-              "Responsive Design",
-              "Source Code",
-            ]}
-          />
-          <WorkSolutionCards
-            premium={true}
-            title="Enterprise"
-            price={5000000}
-            discount={10 / 100}
-            whatYouGet={[
-              "5 Days delivery time",
-              "3 pages",
-              "3 Revisions",
-              "Dynamic website",
-              "Database",
-              "Design Customization",
-              "Content Upload",
-              "Responsive Design",
-              "Source Code",
-            ]}
-          />
+          {homePageDatas?.packageService?.map((item, index) => {
+            return (
+              <div key={index}>
+                <WorkSolutionCards
+                  title={item.title_1}
+                  bestFor={item.title_2}
+                  description={item.deskripsi}
+                  price={item.hargaService}
+                  discount={10 / 100}
+                  whatYouGet={item.benefit}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
       {/* Work solution*/}
@@ -377,7 +395,7 @@ export default function Home() {
           <div className="font-bold text-4xl textLight text-center">FAQs</div>
           <div className="m-w-full">
             <Accordion allowMultiple className="gap-y-1 grid mt-10 ">
-              {cardData.map((item, index) => {
+              {homePageDatas.faqs.map((item, index) => {
                 return (
                   <AccordionItem
                     className="border-y border-[#131b2e] py-5"
@@ -393,7 +411,7 @@ export default function Home() {
                               textAlign="left"
                               className=" font-medium text-lg text-gray-300"
                             >
-                              Section 1 title
+                              {item.title_1}
                             </Box>
                             {isExpanded ? (
                               <div className="p-2 rounded-full border border-black h-10 w-10 flex items-center justify-center bg-[#0fbbcf]">
@@ -407,11 +425,7 @@ export default function Home() {
                           </AccordionButton>
                         </h2>
                         <AccordionPanel pb={4} className="mt-10 max-w-[90%]">
-                          Lorem ipsum dolor sit amet, consectetur adipiscing
-                          elit, sed do eiusmod tempor incididunt ut labore et
-                          dolore magna aliqua. Ut enim ad minim veniam, quis
-                          nostrud exercitation ullamco laboris nisi ut aliquip
-                          ex ea commodo consequat.
+                          {item.description}
                         </AccordionPanel>
                       </>
                     )}

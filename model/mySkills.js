@@ -9,9 +9,6 @@ const mySkillsSchema = new Schema(
   {
     title: { type: String, required: true },
     percentage: { type: Number, required: true },
-    // benefit: [
-    //   { type: benefitSchema, required: true }, // Array of benefit objects with specified structure
-    // ],
   },
   { timestamps: true }
 );
