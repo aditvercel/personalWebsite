@@ -8,9 +8,13 @@ export async function GET(request) {
   await connectToDB();
 
   const { searchParams } = new URL(request.url);
+  const category = searchParams.get("category");
+  const page = parseInt(searchParams.get("page")) || 1; // Default to page 1 if not provided
+  const pageSize = 6; // Define the number of items per page
   const id = searchParams.get("id");
 
   try {
+    // Fetch a single item by ID
     if (id) {
       const item = await latestProject.findById(id);
       if (!item) {
@@ -28,18 +32,32 @@ export async function GET(request) {
           status: "success",
           statusCode: 200,
           message: "Item retrieved successfully",
-          result: encrypt(item), // Encrypting single item
+          result: encrypt(item),
         },
         { status: 200 }
       );
     } else {
-      const items = await latestProject.find();
+      // Filter by category if provided
+      const query = category ? { category } : {};
+
+      // Pagination and filtering
+      const items = await latestProject
+        .find(query)
+        .skip((page - 1) * pageSize)
+        .limit(pageSize);
+
+      // Total count for pagination
+      const totalCount = await latestProject.countDocuments(query);
+      const totalPages = Math.ceil(totalCount / pageSize);
+
       return NextResponse.json(
         {
           status: "success",
           statusCode: 200,
           message: "Items retrieved successfully",
-          result: encrypt(items), // Encrypting items correctly
+          result: encrypt(items),
+          totalPages, // Send total pages to the frontend for pagination
+          currentPage: page,
         },
         { status: 200 }
       );

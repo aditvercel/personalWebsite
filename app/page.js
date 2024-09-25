@@ -43,7 +43,13 @@ export default function Home() {
     packageService: [],
     faqs: [],
     mySkills: [],
+    latestProject: [],
   });
+  const [latestProjectQuery, setLatestProjectQuery] = useState({
+    category: "All",
+    page: 1,
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,14 +63,18 @@ export default function Home() {
         }
         const tes = await api.get(
           `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq`
-          // {
-          //   title_1: "test Title",
-          //   description: "test Description",
-          // }
         );
         if (tes.data.statusCode === 200) {
           setHomePageDatas((item) => {
             return { ...item, faqs: tes.data.result };
+          });
+        }
+        const ues = await api.get(
+          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills`
+        );
+        if (ues.data.statusCode === 200) {
+          setHomePageDatas((item) => {
+            return { ...item, mySkills: ues.data.result };
           });
         }
 
@@ -106,12 +116,22 @@ export default function Home() {
         //     percentage: 90,
         //   }
         // );
-        const ues = await api.get(
-          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills`
+        // const wry = await api.post(
+        //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject`,
+        //   {
+        //     image:
+        //       "https://res.cloudinary.com/drymuerks/image/upload/v1726801891/362927132_675384167972498_3833124988285082399_n_2_-_Copy_sp2rsp.jpg",
+        //     title_1: "test 1 title",
+        //     description: "test 1 description",
+        //     category: "Web Development",
+        //   }
+        // );
+        const wry = await api.get(
+          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject`
         );
-        if (ues.data.statusCode === 200) {
+        if (wry.data.statusCode === 200) {
           setHomePageDatas((item) => {
-            return { ...item, mySkills: ues.data.result };
+            return { ...item, latestProject: wry.data.result };
           });
         }
       } catch (error) {
@@ -126,6 +146,30 @@ export default function Home() {
     // see updated datas
     console.log("Updated homePageDatas", homePageDatas);
   }, [homePageDatas]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await api.get(
+          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject?category=${latestProjectQuery.category}`
+        );
+        if (res.data.statusCode === 200) {
+          setHomePageDatas((item) => {
+            return { ...item, ...res.data.result };
+          });
+        }
+      } catch (err) {}
+    };
+    fetchData();
+  }, [latestProjectQuery]);
+
+  const handleChangeQuery = (category) => {
+    setLatestProjectQuery((item) => ({
+      ...item,
+      category, // Directly updating the category
+    }));
+    console.log(latestProjectQuery);
+  };
 
   const splideRef = useRef(null);
   const [selectedFilter, setSelectedFilter] = useState("All");
@@ -317,7 +361,7 @@ export default function Home() {
                 "All",
                 "Web Development",
                 "Mobile App",
-                "Motion",
+                // "Motion",
                 "Graphic Design",
               ].map((category) => (
                 <button
@@ -326,10 +370,8 @@ export default function Home() {
                     selectedFilter === category
                       ? "bg-blue-500 text-white"
                       : "bg-[#0f1628] text-blue-300"
-                  } 
-              
-                `}
-                  onClick={() => handleFilterClick(category)}
+                  }`}
+                  onClick={() => handleChangeQuery(category)} // Pass category here
                 >
                   {category}
                 </button>
@@ -341,7 +383,7 @@ export default function Home() {
         <div className="mt-10">
           <div className="grid grid-cols-2 md:grid-cols-3 align-middle justify-center items-center gap-y-2 md:gap-x-3 md:gap-y-5">
             <AnimatePresence>
-              {filteredCards.map((item, index) => (
+              {homePageDatas.latestProject?.map((item, index) => (
                 <LatestProjectCards key={index} item={item} description title />
               ))}
             </AnimatePresence>
