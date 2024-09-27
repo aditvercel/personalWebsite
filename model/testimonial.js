@@ -7,6 +7,7 @@ const benefitSchema = new Schema({
 
 const testimonialSchema = new Schema(
   {
+    name: { type: String, required: true },
     image: { type: String, required: true },
     job_title: { type: String, required: true },
     message: { type: String, required: true },

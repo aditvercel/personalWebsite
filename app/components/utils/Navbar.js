@@ -51,6 +51,16 @@ export default function Navbar() {
     onClose: onDrawerClose,
   } = useDisclosure();
   const [activeIndex, setActiveIndex] = useState(null);
+  const [isPartiallyClosed, setIsPartiallyClosed] = useState(false);
+  const handleClose = () => {
+    // Trigger the drawer to "partially close"
+    setIsPartiallyClosed(true);
+  };
+
+  const handleFullyOpen = () => {
+    setIsPartiallyClosed(false);
+    onOpen();
+  };
 
   const handleClick = (index) => {
     setActiveIndex(index === activeIndex ? null : index); // Toggle the active state
@@ -193,11 +203,16 @@ export default function Navbar() {
       <Drawer
         placement="right"
         onClose={onDrawerClose}
-        isOpen={isDrawerOpen}
-        size="sm"
+        isOpen={isDrawerOpen || isPartiallyClosed}
+        size={isPartiallyClosed ? "xs" : "md"}
+        trapFocus={false}
       >
         <DrawerOverlay onClick={onDrawerClose} />
-        <DrawerContent className="w-[250px] bg-slate-700 text-black px-4 py-12">
+        <DrawerContent
+          transform={isPartiallyClosed ? "translateX(-80%)" : "translateX(0)"}
+          transition="transform 0.3s ease"
+          className="w-[250px] bg-slate-700 text-black px-4 py-12"
+        >
           <DrawerHeader className="text-slate-400 font-bold text-lg text-center mb-5">
             Navigation Menu
           </DrawerHeader>

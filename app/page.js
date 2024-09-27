@@ -44,6 +44,7 @@ export default function Home() {
     faqs: [],
     mySkills: [],
     latestProject: [],
+    testimonial: [],
   });
   const [latestProjectQuery, setLatestProjectQuery] = useState({
     category: "All",
@@ -75,6 +76,35 @@ export default function Home() {
         if (ues.data.statusCode === 200) {
           setHomePageDatas((item) => {
             return { ...item, mySkills: ues.data.result };
+          });
+        }
+
+        const ies = await api.get(
+          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/testimonial`
+        );
+        if (ies.data.statusCode === 200) {
+          setHomePageDatas((item) => {
+            return { ...item, testimonial: ies.data.result };
+          });
+        }
+        // const pes = await api.post(
+        //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/testimonial`,
+        //   {
+        //     name: "Adity maarzuk",
+        //     image:
+        //       "https://res.cloudinary.com/drymuerks/image/upload/v1726801891/362927132_675384167972498_3833124988285082399_n_2_-_Copy_sp2rsp.jpg",
+        //     job_title: "Frontend Developer",
+        //     message:
+        //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam facilisis, nisi ac hendrerit commodo, eros turpis mollis dui, eu faucibus dui est sed velit. Curabitur semper tempus egestas. Aenean faucibus magna ipsum, aliquam venenatis mi aliquet at. Morbi vestibulum vulputate mauris, et pharetra leo posuere eget. Vestibulum tincidunt tortor tincidunt mauris mattis gravida. Suspendisse et sem sollicitudin, blandit velit ut, pellentesque magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras congue leo eu turpis tristique, sit amet pellentesque mi porttitor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vel metus in elit lacinia malesuada. In euismod dictum mattis. Duis vehicula vulputate hendrerit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;",
+        //   }
+        // );
+
+        const wry = await api.get(
+          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject`
+        );
+        if (wry.data.statusCode === 200) {
+          setHomePageDatas((item) => {
+            return { ...item, latestProject: wry.data.result };
           });
         }
 
@@ -126,14 +156,6 @@ export default function Home() {
         //     category: "Web Development",
         //   }
         // );
-        const wry = await api.get(
-          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject`
-        );
-        if (wry.data.statusCode === 200) {
-          setHomePageDatas((item) => {
-            return { ...item, latestProject: wry.data.result };
-          });
-        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -191,7 +213,7 @@ export default function Home() {
     }
     return result;
   };
-  const slides = chunkArray(datas, 3);
+  const slides = chunkArray(homePageDatas.testimonial, 3);
 
   const cardData = [
     { id: 1, category: "Web Development", content: "Web Dev Card 1" },
@@ -497,7 +519,7 @@ export default function Home() {
                           <div className=" rounded-md mb-5 flex gap-5">
                             <Image
                               src={item.image}
-                              alt={item.title}
+                              alt={item._id}
                               width={50}
                               height={50}
                               className=" rounded-full"
@@ -506,9 +528,7 @@ export default function Home() {
                               <div className=" text-md font-bold">
                                 Marlian martezze
                               </div>
-                              <div className=" text-xs">
-                                Frontend developer at bina nusa
-                              </div>
+                              <div className=" text-xs">{item.job_title}</div>
                             </div>
                           </div>
                           <div className="h-[80px] overflow-hidden text-ellipsis line-clamp-4 z-10 text-xs">
