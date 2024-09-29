@@ -1,53 +1,133 @@
 "use client";
-import { useState } from "react";
+import {
+  TableContainer,
+  Table,
+  Thead,
+  Tr,
+  Th,
+  Tbody,
+  Td,
+  Button,
+  HStack,
+  IconButton,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
+  Link,
+} from "@chakra-ui/react";
+import { DeleteIcon, EditIcon, InfoOutlineIcon } from "@chakra-ui/icons"; // Icons from Chakra
+import { useRef } from "react";
 
-export default function Drawer() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Page() {
+  const { isOpen, onOpen, onClose } = useDisclosure(); // Chakra Disclosure for AlertDialog
+  const cancelRef = useRef(); // Ref for AlertDialog cancellation
 
-  // Function to toggle drawer open/close
-  const toggleDrawer = () => {
-    setIsOpen(!isOpen);
+  // Delete Confirmation Popup
+  const handleDelete = () => {
+    // Add logic to handle delete action
+    console.log("Item deleted!");
+    onClose();
   };
 
   return (
-    <div className="absolute w-full h-full border border-red-500 left-0 top-0 pt-[120px]">
-      <div className="h-[100vw] w-full border border-green">
-        {/* Drawer */}
-        <div
-          className={`relative bg-white h-full transition-width duration-300 ${
-            isOpen ? "w-64" : "w-20"
-          }`}
-        >
-          {/* Drawer Toggle Button */}
-          <button
-            className="absolute top-4 right-[-10px] bg-gray-300 rounded-full px-2 py-1"
-            onClick={toggleDrawer}
-          >
-            {isOpen ? "<" : ">"}
-          </button>
-
-          {/* Drawer Content */}
-          <div className="h-full flex flex-col items-center">
-            {isOpen ? (
-              // Full Drawer Menu when open
-              <div className="mt-10">
-                <ul>
-                  <li className="py-2">Menu Item 1</li>
-                  <li className="py-2">Menu Item 2</li>
-                  <li className="py-2">Menu Item 3</li>
-                </ul>
-              </div>
-            ) : (
-              // Icon-only when closed
-              <div className="mt-10 flex flex-col items-center">
-                <div className="mb-4">🔍</div>
-                <div className="mb-4">📄</div>
-                <div className="mb-4">⚙️</div>
-              </div>
-            )}
-          </div>
-        </div>
+    <div>
+      <div className="w-full bg-white h-16 flex items-center align-middle px-2 text-2xl font-medium mb-5 justify-between">
+        <h1>Title</h1>
+        <Button colorScheme="green" size="md">
+          Create
+        </Button>
       </div>
+      <div className="rounded-lg bg-white p-5">
+        <TableContainer className="overflow-x-auto">
+          <Table>
+            <Thead className="bg-gray-400">
+              <Tr>
+                <Th>No.</Th> {/* Number Column Header */}
+                <Th>To convert</Th>
+                <Th>into</Th>
+                <Th isNumeric>multiply by</Th>
+                <Th>Action</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {/* Row 1 */}
+              <Tr>
+                <Td>1</Td> {/* Numbering the row */}
+                <Td>inches</Td>
+                <Td>millimetres (mm)</Td>
+                <Td isNumeric>25.4</Td>
+                <Td>
+                  <HStack spacing="4">
+                    {/* Detail Button with Icon */}
+                    <Link href="cms/detail">
+                      <IconButton
+                        icon={<InfoOutlineIcon />}
+                        colorScheme="blue"
+                        size="sm"
+                        aria-label="Detail"
+                      />
+                    </Link>
+
+                    {/* Update Button with Icon */}
+                    <Link href="cms/update">
+                      <IconButton
+                        icon={<EditIcon />}
+                        colorScheme="yellow"
+                        size="sm"
+                        aria-label="Update"
+                      />
+                    </Link>
+
+                    {/* Delete Button with Icon and Confirmation Dialog */}
+                    <IconButton
+                      icon={<DeleteIcon />}
+                      colorScheme="red"
+                      size="sm"
+                      aria-label="Delete"
+                      onClick={onOpen} // Open the confirmation dialog
+                    />
+                  </HStack>
+                </Td>
+              </Tr>
+
+              {/* Add more rows as needed */}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </div>
+
+      {/* AlertDialog for Delete Confirmation */}
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold" color="black">
+              Delete Item
+            </AlertDialogHeader>
+
+            <AlertDialogBody color="black">
+              Are you sure you want to delete this item? This action cannot be
+              undone.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={handleDelete} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </div>
   );
 }

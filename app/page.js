@@ -29,6 +29,10 @@ import {
   CircularProgress,
   CircularProgressLabel,
   Center,
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb,
 } from "@chakra-ui/react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import ScrollOnTop from "./components/utils/ScrollOnTop.js";
@@ -54,116 +58,56 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await api.get(
-          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService`
-        );
+        const [res, tes, ues, ies, wry] = await Promise.all([
+          api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService`),
+          api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq`),
+          api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills`),
+          api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/testimonial`),
+          api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject`),
+        ]);
+
         if (res.data.statusCode === 200) {
-          setHomePageDatas((item) => {
-            return { ...item, packageService: res.data.result };
-          });
+          setHomePageDatas((item) => ({
+            ...item,
+            packageService: res.data.result,
+          }));
         }
-        const tes = await api.get(
-          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq`
-        );
+
         if (tes.data.statusCode === 200) {
-          setHomePageDatas((item) => {
-            return { ...item, faqs: tes.data.result };
-          });
+          setHomePageDatas((item) => ({
+            ...item,
+            faqs: tes.data.result,
+          }));
         }
-        const ues = await api.get(
-          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills`
-        );
+
         if (ues.data.statusCode === 200) {
-          setHomePageDatas((item) => {
-            return { ...item, mySkills: ues.data.result };
-          });
+          setHomePageDatas((item) => ({
+            ...item,
+            mySkills: ues.data.result,
+          }));
         }
 
-        const ies = await api.get(
-          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/testimonial`
-        );
         if (ies.data.statusCode === 200) {
-          setHomePageDatas((item) => {
-            return { ...item, testimonial: ies.data.result };
-          });
+          setHomePageDatas((item) => ({
+            ...item,
+            testimonial: ies.data.result,
+          }));
         }
-        // const pes = await api.post(
-        //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/testimonial`,
-        //   {
-        //     name: "Adity maarzuk",
-        //     image:
-        //       "https://res.cloudinary.com/drymuerks/image/upload/v1726801891/362927132_675384167972498_3833124988285082399_n_2_-_Copy_sp2rsp.jpg",
-        //     job_title: "Frontend Developer",
-        //     message:
-        //       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam facilisis, nisi ac hendrerit commodo, eros turpis mollis dui, eu faucibus dui est sed velit. Curabitur semper tempus egestas. Aenean faucibus magna ipsum, aliquam venenatis mi aliquet at. Morbi vestibulum vulputate mauris, et pharetra leo posuere eget. Vestibulum tincidunt tortor tincidunt mauris mattis gravida. Suspendisse et sem sollicitudin, blandit velit ut, pellentesque magna. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras congue leo eu turpis tristique, sit amet pellentesque mi porttitor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vel metus in elit lacinia malesuada. In euismod dictum mattis. Duis vehicula vulputate hendrerit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;",
-        //   }
-        // );
 
-        const wry = await api.get(
-          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject`
-        );
         if (wry.data.statusCode === 200) {
-          setHomePageDatas((item) => {
-            return { ...item, latestProject: wry.data.result };
-          });
+          setHomePageDatas((item) => ({
+            ...item,
+            latestProject: wry.data.result,
+          }));
         }
-
-        // const tes = await api.post(
-        //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService`,
-        //   {
-        //     namaService: "testing_2",
-        //     title_1: "testing_title_1",
-        //     title_2: "testing_title_2",
-        //     hargaService: 400000,
-        //     stock: 12,
-        //     deskripsi: "testing_deskripsi_2",
-        //     whatsappLink: "whatsapplink_2",
-        //     statusType: "POPULAR",
-        //     benefit: [
-        //       "3 Days delivery time",
-        //       "3 pages",
-        //       "3 Revisions",
-        //       "static website",
-        //       "Design Customization",
-        //       "Content Upload",
-        //       "Responsive Design",
-        //       "Source Code",
-        //     ],
-        //   }
-        // );
-
-        // const tes = await api.post(
-        //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq`,
-        //   {
-        //     title_1: "test Title",
-        //     description: "test Description",
-        //   }
-        // );
-        // const yes = await api.post(
-        //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills`,
-        //   {
-        //     title: "React",
-        //     percentage: 90,
-        //   }
-        // );
-        // const wry = await api.post(
-        //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject`,
-        //   {
-        //     image:
-        //       "https://res.cloudinary.com/drymuerks/image/upload/v1726801891/362927132_675384167972498_3833124988285082399_n_2_-_Copy_sp2rsp.jpg",
-        //     title_1: "test 1 title",
-        //     description: "test 1 description",
-        //     category: "Web Development",
-        //   }
-        // );
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-    console.log(homePageDatas);
   }, []);
+
   useEffect(() => {
     // see updated datas
     console.log("Updated homePageDatas", homePageDatas);
@@ -335,30 +279,47 @@ export default function Home() {
           <div className="font-bold text-4xl textLight text-center md:mb-20">
             My Skill&apos;s
           </div>
-          <div className="w-full grid grid-cols-3 md:grid-cols-5 mt-10 gap-x-5 md:gap-y-16 gap-y-10">
+          <div className="w-full grid grid-cols-3 md:grid-cols-4 mt-10 gap-x-5 md:gap-y-16 gap-y-10">
             {homePageDatas.mySkills.map((item, index) => (
-              <div
-                className="flex items-center justify-center align-middle relative"
-                key={index}
-              >
-                <CircularProgress
-                  key={index}
-                  value={item.percentage}
-                  color="teal.400" // Color of the progress ring
-                  trackColor="gray.200" // Color of the track (background of the progress ring)
-                  size={32}
-                >
-                  <CircularProgressLabel
-                    color="white" // Color of the text inside the progress circle
-                    className=" text-lg"
+              <div key={index}>
+                <div>{item.title}</div>
+                <div className=" flex gap-2">
+                  <Slider
+                    aria-label="slider-ex-2"
+                    colorScheme="blue"
+                    defaultValue={item.percentage}
+                    isDisabled={true}
                   >
-                    {item.percentage}%
-                  </CircularProgressLabel>
-                </CircularProgress>
-                <div className="absolute bottom-[-30px] right-0 left-0 mr-auto text-lg text-center">
-                  {item.title}
+                    <SliderTrack>
+                      <SliderFilledTrack />
+                    </SliderTrack>
+                    <SliderThumb />
+                  </Slider>
+                  <div className="w-20">{item.percentage}%</div>
                 </div>
               </div>
+              // <div
+              //   className="flex items-center justify-center align-middle relative"
+              //   key={index}
+              // >
+              //   <CircularProgress
+              //     key={index}
+              //     value={item.percentage}
+              //     color="teal.400" // Color of the progress ring
+              //     trackColor="gray.200" // Color of the track (background of the progress ring)
+              //     size={32}
+              //   >
+              //     <CircularProgressLabel
+              //       color="white" // Color of the text inside the progress circle
+              //       className=" text-lg"
+              //     >
+              //       {item.percentage}%
+              //     </CircularProgressLabel>
+              //   </CircularProgress>
+              //   <div className="absolute bottom-[-30px] right-0 left-0 mr-auto text-lg text-center">
+              //     {item.title}
+              //   </div>
+              // </div>
             ))}
           </div>
         </div>
