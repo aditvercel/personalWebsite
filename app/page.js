@@ -34,6 +34,8 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
+  Skeleton,
+  SkeletonText,
 } from "@chakra-ui/react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import ScrollOnTop from "./components/utils/ScrollOnTop.js";
@@ -54,12 +56,48 @@ export default function Home() {
       currentPage: 0,
     },
     testimonial: [],
+    skeletons: {
+      packageService: false,
+      faqs: false,
+      mySkills: false,
+      latestProject: false,
+    },
   });
   const [latestProjectQuery, setLatestProjectQuery] = useState({
     category: 0,
     page: 1,
     totalPages: 0,
   });
+  const [slides, setSlides] = useState([]);
+
+  const chunkArray = (array, size) => {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
+      result.push(array.slice(i, i + size));
+    }
+    return result;
+  };
+
+  // Function to update chunk size based on screen size
+  const updateSlides = () => {
+    // Check if screen is small (Tailwind `sm` screen size)
+    const isSmallScreen = window.matchMedia("(max-width: 640px)").matches;
+
+    // Adjust chunk size depending on the screen size
+    const chunkSize = isSmallScreen ? 1 : 3; // 1 slide for small screens, 3 for larger
+    setSlides(chunkArray(homePageDatas.testimonial, chunkSize));
+  };
+
+  useEffect(() => {
+    // Initial load
+    updateSlides();
+
+    // Add a resize event listener to handle screen resizing
+    window.addEventListener("resize", updateSlides);
+
+    // Cleanup event listener on component unmount
+    return () => window.removeEventListener("resize", updateSlides);
+  }, [homePageDatas.testimonial]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -140,39 +178,50 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
+      // Set skeleton to true before fetching data
+      setHomePageDatas((item) => ({
+        ...item,
+        skeletons: {
+          ...item.skeletons,
+          latestProject: false, // Show skeleton before fetching
+        },
+      }));
+
       try {
         const res = await api.get(
           `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject?category=${latestProjectQuery.category}&page=${latestProjectQuery.page}`
         );
+
         if (res.data.statusCode === 200) {
-          setHomePageDatas((item) => {
-            return {
-              ...item,
-              latestProject: {
-                ...item.latestProject,
-                items: [...res.data.result.items],
-                totalPages: res.data.result.totalPages,
-                currentPage: res.data.result.currentPage,
-              },
-            };
-          });
+          setHomePageDatas((item) => ({
+            ...item,
+            latestProject: {
+              items: [...res.data.result.items],
+              totalPages: res.data.result.totalPages,
+              currentPage: res.data.result.currentPage,
+            },
+            skeletons: {
+              ...item.skeletons,
+              latestProject: true, // Hide skeleton when data is fetched
+            },
+          }));
         }
-      } catch (err) {}
+      } catch (err) {
+        // In case of error, hide the skeleton
+        setHomePageDatas((item) => ({
+          ...item,
+          skeletons: {
+            ...item.skeletons,
+            latestProject: false,
+          },
+        }));
+      }
     };
+
     fetchData();
   }, [latestProjectQuery]);
-
   const splideRef = useRef(null);
   const [selectedFilter, setSelectedFilter] = useState(0);
-
-  const chunkArray = (array, size) => {
-    const result = [];
-    for (let i = 0; i < array.length; i += size) {
-      result.push(array.slice(i, i + size));
-    }
-    return result;
-  };
-  const slides = chunkArray(homePageDatas.testimonial, 3);
 
   const handleFilterClick = (category) => {
     setSelectedFilter(category);
@@ -371,7 +420,15 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-3 align-middle justify-center items-center gap-y-2 md:gap-x-3 md:gap-y-5">
             <AnimatePresence>
               {homePageDatas.latestProject?.items?.map((item, index) => (
-                <LatestProjectCards key={index} item={item} description title />
+                <div key={index}>
+                  <Skeleton isLoaded={homePageDatas.skeletons.latestProject}>
+                    <LatestProjectCards item={item} description title />
+                  </Skeleton>
+                  <SkeletonText
+                    noOfLines={4}
+                    isLoaded={homePageDatas.skeletons.latestProject}
+                  />
+                </div>
               ))}
             </AnimatePresence>
           </div>

@@ -25,33 +25,33 @@ import api from "@/utils/axiosInstance";
 
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure(); // Chakra Disclosure for AlertDialog
-  // const [homePageDatas, setHomePageDatas] = useState({
-  //  journeyDatas : []
-  // });
+  const [homePageDatas, setHomePageDatas] = useState({
+    journeyDatas: [],
+  });
   const cancelRef = useRef(); // Ref for AlertDialog cancellation
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const [res, tes, ues, ies, wry] = await Promise.all([
-  //         api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey`),
-  //         // api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq`),
-  //         // api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills`),
-  //       ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [res, tes, ues, ies, wry] = await Promise.all([
+          api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey`),
+          // api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq`),
+          // api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills`),
+        ]);
 
-  //       if (res.data.statusCode === 200) {
-  //         setHomePageDatas((item) => ({
-  //           ...item,
-  //           journeyDatas: res.data.result,
-  //         }));
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
+        if (res.data.statusCode === 200) {
+          setHomePageDatas((item) => ({
+            ...item,
+            journeyDatas: res.data.result,
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-  //   fetchData();
-  // }, []);
+    fetchData();
+  }, []);
 
   // Delete Confirmation Popup
   const handleDelete = () => {
@@ -71,57 +71,63 @@ export default function Page() {
       <div className="rounded-lg bg-white p-5">
         <TableContainer className="overflow-x-auto">
           <Table>
-            <Thead className="bg-gray-400">
-              <Tr>
-                <Th>No.</Th> {/* Number Column Header */}
-                <Th>To convert</Th>
-                <Th>into</Th>
-                <Th isNumeric>multiply by</Th>
-                <Th>Action</Th>
-              </Tr>
-            </Thead>
+            {homePageDatas.journeyDatas.length > 0 && (
+              <Thead className="bg-gray-400">
+                <Tr>
+                  <Th>NO.</Th>
+                  {Object.keys(homePageDatas.journeyDatas[0]).map(
+                    (key, index) => (
+                      <Th key={index}>{key}</Th>
+                    )
+                  )}
+                  <Th>Action</Th> {/* Action column */}
+                </Tr>
+              </Thead>
+            )}
             <Tbody>
-              {/* Row 1 */}
-              <Tr>
-                <Td>1</Td> {/* Numbering the row */}
-                <Td>inches</Td>
-                <Td>millimetres (mm)</Td>
-                <Td isNumeric>25.4</Td>
-                <Td>
-                  <HStack spacing="4">
-                    {/* Detail Button with Icon */}
-                    <Link href="cms/detail">
+              {homePageDatas.journeyDatas.map((item, index) => (
+                <Tr key={index}>
+                  <Td>{index + 1}</Td> {/* Row numbering */}
+                  {Object.keys(item).map((key) => (
+                    <Td key={key}>{item[key]}</Td>
+                  ))}
+                  <Td>
+                    <HStack spacing="4">
+                      {/* Detail Button with Icon */}
+                      <Link href={`cms/detail/${item._id}`}>
+                        <IconButton
+                          icon={<InfoOutlineIcon />}
+                          colorScheme="blue"
+                          size="sm"
+                          aria-label="Detail"
+                        />
+                      </Link>
+
+                      {/* Update Button with Icon */}
+                      <Link href={`cms/update/${item._id}`}>
+                        <IconButton
+                          icon={<EditIcon />}
+                          colorScheme="yellow"
+                          size="sm"
+                          aria-label="Update"
+                        />
+                      </Link>
+
+                      {/* Delete Button with Icon and Confirmation Dialog */}
                       <IconButton
-                        icon={<InfoOutlineIcon />}
-                        colorScheme="blue"
+                        icon={<DeleteIcon />}
+                        colorScheme="red"
                         size="sm"
-                        aria-label="Detail"
+                        aria-label="Delete"
+                        onClick={() => {
+                          console.log(item);
+                          onOpen();
+                        }} // Open the confirmation dialog
                       />
-                    </Link>
-
-                    {/* Update Button with Icon */}
-                    <Link href="cms/update">
-                      <IconButton
-                        icon={<EditIcon />}
-                        colorScheme="yellow"
-                        size="sm"
-                        aria-label="Update"
-                      />
-                    </Link>
-
-                    {/* Delete Button with Icon and Confirmation Dialog */}
-                    <IconButton
-                      icon={<DeleteIcon />}
-                      colorScheme="red"
-                      size="sm"
-                      aria-label="Delete"
-                      onClick={onOpen} // Open the confirmation dialog
-                    />
-                  </HStack>
-                </Td>
-              </Tr>
-
-              {/* Add more rows as needed */}
+                    </HStack>
+                  </Td>
+                </Tr>
+              ))}
             </Tbody>
           </Table>
         </TableContainer>
