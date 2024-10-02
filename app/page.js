@@ -6,6 +6,7 @@ import photosaya from "@/public/images/photo_saya.png";
 import ButtonFilled from "./components/buttons/buttonFilled.js";
 import aboutDatas from "@/public/data/aboutData";
 import skilldatas from "@/public/data/skillsData.js";
+import latestProjectFilter from "@/public/data/latestProjectFilter.js";
 import Typewriter from "typewriter-effect";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import quoteIcon from "@/public/icons/quote-close-editor-svgrepo-com.svg";
@@ -47,23 +48,47 @@ export default function Home() {
     packageService: [],
     faqs: [],
     mySkills: [],
-    latestProject: [],
+    latestProject: {
+      items: [],
+      totalPages: 0,
+      currentPage: 0,
+    },
     testimonial: [],
   });
   const [latestProjectQuery, setLatestProjectQuery] = useState({
-    category: "All",
+    category: 0,
     page: 1,
+    totalPages: 0,
   });
 
   useEffect(() => {
     const fetchData = async () => {
+      let body = {
+        image:
+          "https://res.cloudinary.com/drymuerks/image/upload/v1726801891/362927132_675384167972498_3833124988285082399_n_2_-_Copy_sp2rsp.jpg",
+        year: "2024",
+        title_1: "title",
+        description_1: "description1",
+        description_2: "description2",
+      };
       try {
         const [res, tes, ues, ies, wry] = await Promise.all([
           api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService`),
           api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq`),
           api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills`),
           api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/testimonial`),
-          api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject`),
+          // api.post(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey`, {
+          //   image:
+          //     "https://res.cloudinary.com/drymuerks/image/upload/v1726801891/362927132_675384167972498_3833124988285082399_n_2_-_Copy_sp2rsp.jpg",
+          //   year: new Date(),
+          //   title_1: "title",
+          //   description_1: "description1",
+          //   description_2: "description2",
+          // }),
+
+          // api.get(
+          //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject?category=${latestProjectQuery.category}`
+          // ),
         ]);
 
         if (res.data.statusCode === 200) {
@@ -94,12 +119,12 @@ export default function Home() {
           }));
         }
 
-        if (wry.data.statusCode === 200) {
-          setHomePageDatas((item) => ({
-            ...item,
-            latestProject: wry.data.result,
-          }));
-        }
+        // if (wry.data.statusCode === 200) {
+        //   setHomePageDatas((item) => ({
+        //     ...item,
+        //     latestProject: wry.data.result,
+        //   }));
+        // }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -117,11 +142,19 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const res = await api.get(
-          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject?category=${latestProjectQuery.category}`
+          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject?category=${latestProjectQuery.category}&page=${latestProjectQuery.page}`
         );
         if (res.data.statusCode === 200) {
           setHomePageDatas((item) => {
-            return { ...item, ...res.data.result };
+            return {
+              ...item,
+              latestProject: {
+                ...item.latestProject,
+                items: [...res.data.result.items],
+                totalPages: res.data.result.totalPages,
+                currentPage: res.data.result.currentPage,
+              },
+            };
           });
         }
       } catch (err) {}
@@ -129,26 +162,8 @@ export default function Home() {
     fetchData();
   }, [latestProjectQuery]);
 
-  const handleChangeQuery = (category) => {
-    setLatestProjectQuery((item) => ({
-      ...item,
-      category, // Directly updating the category
-    }));
-    console.log(latestProjectQuery);
-  };
-
   const splideRef = useRef(null);
-  const [selectedFilter, setSelectedFilter] = useState("All");
-  const datas = [
-    { image: "https://picsum.photos/200?random=1", title: "Title 1" },
-    { image: "https://picsum.photos/200?random=2", title: "Title 2" },
-    { image: "https://picsum.photos/200?random=3", title: "Title 3" },
-    { image: "https://picsum.photos/200?random=4", title: "Title 4" },
-    { image: "https://picsum.photos/200?random=5", title: "Title 5" },
-    { image: "https://picsum.photos/200?random=6", title: "Title 6" },
-    { image: "https://picsum.photos/200?random=7", title: "Title 7" },
-    // Add more items as needed
-  ];
+  const [selectedFilter, setSelectedFilter] = useState(0);
 
   const chunkArray = (array, size) => {
     const result = [];
@@ -159,21 +174,16 @@ export default function Home() {
   };
   const slides = chunkArray(homePageDatas.testimonial, 3);
 
-  const cardData = [
-    { id: 1, category: "Web Development", content: "Web Dev Card 1" },
-    { id: 2, category: "Mobile App", content: "Mobile App Card 1" },
-    { id: 3, category: "Graphic Design", content: "Motion Card 1" },
-    { id: 4, category: "Graphic Design", content: "Graphic Design Card 1" },
-    { id: 5, category: "Web Development", content: "Web Dev Card 2" },
-    { id: 6, category: "Web Development", content: "Web Dev Card 3" },
-  ];
-
-  const filteredCards = cardData.filter(
-    (card) => selectedFilter === "All" || card.category === selectedFilter
-  );
-
   const handleFilterClick = (category) => {
     setSelectedFilter(category);
+  };
+
+  const handleChangeQuery = (category) => {
+    handleFilterClick(category); // This will update the filter state
+    setLatestProjectQuery((item) => ({
+      ...item,
+      category: category, // Use the passed category directly instead of selectedFilter
+    }));
   };
 
   const handleDownload = () => {
@@ -340,23 +350,17 @@ export default function Home() {
         <div className="mt-10 flex items-center align-middle justify-center overflow-x-scroll md:overflow-hidden">
           <div className="w-[1300px] pl-[500px] md:pl-0 flex items-center justify-center align-middle self-center">
             <div className="flex items-center align-middle gap-2 lg:gap-5 justify-center w-[1500px] md:max-w-full self-center">
-              {[
-                "All",
-                "Web Development",
-                "Mobile App",
-                // "Motion",
-                "Graphic Design",
-              ].map((category) => (
+              {latestProjectFilter.map((category) => (
                 <button
-                  key={category}
-                  className={`border border-blue-300 py-2 px-4 rounded-3xl md:min-w-[100px]  min-w-[150px] text-center ${
-                    selectedFilter === category
+                  key={category.key}
+                  className={`border border-blue-300 py-2 px-4 rounded-3xl md:min-w-[100px] min-w-[150px] text-center ${
+                    selectedFilter === category.key
                       ? "bg-blue-500 text-white"
                       : "bg-[#0f1628] text-blue-300"
                   }`}
-                  onClick={() => handleChangeQuery(category)} // Pass category here
+                  onClick={() => handleChangeQuery(category.key)}
                 >
-                  {category}
+                  {category.title}
                 </button>
               ))}
             </div>
@@ -366,7 +370,7 @@ export default function Home() {
         <div className="mt-10">
           <div className="grid grid-cols-2 md:grid-cols-3 align-middle justify-center items-center gap-y-2 md:gap-x-3 md:gap-y-5">
             <AnimatePresence>
-              {homePageDatas.latestProject?.map((item, index) => (
+              {homePageDatas.latestProject?.items?.map((item, index) => (
                 <LatestProjectCards key={index} item={item} description title />
               ))}
             </AnimatePresence>
@@ -374,7 +378,12 @@ export default function Home() {
         </div>
         <div className="flex items-center justify-center align-middle mt-10">
           <Pagination
-            count={200}
+            count={homePageDatas.latestProject.totalPages}
+            onChange={(e, page) => {
+              setLatestProjectQuery((item) => {
+                return { ...item, page }; // Use the provided page number
+              });
+            }}
             color="primary"
             size="large"
             shape="rounded"

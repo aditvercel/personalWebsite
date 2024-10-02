@@ -20,11 +20,38 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon, InfoOutlineIcon } from "@chakra-ui/icons"; // Icons from Chakra
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
+import api from "@/utils/axiosInstance";
 
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure(); // Chakra Disclosure for AlertDialog
+  // const [homePageDatas, setHomePageDatas] = useState({
+  //  journeyDatas : []
+  // });
   const cancelRef = useRef(); // Ref for AlertDialog cancellation
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const [res, tes, ues, ies, wry] = await Promise.all([
+  //         api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey`),
+  //         // api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq`),
+  //         // api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills`),
+  //       ]);
+
+  //       if (res.data.statusCode === 200) {
+  //         setHomePageDatas((item) => ({
+  //           ...item,
+  //           journeyDatas: res.data.result,
+  //         }));
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
 
   // Delete Confirmation Popup
   const handleDelete = () => {
@@ -35,8 +62,8 @@ export default function Page() {
 
   return (
     <div>
-      <div className="w-full bg-white h-16 flex items-center align-middle px-2 text-2xl font-medium mb-5 justify-between">
-        <h1>Title</h1>
+      <div className="w-full bg-white h-16 flex items-center align-middle px-2 text-2xl  mb-5 justify-between font-bold">
+        <h1>Home Manager</h1>
         <Button colorScheme="green" size="md">
           Create
         </Button>

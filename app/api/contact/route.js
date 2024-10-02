@@ -1,5 +1,5 @@
 import { connectToDB } from "@/utils/ConnectDB";
-import latestProject from "@/model/latestProject";
+import contact from "@/model/contact";
 import { NextResponse } from "next/server";
 import { encrypt, decrypt } from "@/utils/axiosInstance";
 
@@ -8,15 +8,11 @@ export async function GET(request) {
   await connectToDB();
 
   const { searchParams } = new URL(request.url);
-  const category = parseInt(searchParams.get("category")); // Convert to integer for easier comparison
-  const page = parseInt(searchParams.get("page")) || 1; // Default to page 1 if not provided
-  const pageSize = 6; // Define the number of items per page
   const id = searchParams.get("id");
 
   try {
-    // Fetch a single item by ID
     if (id) {
-      const item = await latestProject.findById(id);
+      const item = await contact.findById(id);
       if (!item) {
         return NextResponse.json(
           {
@@ -32,34 +28,18 @@ export async function GET(request) {
           status: "success",
           statusCode: 200,
           message: "Item retrieved successfully",
-          result: encrypt(item),
+          result: encrypt(item), // Encrypting single item
         },
         { status: 200 }
       );
     } else {
-      // Filter by category, but if category is 0, don't filter
-      const query = category === 0 ? {} : { category };
-
-      // Pagination and filtering
-      const items = await latestProject
-        .find(query)
-        .skip((page - 1) * pageSize)
-        .limit(pageSize);
-
-      // Total count for pagination
-      const totalCount = await latestProject.countDocuments(query);
-      const totalPages = Math.ceil(totalCount / pageSize);
-
+      const items = await contact.find();
       return NextResponse.json(
         {
           status: "success",
           statusCode: 200,
           message: "Items retrieved successfully",
-          result: encrypt({
-            items: [...items],
-            totalPages, // Send total pages to the frontend for pagination
-            currentPage: page,
-          }),
+          result: encrypt(items), // Encrypting items correctly
         },
         { status: 200 }
       );
@@ -92,7 +72,7 @@ export async function POST(request) {
     const data = JSON.parse(decryptedString);
 
     // Create new item with decrypted data
-    const newItem = await latestProject.create(data);
+    const newItem = await contact.create(data);
 
     // Encrypt the response
     return NextResponse.json(
@@ -131,7 +111,7 @@ export async function PUT(request) {
     const { id, ...updateData } = JSON.parse(decryptedString);
 
     // Find and update the item
-    const updatedItem = await latestProject.findByIdAndUpdate(id, updateData, {
+    const updatedItem = await contact.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
     });
@@ -183,7 +163,7 @@ export async function DELETE(request) {
     const { id } = JSON.parse(decryptedString);
 
     // Find and delete the item
-    const deletedItem = await latestProject.findByIdAndDelete(id);
+    const deletedItem = await contact.findByIdAndDelete(id);
 
     if (!deletedItem) {
       return NextResponse.json(

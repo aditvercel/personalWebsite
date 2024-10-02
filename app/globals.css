@@ -102,6 +102,20 @@ button.splide__arrow--prev {
   transform: scale(0.95) !important;
 }
 
+*,
+::before,
+::after {
+  border: 0px;
+  border-color: #ffffff !important;
+}
+.css-uttm9k {
+  padding: 0px;
+}
+
+.css-1eziwv {
+  font-size: 13px;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance !important;

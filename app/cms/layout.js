@@ -8,6 +8,7 @@ import {
   AccordionIcon,
   Button,
 } from "@chakra-ui/react";
+import cmsNavbar from "@/public/data/cmsNavbar";
 
 export default function CMSlayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,86 +39,46 @@ export default function CMSlayout({ children }) {
               {isOpen ? (
                 // Full Drawer Menu when open
                 <div className="mt-20 text-black h-full">
-                  <Accordion allowToggle>
-                    <AccordionItem>
-                      <AccordionButton>
-                        <span className="flex-grow text-left">
-                          Home Manager
-                        </span>
-                        <AccordionIcon />
-                      </AccordionButton>
-                      <AccordionPanel pb={4}>
-                        <ul>
-                          <li>Sub-item 1</li>
-                          <li>Sub-item 2</li>
-                          <li>Sub-item 3</li>
-                        </ul>
-                      </AccordionPanel>
-                    </AccordionItem>
-                    <AccordionItem>
-                      <AccordionButton>
-                        <span className="flex-grow text-left">
-                          About Manager
-                        </span>
-                        <AccordionIcon />
-                      </AccordionButton>
-                      <AccordionPanel pb={4}>
-                        <ul>
-                          <li>Sub-item 1</li>
-                          <li>Sub-item 2</li>
-                          <li>Sub-item 3</li>
-                        </ul>
-                      </AccordionPanel>
-                    </AccordionItem>
-                    <AccordionItem>
-                      <AccordionButton>
-                        <span className="flex-grow text-left">
-                          Journey Manager
-                        </span>
-                        <AccordionIcon />
-                      </AccordionButton>
-                      <AccordionPanel pb={4}>
-                        <ul>
-                          <li>Sub-item 1</li>
-                          <li>Sub-item 2</li>
-                          <li>Sub-item 3</li>
-                        </ul>
-                      </AccordionPanel>
-                    </AccordionItem>
-                    <AccordionItem>
-                      <AccordionButton>
-                        <span className="flex-grow text-left">
-                          Contact Manager
-                        </span>
-                        <AccordionIcon />
-                      </AccordionButton>
-                      <AccordionPanel pb={4}>
-                        <ul>
-                          <li>Sub-item 1</li>
-                          <li>Sub-item 2</li>
-                          <li>Sub-item 3</li>
-                        </ul>
-                      </AccordionPanel>
-                    </AccordionItem>
-                    <AccordionItem>
-                      <AccordionButton>
-                        <span className="flex-grow text-left">
-                          Query Manager
-                        </span>
-                        <AccordionIcon />
-                      </AccordionButton>
-                      <AccordionPanel pb={4}>
-                        <ul>
-                          <li>Sub-item 1</li>
-                          <li>Sub-item 2</li>
-                          <li>Sub-item 3</li>
-                        </ul>
-                      </AccordionPanel>
-                    </AccordionItem>
+                  <Accordion allowToggle className="gap-3 grid text-sm">
+                    {cmsNavbar.map((item, index) => {
+                      return item.child && item.child.length > 0 ? (
+                        <AccordionItem key={index}>
+                          <AccordionButton>
+                            <span
+                              className="flex-grow text-center mb-2"
+                              style={{ fontWeight: 600 }}
+                            >
+                              {item.parentName}
+                            </span>
+
+                            <AccordionIcon />
+                          </AccordionButton>
+                          <AccordionPanel pb={4}>
+                            <ul className="gap-2 grid">
+                              {item.child.map((itemChild, index) => (
+                                <li key={index}>{itemChild.childName}</li>
+                              ))}
+                            </ul>
+                          </AccordionPanel>
+                        </AccordionItem>
+                      ) : (
+                        <div key={index}>
+                          <Button
+                            className="bg-white"
+                            style={{ fontWeight: 600 }}
+                          >
+                            {item.parentName}
+                          </Button>
+                        </div>
+                      );
+                    })}
                   </Accordion>
-                  <Button className=" absolute bottom-5 left-0 right-0 m-auto text-center">
-                    LOGIN
-                  </Button>
+
+                  <div className="flex items-center justify-center">
+                    <Button className=" relative bottom-[-20px] left-0 right-0 m-auto text-center mt-5 w-full mb-20">
+                      LOGIN
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 // Icon-only when closed
@@ -135,7 +96,7 @@ export default function CMSlayout({ children }) {
 
           {/* Main Content */}
           <div className="w-full px-5 pr-5 max-w-[90%]">
-            <div className="rounded-xl shadow-md shadow-white w-full p-5 text-black">
+            <div className="rounded-xl shadow-md shadow-black w-full p-5 text-black">
               {children}
             </div>
           </div>
