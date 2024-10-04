@@ -19,30 +19,47 @@ import {
   AlertDialogFooter,
   Link,
 } from "@chakra-ui/react";
-import { DeleteIcon, EditIcon, InfoOutlineIcon } from "@chakra-ui/icons"; // Icons from Chakra
+import { DeleteIcon, EditIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 import { useRef, useEffect, useState } from "react";
 import api from "@/utils/axiosInstance";
+import IStoolbar from "../components/utils/IStoolbar";
+import {
+  convertToIndonesianDate,
+  convertToIndonesianDateMonthAndYear,
+} from "@/utils/formmattedValue";
 
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure(); // Chakra Disclosure for AlertDialog
   const [homePageDatas, setHomePageDatas] = useState({
     journeyDatas: [],
+    deletedItemId: "",
   });
   const cancelRef = useRef(); // Ref for AlertDialog cancellation
+
+  const changeDeletedId = (id) => {
+    setHomePageDatas((item) => {
+      return { ...item, deletedItemId: id };
+    });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [res, tes, ues, ies, wry] = await Promise.all([
+        const [res] = await Promise.all([
           api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey`),
-          // api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq`),
-          // api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills`),
         ]);
 
         if (res.data.statusCode === 200) {
           setHomePageDatas((item) => ({
             ...item,
-            journeyDatas: res.data.result,
+            journeyDatas: res.data.result.map((itemChild) => {
+              return {
+                ...itemChild,
+                createdAt: convertToIndonesianDate(itemChild.createdAt),
+                updatedAt: convertToIndonesianDate(itemChild.updatedAt),
+                year: convertToIndonesianDateMonthAndYear(itemChild.year),
+              };
+            }),
           }));
         }
       } catch (error) {
@@ -53,26 +70,41 @@ export default function Page() {
     fetchData();
   }, []);
 
-  // Delete Confirmation Popup
-  const handleDelete = () => {
-    // Add logic to handle delete action
-    console.log("Item deleted!");
-    onClose();
+  const handleDelete = async () => {
+    try {
+      const res = await api.delete(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey`,
+        {
+          data: { id: homePageDatas.deletedItemId }, // Adjusted to send as data in DELETE request
+        }
+      );
+
+      if (res.data.statusCode === 200) {
+        alert("Success");
+        // Optionally refetch or update the list after deletion
+        setHomePageDatas((prev) => ({
+          ...prev,
+          journeyDatas: prev.journeyDatas.filter(
+            (item) => item._id !== homePageDatas.deletedItemId
+          ),
+          deletedItemId: "", // Clear the deletedItemId
+        }));
+      }
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    } finally {
+      onClose(); // Close the dialog after the delete operation
+    }
   };
 
   return (
     <div>
-      <div className="w-full bg-white h-16 flex items-center align-middle px-2 text-2xl  mb-5 justify-between font-bold">
-        <h1>Home Manager</h1>
-        <Button colorScheme="green" size="md">
-          Create
-        </Button>
-      </div>
+      <IStoolbar title="Home Manager" add="/cms/create" />
       <div className="rounded-lg bg-white p-5">
         <TableContainer className="overflow-x-auto">
-          <Table>
+          <Table variant="striped" colorScheme="gray" border={1}>
             {homePageDatas.journeyDatas.length > 0 && (
-              <Thead className="bg-gray-400">
+              <Thead className="bg-gray-400 h-[60px]">
                 <Tr>
                   <Th>NO.</Th>
                   {Object.keys(homePageDatas.journeyDatas[0]).map(
@@ -80,20 +112,19 @@ export default function Page() {
                       <Th key={index}>{key}</Th>
                     )
                   )}
-                  <Th>Action</Th> {/* Action column */}
+                  <Th>Action</Th>
                 </Tr>
               </Thead>
             )}
             <Tbody>
               {homePageDatas.journeyDatas.map((item, index) => (
                 <Tr key={index}>
-                  <Td>{index + 1}</Td> {/* Row numbering */}
+                  <Td>{index + 1}</Td>
                   {Object.keys(item).map((key) => (
                     <Td key={key}>{item[key]}</Td>
                   ))}
                   <Td>
                     <HStack spacing="4">
-                      {/* Detail Button with Icon */}
                       <Link href={`cms/detail/${item._id}`}>
                         <IconButton
                           icon={<InfoOutlineIcon />}
@@ -102,8 +133,6 @@ export default function Page() {
                           aria-label="Detail"
                         />
                       </Link>
-
-                      {/* Update Button with Icon */}
                       <Link href={`cms/update/${item._id}`}>
                         <IconButton
                           icon={<EditIcon />}
@@ -112,17 +141,15 @@ export default function Page() {
                           aria-label="Update"
                         />
                       </Link>
-
-                      {/* Delete Button with Icon and Confirmation Dialog */}
                       <IconButton
                         icon={<DeleteIcon />}
                         colorScheme="red"
                         size="sm"
                         aria-label="Delete"
                         onClick={() => {
-                          console.log(item);
-                          onOpen();
-                        }} // Open the confirmation dialog
+                          changeDeletedId(item._id); // Set deletedItemId
+                          onOpen(); // Open the confirmation dialog
+                        }}
                       />
                     </HStack>
                   </Td>
@@ -144,12 +171,10 @@ export default function Page() {
             <AlertDialogHeader fontSize="lg" fontWeight="bold" color="black">
               Delete Item
             </AlertDialogHeader>
-
             <AlertDialogBody color="black">
               Are you sure you want to delete this item? This action cannot be
               undone.
             </AlertDialogBody>
-
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel

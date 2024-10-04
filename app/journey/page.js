@@ -32,8 +32,7 @@ export default function Page() {
                 // cardTitle: item.title_1,
                 url: item.image,
                 cardSubtitle: item.description_1,
-                cardDetailedText:
-                  "Deserunt amet nulla nisi cillum aliquip exercitation nisi mollit. Sit reprehenderit aliqua consequat ad deserunt nulla proident adipisicing irure eu consectetur. Pariatur Lorem laborum et proident eiusmod adipisicing elit ex officia. Tempor incididunt ut cillum aliquip pariatur aliquip non sunt irure cupidatat.",
+                cardDetailedText: `${"<p>test</P>"}`,
                 media: {
                   type: "IMAGE",
                   source: {
@@ -75,7 +74,15 @@ export default function Page() {
           cardHeight={300}
           scrollable
           disableToolbar
-        />
+        >
+          {homePageDatas.journeyDatas.map((item, index) => {
+            return (
+              <>
+                <p key={index}>test</p>
+              </>
+            );
+          })}
+        </Chrono>
       )}
     </div>
   );

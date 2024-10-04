@@ -232,6 +232,7 @@ export default function Home() {
     setLatestProjectQuery((item) => ({
       ...item,
       category: category, // Use the passed category directly instead of selectedFilter
+      page: 1,
     }));
   };
 
@@ -421,13 +422,16 @@ export default function Home() {
             <AnimatePresence>
               {homePageDatas.latestProject?.items?.map((item, index) => (
                 <div key={index}>
-                  <Skeleton isLoaded={homePageDatas.skeletons.latestProject}>
+                  <Skeleton
+                    isLoaded={homePageDatas.skeletons.latestProject}
+                    className="rounded-xl"
+                  >
                     <LatestProjectCards item={item} description title />
                   </Skeleton>
-                  <SkeletonText
+                  {/* <SkeletonText
                     noOfLines={4}
                     isLoaded={homePageDatas.skeletons.latestProject}
-                  />
+                  /> */}
                 </div>
               ))}
             </AnimatePresence>

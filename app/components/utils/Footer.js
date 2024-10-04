@@ -31,7 +31,7 @@ export default function Footer() {
 
   return (
     <div className="mt-10">
-      <div className="w-full bg-[#131b2e] p-2 md:px-10 md:py-2 gap-5 rounded-3xl border-[10px] border-[#111a2d] flex flex-col-reverse md:flex-row justify-between">
+      <div className="w-full bg-[#131b2e] p-2 md:px-10 md:py-5 gap-5 rounded-3xl border-[10px] border-[#111a2d] flex flex-col-reverse md:flex-row justify-between ">
         <div className=" align-middle flex items-center self-center relative top-[-10px]">
           <div>
             <div className="flex gap-x-1 items-center align-middle relative left-[-20px]">
@@ -55,7 +55,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="gap-x-1 md:relative md:left-[40px]  border border-white p-2 rounded-lg shadow-black shadow-md  md:max-w-full md:min-w-[400px]">
+        <div className="gap-x-1 md:relative md:left-[40px]  border border-white p-2 md:p-5 rounded-lg shadow-black shadow-md  md:max-w-full md:min-w-[450px]">
           <div className="flex justify-between">
             <div className="text-lg font-bold p-2 text-white">Lets connect</div>
             <ButtonFilled title="SEND" />
