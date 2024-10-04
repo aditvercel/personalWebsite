@@ -18,8 +18,16 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
   Link,
+  Input,
+  InputGroup,
+  InputLeftElement,
 } from "@chakra-ui/react";
-import { DeleteIcon, EditIcon, InfoOutlineIcon } from "@chakra-ui/icons";
+import {
+  DeleteIcon,
+  EditIcon,
+  InfoOutlineIcon,
+  SearchIcon,
+} from "@chakra-ui/icons";
 import { useRef, useEffect, useState } from "react";
 import api from "@/utils/axiosInstance";
 import IStoolbar from "../components/utils/IStoolbar";
@@ -27,14 +35,21 @@ import {
   convertToIndonesianDate,
   convertToIndonesianDateMonthAndYear,
 } from "@/utils/formmattedValue";
+import { Pagination } from "@mui/material";
+import Image from "next/image";
 
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure(); // Chakra Disclosure for AlertDialog
   const [homePageDatas, setHomePageDatas] = useState({
     journeyDatas: [],
     deletedItemId: "",
+    totalPage: 1,
   });
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [currentPage, setCurrentPage] = useState(1); // State for current page
+
   const cancelRef = useRef(); // Ref for AlertDialog cancellation
+  const searchTimeoutRef = useRef(null); // Ref to store the timeout ID
 
   const changeDeletedId = (id) => {
     setHomePageDatas((item) => {
@@ -42,32 +57,33 @@ export default function Page() {
     });
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [res] = await Promise.all([
-          api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey`),
-        ]);
+  const fetchData = async (page = 1, query = "") => {
+    try {
+      const res = await api.get(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/all-list?page=${page}&search=${query}`
+      );
 
-        if (res.data.statusCode === 200) {
-          setHomePageDatas((item) => ({
-            ...item,
-            journeyDatas: res.data.result.map((itemChild) => {
-              return {
-                ...itemChild,
-                createdAt: convertToIndonesianDate(itemChild.createdAt),
-                updatedAt: convertToIndonesianDate(itemChild.updatedAt),
-                year: convertToIndonesianDateMonthAndYear(itemChild.year),
-              };
-            }),
-          }));
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      if (res.data.statusCode === 200) {
+        setHomePageDatas((item) => ({
+          ...item,
+          totalPage: res.data.result.totalPages,
+          journeyDatas: res.data.result.items.map((itemChild) => {
+            return {
+              ...itemChild,
+              createdAt: convertToIndonesianDate(itemChild.createdAt),
+              updatedAt: convertToIndonesianDate(itemChild.updatedAt),
+              year: convertToIndonesianDateMonthAndYear(itemChild.year),
+            };
+          }),
+        }));
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-    fetchData();
+  useEffect(() => {
+    fetchData(currentPage, searchQuery); // Fetch data on mount and when search or page changes
   }, []);
 
   const handleDelete = async () => {
@@ -75,13 +91,12 @@ export default function Page() {
       const res = await api.delete(
         `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey`,
         {
-          data: { id: homePageDatas.deletedItemId }, // Adjusted to send as data in DELETE request
+          data: { id: homePageDatas.deletedItemId },
         }
       );
 
       if (res.data.statusCode === 200) {
         alert("Success");
-        // Optionally refetch or update the list after deletion
         setHomePageDatas((prev) => ({
           ...prev,
           journeyDatas: prev.journeyDatas.filter(
@@ -97,10 +112,47 @@ export default function Page() {
     }
   };
 
+  const handleSearchChange = (event) => {
+    const value = event.target.value;
+    setSearchQuery(value); // Update search term
+    setCurrentPage(1); // Reset to page 1 when searching
+
+    // Clear the previous timeout to avoid multiple API calls
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Set a new timeout to wait for 1 second before triggering the API call
+    searchTimeoutRef.current = setTimeout(() => {
+      // Trigger the fetchData function with the current page and query
+      fetchData(currentPage, value);
+    }, 800); // 1 second delay
+  };
+
+  // Handler for pagination change
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value); // Update page
+    fetchData(value, searchQuery); // Fetch data with the updated page and current search query
+  };
+
   return (
     <div>
       <IStoolbar title="Home Manager" add="/cms/create" />
       <div className="rounded-lg bg-white p-5">
+        <div className="my-5">
+          <InputGroup>
+            <InputLeftElement pointerEvents="none">
+              <SearchIcon color="gray.300" />
+            </InputLeftElement>
+            <Input
+              variant="filled"
+              placeholder="Search..."
+              className="border border-black"
+              value={searchQuery} // Controlled input for search
+              onChange={handleSearchChange} // Update search term on change
+            />
+          </InputGroup>
+        </div>
         <TableContainer className="overflow-x-auto">
           <Table variant="striped" colorScheme="gray" border={1}>
             {homePageDatas.journeyDatas.length > 0 && (
@@ -120,9 +172,20 @@ export default function Page() {
               {homePageDatas.journeyDatas.map((item, index) => (
                 <Tr key={index}>
                   <Td>{index + 1}</Td>
+
                   {Object.keys(item).map((key) => (
-                    <Td key={key}>{item[key]}</Td>
+                    <Td key={key}>
+                      {key === "image" ? (
+                        <div
+                          className="bg-gray-500 shadow-sm shadow-black rounded-lg h-[70px] w-[100px] bg-cover bg-center"
+                          style={{ backgroundImage: `url(${item[key]})` }}
+                        ></div>
+                      ) : (
+                        item[key] // Remove the extra braces here
+                      )}
+                    </Td>
                   ))}
+                  {/* actions button */}
                   <Td>
                     <HStack spacing="4">
                       <Link href={`cms/detail/${item._id}`}>
@@ -158,6 +221,17 @@ export default function Page() {
             </Tbody>
           </Table>
         </TableContainer>
+        <div className="flex items-center justify-center align-middle mt-10">
+          <Pagination
+            count={homePageDatas.totalPage}
+            page={currentPage} // Controlled pagination
+            onChange={handlePageChange} // Update page on change
+            color="primary"
+            size="large"
+            shape="rounded"
+            className="bg-gray-400 rounded-lg"
+          />
+        </div>
       </div>
 
       {/* AlertDialog for Delete Confirmation */}
