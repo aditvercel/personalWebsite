@@ -101,7 +101,7 @@ export default function ImagesInput(props) {
             <div>{fileName}</div>
           </div>
         </button>
-        <div className="flex justify-end border-2 border-black p-2 bg-gray-500 rounded-lg">
+        <div className="flex justify-end border-2 border-black p-2 bg-gray-500 rounded-lg text-white">
           <button onClick={handleBrowseClick}>Browse</button>
         </div>
         {/* Hidden file input */}

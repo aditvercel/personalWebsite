@@ -30,27 +30,27 @@ body {
 ::-webkit-scrollbar-track {
   background: grey !important; /* Track color */
 }
+/* 
 .jodit-icon {
   fill: white !important;
-}
-.jodit-toolbar__box:not(:empty):not(:empty) {
+} */
+/* .jodit-toolbar__box:not(:empty):not(:empty) {
   background-color: #131b2e !important;
-}
-.jodit-toolbar-button__trigger svg {
+} */
+/* .jodit-toolbar-button__trigger .svg {
   fill: white; /* For SVG elements with fill property */
-  color: white; /* For SVG elements styled with color property */
-}
+
 a.jodit-status-bar-link {
   display: none;
 }
 
-.jodit-popup__content {
+/* .jodit-popup__content {
   background-color: rgb(37, 37, 37) !important;
   border-radius: 10px;
 }
 .jodit-toolbar-button__text {
   color: white !important;
-}
+} */
 
 ::-webkit-scrollbar-thumb {
   background-color: #131b2e !important;
