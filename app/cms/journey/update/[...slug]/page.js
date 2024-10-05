@@ -11,6 +11,16 @@ import JoditInput from "@/app/components/input/JoditInput";
 import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
 const UpdatePage = () => {
+  const [isDisabled, setISdisabled] = useState({
+    save: false,
+    edit: false,
+    add: false,
+  });
+  const changeIsdisabled = (name, value) => {
+    setISdisabled((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
   const params = useParams();
   const { slug } = params; // Access slug directly from params
   const router = useRouter(); // Router for navigation
@@ -50,6 +60,7 @@ const UpdatePage = () => {
   }, []);
 
   const handleSave = async () => {
+    changeIsdisabled("save", true);
     let body = {
       id: slug,
       description_1: detail.description_1,
@@ -71,11 +82,12 @@ const UpdatePage = () => {
 
     try {
       let res = await api.put(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey`,
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/update`,
         body
       );
       if (res && res.data.statusCode === 200) {
         // Close the loading toast and show success toast
+        changeIsdisabled("save", false);
         toast.update(toastId, {
           title: "Update Successful",
           description: "Your data has been updated successfully.",
@@ -88,6 +100,7 @@ const UpdatePage = () => {
         });
       } else {
         // Show error toast
+        changeIsdisabled("save", false);
         toast.update(toastId, {
           title: "Update Failed",
           description: "Something went wrong during the update.",
@@ -110,7 +123,12 @@ const UpdatePage = () => {
 
   return (
     <div className="relative">
-      <IStoolbar save={handleSave} back title="Update Home manager" />
+      <IStoolbar
+        save={handleSave}
+        back
+        title="Update Journey"
+        disabled={isDisabled.save}
+      />
       <div className="bg-gray-100 py-10 px-20 relative">
         <div className="w-full grid grid-cols-2 gap-x-[80px] gap-y-[10px]">
           <ISinput

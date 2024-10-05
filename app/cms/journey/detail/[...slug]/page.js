@@ -42,9 +42,9 @@ const DetailPage = () => {
   return (
     <div className=" relative">
       <IStoolbar
-        edit={`/cms/update/${slug}`}
+        edit={`/cms/journey/update/${slug}`}
         back
-        title="Detail Home manager"
+        title="Detail Journey"
       />
       <div className="bg-gray-100 py-10 px-20 relative">
         {/* <h1 className=" text-black">Edit Page for Item: {slug}</h1> */}

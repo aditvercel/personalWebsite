@@ -31,7 +31,7 @@ import {
 } from "@chakra-ui/icons";
 import { useRef, useEffect, useState } from "react";
 import api from "@/utils/axiosInstance";
-import IStoolbar from "../components/utils/IStoolbar";
+import IStoolbar from "@/app/components/utils/IStoolbar";
 import {
   convertToIndonesianDate,
   convertToIndonesianDateMonthAndYear,
@@ -100,7 +100,7 @@ export default function Page() {
     setLoadingDelete(true); // Set loading to true during deletion process
     try {
       const res = await api.delete(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey`,
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/delete`,
         {
           data: { id: homePageDatas.deletedItemId },
         }
@@ -162,7 +162,7 @@ export default function Page() {
 
   return (
     <div>
-      <IStoolbar title="Home Manager" add="/cms/create" />
+      <IStoolbar title="Journey Manager" add="/cms/journey/create" />
       <div className="rounded-lg bg-white p-5">
         <div className="my-5">
           <InputGroup>
@@ -217,7 +217,7 @@ export default function Page() {
                   {/* actions button */}
                   <Td>
                     <HStack spacing="4">
-                      <Link href={`cms/detail/${item._id}`}>
+                      <Link href={`/cms/journey/detail/${item._id}`}>
                         <IconButton
                           icon={<InfoOutlineIcon />}
                           colorScheme="blue"
@@ -225,7 +225,7 @@ export default function Page() {
                           aria-label="Detail"
                         />
                       </Link>
-                      <Link href={`cms/update/${item._id}`}>
+                      <Link href={`/cms/journey/update/${item._id}`}>
                         <IconButton
                           icon={<EditIcon />}
                           colorScheme="yellow"

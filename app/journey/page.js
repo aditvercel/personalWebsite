@@ -19,28 +19,31 @@ export default function Page() {
         if (res.data.statusCode === 200) {
           setHomePageDatas((prev) => ({
             ...prev,
-            journeyDatas: res.data.result.map((item) => {
-              const date = new Date(item.year);
-              const formattedDate = date.toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              });
+            journeyDatas: res.data.result
+              .map((item) => {
+                const date = new Date(item.year);
+                const formattedDate = date.toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                });
 
-              return {
-                title: formattedDate,
-                textTitle: item.title_1,
-                url: item.image,
-                cardSubtitle: item.description_1,
-                // cardDetailedText: item.description_2,
-                media: {
-                  type: "IMAGE",
-                  source: {
-                    url: item.image,
+                return {
+                  title: formattedDate,
+                  textTitle: item.title_1,
+                  url: item.image,
+                  cardSubtitle: item.description_1,
+                  // cardDetailedText: item.description_2,
+                  media: {
+                    type: "IMAGE",
+                    source: {
+                      url: item.image,
+                    },
                   },
-                },
-              };
-            }),
+                  year: date.getFullYear(), // Add year property for sorting
+                };
+              })
+              .sort((a, b) => b.year - a.year), // Sort by year from recent to oldest
           }));
         }
       } catch (error) {

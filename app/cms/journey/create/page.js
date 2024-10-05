@@ -10,6 +10,17 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
 const CreatePage = () => {
+  const [isDisabled, setISdisabled] = useState({
+    save: false,
+    edit: false,
+    add: false,
+  });
+
+  const changeIsdisabled = (name, value) => {
+    setISdisabled((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
   const [detail, setDetail] = useState({
     createdAt: "",
     description_1: "",
@@ -30,6 +41,7 @@ const CreatePage = () => {
   };
 
   const handleSubmit = async () => {
+    changeIsdisabled("save", true);
     let body = {
       description_1: detail.description_1,
       description_2: detail.description_2,
@@ -50,11 +62,12 @@ const CreatePage = () => {
 
     try {
       let res = await api.post(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey`,
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/create`,
         body
       );
       if (res && res.data.statusCode === 200) {
         // Close the loading toast and show success toast
+        changeIsdisabled("save", false);
         toast.update(toastId, {
           title: "Creation Successful",
           description: "Your journey has been created successfully.",
@@ -77,6 +90,7 @@ const CreatePage = () => {
       }
     } catch (error) {
       // Show error toast
+      changeIsdisabled("save", false);
       toast.update(toastId, {
         title: "Error",
         description: "An error occurred while creating the journey.",
@@ -92,7 +106,8 @@ const CreatePage = () => {
       <IStoolbar
         save={handleSubmit} // Attach save action to the handleSubmit function
         back
-        title="Create Home manager"
+        title="Create Journey"
+        disabled={isDisabled.save}
       />
       <div className="bg-gray-100 py-10 px-20 relative">
         <div className="w-full grid grid-cols-2 gap-x-[80px] gap-y-[10px]">

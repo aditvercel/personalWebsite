@@ -95,8 +95,8 @@ export default function CMSlayout({ children }) {
           </div>
 
           {/* Main Content */}
-          <div className="w-full px-5 pr-5 max-w-[90%]">
-            <div className="rounded-xl shadow-md shadow-black w-full p-5 text-black">
+          <div className="w-full px-5 pr-5 max-w-[90%] overflow-hidden">
+            <div className="rounded-xl shadow-md shadow-black w-full p-5 text-black ">
               {children}
             </div>
           </div>
