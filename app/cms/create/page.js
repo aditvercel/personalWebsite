@@ -2,73 +2,155 @@
 
 import ImagesInput from "@/app/components/input/ImagesInput";
 import ISinput from "@/app/components/input/ISinput";
-import JoditInput from "@/app/components/input/JoditInput";
 import IStoolbar from "@/app/components/utils/IStoolbar";
-
-// import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import api from "@/utils/axiosInstance";
+import JoditInput from "@/app/components/input/JoditInput";
+import { useRouter } from "next/navigation";
+import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
 const CreatePage = () => {
-  //   const params = useParams();
-  //   const { slug } = params; // Access slug directly from params
+  const [detail, setDetail] = useState({
+    createdAt: "",
+    description_1: "",
+    description_2: "",
+    image: "",
+    title_1: "",
+    updatedAt: "",
+    year: "",
+    imageName: "",
+  });
+
+  const router = useRouter(); // For navigation
+  const toast = useToast(); // Chakra UI toast hook
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setDetail((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async () => {
+    let body = {
+      description_1: detail.description_1,
+      description_2: detail.description_2,
+      image: detail.image,
+      imageName: detail.imageName,
+      title_1: detail.title_1,
+      year: detail.year,
+    };
+
+    // Show loading toast
+    const toastId = toast({
+      title: "Creating...",
+      description: "Your journey is being created.",
+      status: "loading",
+      duration: null, // Keep loading until action finishes
+      isClosable: false,
+    });
+
+    try {
+      let res = await api.post(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey`,
+        body
+      );
+      if (res && res.data.statusCode === 200) {
+        // Close the loading toast and show success toast
+        toast.update(toastId, {
+          title: "Creation Successful",
+          description: "Your journey has been created successfully.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          onCloseComplete: () => {
+            router.back(); // Navigate back only when the toast is closed
+          },
+        });
+      } else {
+        // Show error toast
+        toast.update(toastId, {
+          title: "Creation Failed",
+          description: "Something went wrong during creation.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      // Show error toast
+      toast.update(toastId, {
+        title: "Error",
+        description: "An error occurred while creating the journey.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
 
   return (
-    <div className=" relative">
-      <IStoolbar add title="Create Home manager" back="/cms" />
+    <div className="relative">
+      <IStoolbar
+        save={handleSubmit} // Attach save action to the handleSubmit function
+        back
+        title="Create Home manager"
+      />
       <div className="bg-gray-100 py-10 px-20 relative">
-        <div className=" w-full grid grid-cols-2 gap-x-[80px] gap-y-[10px]">
+        <div className="w-full grid grid-cols-2 gap-x-[80px] gap-y-[10px]">
           <ISinput
-            // onChange={handleInputChange}
+            onChange={handleInputChange}
             type="text"
-            name="fullName"
+            name="title_1"
             placeholder="Write your full name"
-            noNumber
-            noSymbol
-            noSyntax
+            value={detail.title_1}
             required
             label="Title"
           />
           <ISinput
-            // onChange={handleInputChange}
+            onChange={handleInputChange}
             type="date"
-            name="fullName"
+            name="year"
             placeholder="Write your full name"
-            noNumber
-            noSymbol
-            noSyntax
             required
             label="Date"
+            value={detail.year}
           />
           <JoditInput
-            // value={content}
             tabIndex={3} // tabIndex of textarea
-            name="email"
+            name="description_1"
             label="Description 1"
             required
-            readonly
-            // onBlur={(newContent) => {
-            //   setLetsConnectForm((item) => {
-            //     return { ...item, messages: newContent };
-            //   });
-            // }}
+            value={detail.description_1}
+            onBlur={(newContent) => {
+              setDetail((item) => {
+                return { ...item, description_1: newContent };
+              });
+            }}
           />
           <JoditInput
-            // value={content}
-            tabIndex={3} // tabIndex of textarea
-            name="email"
+            tabIndex={3}
+            name="description_2"
             label="Description 2"
             required
-            // onBlur={(newContent) => {
-            //   setLetsConnectForm((item) => {
-            //     return { ...item, messages: newContent };
-            //   });
-            // }}
+            value={detail.description_2}
+            onBlur={(newContent) => {
+              setDetail((item) => {
+                return { ...item, description_2: newContent };
+              });
+            }}
           />
         </div>
         <ImagesInput
-          // onChange={handleInputChange}
+          onChange={(fileName, base64) => {
+            setDetail((prev) => ({
+              ...prev,
+              image: base64,
+              imageName: fileName,
+            }));
+          }}
           type="image"
-          name="fullName"
+          name="image"
           label="Image"
+          value={detail}
         />
       </div>
     </div>

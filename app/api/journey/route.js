@@ -2,6 +2,12 @@ import { connectToDB } from "@/utils/ConnectDB";
 import journey from "@/model/journey";
 import { NextResponse } from "next/server";
 import { encrypt, decrypt } from "@/utils/axiosInstance";
+import { v2 as cloudinary } from "cloudinary";
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // GET request handler
 export async function GET(request) {
@@ -59,28 +65,30 @@ export async function GET(request) {
 
 // POST request handler
 export async function POST(request) {
-  console.log(request);
   await connectToDB();
   try {
-    // Extract the encrypted data from the request body
-    const { encryptedData } = await request.json(); // Assuming encryptedData is in the body
-
-    // Decrypt the data
-    const decryptedString = decrypt(encryptedData); // decryptedString will be a JSON string
-
-    // Parse the decrypted string into an object
+    const { encryptedData } = await request.json();
+    const decryptedString = decrypt(encryptedData);
     const data = JSON.parse(decryptedString);
 
+    // Upload image to Cloudinary
+    if (data.image) {
+      const uploadResponse = await cloudinary.uploader.upload(data.image, {
+        upload_preset: "ml_default", // Use your upload preset
+      });
+      data.image = uploadResponse.secure_url; // Set the image to the returned URL
+    }
+
     // Create new item with decrypted data
+    console.log(data, "datanya");
     const newItem = await journey.create(data);
 
-    // Encrypt the response
     return NextResponse.json(
       {
         status: "success",
         statusCode: 200,
         message: "Item created successfully",
-        result: encrypt(newItem), // Encrypting new item
+        result: encrypt(newItem),
       },
       { status: 200 }
     );
@@ -101,22 +109,13 @@ export async function POST(request) {
 export async function PUT(request) {
   await connectToDB();
   try {
-    // Extract the encrypted data from the request body
-    const { encryptedData } = await request.json(); // Assuming encryptedData is in the body
-
-    // Decrypt the data
-    const decryptedString = decrypt(encryptedData); // decryptedString will be a JSON string
-
-    // Parse the decrypted string into an object
+    const { encryptedData } = await request.json();
+    const decryptedString = decrypt(encryptedData);
     const { id, ...updateData } = JSON.parse(decryptedString);
 
-    // Find and update the item
-    const updatedItem = await journey.findByIdAndUpdate(id, updateData, {
-      new: true,
-      runValidators: true,
-    });
-
-    if (!updatedItem) {
+    // Find the existing item
+    const existingItem = await journey.findById(id);
+    if (!existingItem) {
       return NextResponse.json(
         {
           status: "error",
@@ -127,12 +126,36 @@ export async function PUT(request) {
       );
     }
 
+    // Upload new image to Cloudinary if it exists and delete the old image
+    if (updateData.image) {
+      if (existingItem.image) {
+        // Extract public_id from the old image URL and delete it
+        const publicId = existingItem.image.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(publicId);
+      }
+
+      // Upload the new image
+      const uploadResponse = await cloudinary.uploader.upload(
+        updateData.image,
+        {
+          upload_preset: "ml_default",
+        }
+      );
+      updateData.image = uploadResponse.secure_url; // Set the image to the returned URL
+    }
+
+    // Update the item with the new data
+    const updatedItem = await journey.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
     return NextResponse.json(
       {
         status: "success",
         statusCode: 200,
         message: "Item updated successfully",
-        result: encrypt(updatedItem), // Encrypting updated item
+        result: encrypt(updatedItem),
       },
       { status: 200 }
     );
@@ -154,15 +177,11 @@ export async function DELETE(request) {
   await connectToDB();
   try {
     // Extract the encrypted data from the request body
-    const { encryptedData } = await request.json(); // Assuming encryptedData is in the body
-
-    // Decrypt the data
-    const decryptedString = decrypt(encryptedData); // decryptedString will be a JSON string
-
-    // Parse the decrypted string into an object
+    const { encryptedData } = await request.json();
+    const decryptedString = decrypt(encryptedData);
     const { id } = JSON.parse(decryptedString);
 
-    // Find and delete the item
+    // Find the item to delete
     const deletedItem = await journey.findByIdAndDelete(id);
 
     if (!deletedItem) {
@@ -176,12 +195,18 @@ export async function DELETE(request) {
       );
     }
 
+    // Delete the image from Cloudinary if it exists
+    if (deletedItem.image) {
+      const publicId = deletedItem.image.split("/").pop().split(".")[0];
+      await cloudinary.uploader.destroy(publicId);
+    }
+
     return NextResponse.json(
       {
         status: "success",
         statusCode: 200,
         message: "Item deleted successfully",
-        result: encrypt(deletedItem), // Encrypting deleted item
+        result: encrypt(deletedItem),
       },
       { status: 200 }
     );

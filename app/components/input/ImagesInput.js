@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
+import { ImageOutlined } from "@mui/icons-material";
 
 export default function ImagesInput(props) {
-  const [fileName, setFileName] = useState("Upload a picture...");
+  const [fileName, setFileName] = useState("");
   const [imagePreview, setImagePreview] = useState(null); // Store the image preview URL
   const [showModal, setShowModal] = useState(false); // Control the visibility of the modal
   const [zoom, setZoom] = useState(1); // Store zoom level
@@ -25,12 +26,17 @@ export default function ImagesInput(props) {
       // Create an image preview URL
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result); // Store the preview image in the state
+        const base64 = reader.result; // Store the Base64 string
+        setImagePreview(base64); // Update the image preview state
+
+        // Send the file name and Base64 string to the parent component
+        props.onChange(file.name, base64); // Call the parent function with the file name and Base64
       };
+
+      // Read the file as a data URL (Base64)
       reader.readAsDataURL(file);
     }
   };
-
   const handleZoomIn = () => setZoom((prev) => Math.min(prev + 0.2, 3)); // Maximum zoom level
   const handleZoomOut = () => setZoom((prev) => Math.max(prev - 0.2, 0.2)); // Minimum zoom level is 1 (no zoom out beyond original size)
 
@@ -70,9 +76,9 @@ export default function ImagesInput(props) {
           onClick={() => setShowModal(true)}
         >
           <div>
-            {imagePreview ? (
+            {imagePreview || props.value?.image ? (
               <img
-                src={imagePreview}
+                src={imagePreview || props.value.image}
                 alt="Uploaded"
                 style={{
                   width: "40px",
@@ -98,11 +104,15 @@ export default function ImagesInput(props) {
             )}
           </div>
           <div className="ml-2">
-            <div>{fileName}</div>
+            <div>{fileName || props.value?.imageName || ""}</div>
           </div>
         </button>
         <div className="flex justify-end border-2 border-black p-2 bg-gray-500 rounded-lg text-white">
-          <button onClick={handleBrowseClick}>Browse</button>
+          {props.disabled ? (
+            <button onClick={() => setShowModal(true)}>preview</button>
+          ) : (
+            <button onClick={handleBrowseClick}>Browse</button>
+          )}
         </div>
         {/* Hidden file input */}
         <input
@@ -115,7 +125,7 @@ export default function ImagesInput(props) {
       </div>
 
       {/* Modal for image zoom */}
-      {showModal && imagePreview && (
+      {showModal && (imagePreview || props.value?.image) && (
         <div
           ref={modalRef}
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-20"
@@ -127,7 +137,7 @@ export default function ImagesInput(props) {
           >
             <img
               ref={imgRef}
-              src={imagePreview}
+              src={imagePreview || props.value?.image}
               alt="Zoomed"
               style={{
                 transform: `scale(${zoom})`, // Apply zoom scale

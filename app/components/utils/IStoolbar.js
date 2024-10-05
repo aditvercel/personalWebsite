@@ -47,7 +47,7 @@ export default function IStoolbar(props) {
         </Button>
       )}
       {props.save && (
-        <Button colorScheme="green" size="md" onClick={() => handleGoToLink}>
+        <Button colorScheme="green" size="md" onClick={props.save}>
           Save
         </Button>
       )}

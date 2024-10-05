@@ -21,6 +21,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  useToast, // Import Toast for notifications
 } from "@chakra-ui/react";
 import {
   DeleteIcon,
@@ -45,8 +46,10 @@ export default function Page() {
     deletedItemId: "",
     totalPage: 1,
   });
+  const [loadingDelete, setLoadingDelete] = useState(false); // Loading state for delete action
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [currentPage, setCurrentPage] = useState(1); // State for current page
+  const toast = useToast(); // Toast for notifications
 
   const cancelRef = useRef(); // Ref for AlertDialog cancellation
   const searchTimeoutRef = useRef(null); // Ref to store the timeout ID
@@ -78,6 +81,13 @@ export default function Page() {
         }));
       }
     } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch data.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       console.error("Error fetching data:", error);
     }
   };
@@ -87,6 +97,7 @@ export default function Page() {
   }, []);
 
   const handleDelete = async () => {
+    setLoadingDelete(true); // Set loading to true during deletion process
     try {
       const res = await api.delete(
         `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey`,
@@ -96,7 +107,6 @@ export default function Page() {
       );
 
       if (res.data.statusCode === 200) {
-        alert("Success");
         setHomePageDatas((prev) => ({
           ...prev,
           journeyDatas: prev.journeyDatas.filter(
@@ -104,10 +114,25 @@ export default function Page() {
           ),
           deletedItemId: "", // Clear the deletedItemId
         }));
+        toast({
+          title: "Success",
+          description: "Item deleted successfully.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete the item.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       console.error("Error deleting item:", error);
     } finally {
+      setLoadingDelete(false); // Stop loading state after deletion or failure
       onClose(); // Close the dialog after the delete operation
     }
   };
@@ -180,8 +205,12 @@ export default function Page() {
                           className="bg-gray-500 shadow-sm shadow-black rounded-lg h-[70px] w-[100px] bg-cover bg-center"
                           style={{ backgroundImage: `url(${item[key]})` }}
                         ></div>
+                      ) : key === "description_1" || key === "description_2" ? (
+                        <div className="w-[300px] overflow-hidden text-ellipsis">
+                          {item[key]}
+                        </div>
                       ) : (
-                        item[key] // Remove the extra braces here
+                        item[key]
                       )}
                     </Td>
                   ))}
@@ -242,18 +271,29 @@ export default function Page() {
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold" color="black">
-              Delete Item
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Confirmation
             </AlertDialogHeader>
-            <AlertDialogBody color="black">
-              Are you sure you want to delete this item? This action cannot be
-              undone.
+
+            <AlertDialogBody>
+              Are you sure you want to delete this item? You can't undo this
+              action.
             </AlertDialogBody>
+
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
+              <Button
+                ref={cancelRef}
+                onClick={onClose}
+                isDisabled={loadingDelete}
+              >
                 Cancel
               </Button>
-              <Button colorScheme="red" onClick={handleDelete} ml={3}>
+              <Button
+                colorScheme="red"
+                onClick={handleDelete}
+                ml={3}
+                isLoading={loadingDelete} // Show loading state
+              >
                 Delete
               </Button>
             </AlertDialogFooter>

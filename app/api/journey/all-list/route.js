@@ -2,6 +2,7 @@ import { connectToDB } from "@/utils/ConnectDB";
 import journey from "@/model/journey";
 import { NextResponse } from "next/server";
 import { encrypt, decrypt } from "@/utils/axiosInstance";
+import mongoose from "mongoose";
 
 // GET request handler
 export async function GET(request) {
@@ -44,15 +45,16 @@ export async function GET(request) {
       );
     } else {
       // Build the query object
+      let isObjectId = mongoose.Types.ObjectId.isValid(search);
       const query = {
         ...(category !== null && { category }), // Filter by category only if it's valid (not null)
         ...(search && {
           $or: [
             // Search functionality
-            { title_1: { $regex: search, $options: "i" } }, // Case-insensitive search in 'title'
-            { description_1: { $regex: search, $options: "i" } }, // Case-insensitive search in 'description'
-            { description_2: { $regex: search, $options: "i" } },
-            // { year: { $regex: search, $options: "i" } },
+            { title_1: { $regex: search, $options: "i" } }, // Case-insensitive search in 'title_1'
+            { description_1: { $regex: search, $options: "i" } }, // Case-insensitive search in 'description_1'
+            { description_2: { $regex: search, $options: "i" } }, // Case-insensitive search in 'description_2'
+            ...(isObjectId ? [{ _id: search }] : []), // Only search by _id if the search string is a valid ObjectId
           ],
         }),
       };

@@ -29,10 +29,10 @@ export default function Page() {
 
               return {
                 title: formattedDate,
-                // cardTitle: item.title_1,
+                textTitle: item.title_1,
                 url: item.image,
                 cardSubtitle: item.description_1,
-                cardDetailedText: `${"<p>test</P>"}`,
+                // cardDetailedText: item.description_2,
                 media: {
                   type: "IMAGE",
                   source: {
@@ -75,13 +75,19 @@ export default function Page() {
           scrollable
           disableToolbar
         >
-          {homePageDatas.journeyDatas.map((item, index) => {
-            return (
-              <>
-                <p key={index}>test</p>
-              </>
-            );
-          })}
+          {homePageDatas.journeyDatas.map((item, index) => (
+            <div
+              key={index}
+              className=" text-black grid align-middle justify-center self-center text-center"
+            >
+              <div className=" text-center font-medium text-[16px]">
+                {item.textTitle}
+              </div>
+              <div className="mt-5">
+                <div dangerouslySetInnerHTML={{ __html: item.cardSubtitle }} />
+              </div>
+            </div>
+          ))}
         </Chrono>
       )}
     </div>

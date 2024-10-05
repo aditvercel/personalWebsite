@@ -108,8 +108,22 @@ export default function ISinput(props) {
     validationState.hasSymbol ||
     validationState.hasSyntax;
 
+  const formatDate = (dateString) => {
+    if (!dateString) return ""; // Handle empty date values
+    const date = new Date(dateString);
+    // Extract year, month, and day and format them as YYYY-MM-DD
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
   return (
-    <FormControl isInvalid={isError} isRequired={props.required}>
+    <FormControl
+      isInvalid={isError}
+      isRequired={props.required}
+      isDisabled={props.disabled}
+      readOnly={props.readOnly}
+    >
       {props.type === "textarea" && (
         <>
           <div className=" text-base font-medium mb-2">
@@ -182,9 +196,10 @@ export default function ISinput(props) {
               isInvalid={isError} // Use the combined error state
               type="date"
               name={props.name}
-              value={props.value}
+              value={props.value ? formatDate(props.value) : ""} // Format the date
               onChange={handleChange}
               onClick={handleClickDate}
+              disabled={props.disabled} // Include the disabled prop
             />
           </div>
         </>

@@ -8,6 +8,7 @@ const benefitSchema = new Schema({
 const journeySchema = new Schema(
   {
     image: { type: String, required: true },
+    imageName: { type: String, required: true },
     year: { type: Date, required: true },
     title_1: { type: String, required: true },
     description_1: { type: String, required: true },

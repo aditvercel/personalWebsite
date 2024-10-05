@@ -12,26 +12,26 @@ const SECRET_KEY = process.env.NEXT_PUBLIC_ENCRYPTION_SECRET;
 export const encrypt = (data) => {
   const text = JSON.stringify(data);
   const encrypted = CryptoJS.AES.encrypt(text, SECRET_KEY).toString();
-  console.log(
-    "SECRET_KEY:",
-    SECRET_KEY,
-    "Encrypted: ",
-    encrypted,
-    `from: ${text}`
-  );
+  // console.log(
+  //   "SECRET_KEY:",
+  //   SECRET_KEY,
+  //   "Encrypted: ",
+  //   encrypted,
+  //   `from: ${text}`
+  // );
   return encrypted;
 };
 
 export const decrypt = (cipherText) => {
   const bytes = CryptoJS.AES.decrypt(cipherText, SECRET_KEY);
   const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-  console.log(
-    "SECRET_KEY:",
-    SECRET_KEY,
-    "Decrypted: ",
-    decrypted,
-    `from: ${cipherText}`
-  );
+  // console.log(
+  //   "SECRET_KEY:",
+  //   SECRET_KEY,
+  //   "Decrypted: ",
+  //   decrypted,
+  //   `from: ${cipherText}`
+  // );
   return decrypted;
 };
 // Request interceptor to encrypt the request payload
@@ -59,7 +59,7 @@ api.interceptors.response.use(
     // Decrypt the response data if it contains encrypted data
     if (response.data && response.data.result) {
       const decryptedresult = JSON.parse(decrypt(response.data.result));
-      console.log("Decrypted result: ", decryptedresult);
+      // console.log("Decrypted result: ", decryptedresult);
 
       // Replace the encrypted result with the decrypted ones in the response
       return {
