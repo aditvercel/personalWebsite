@@ -7,49 +7,49 @@ const cmsNavbar = [
       {
         childName: "Profile Manager",
         icon: "",
-        link: "/profile",
+        link: "/cms/profile",
       },
       {
         childName: "Keys Manager",
         icon: "",
-        link: "/keys",
+        link: "/cms/keys",
       },
       {
         childName: "Skills Manager",
         icon: "",
-        link: "/skills",
+        link: "/cms/skills",
       },
       {
         childName: "Latest Project",
         icon: "",
-        link: "/latestProject",
+        link: "/cms/latestProject",
       },
       {
         childName: "Work Solution",
         icon: "",
-        link: "/workSolution",
+        link: "/cms/workSolution",
       },
       {
         childName: "FAQ",
         icon: "",
-        link: "/faq",
+        link: "/cms/faq",
       },
       {
         childName: "Testimonials",
         icon: "",
-        link: "/testimonial",
+        link: "/cms/testimonial",
       },
       {
         childName: "Footer",
         icon: "",
-        link: "/footer",
+        link: "/cms/footer",
       },
     ],
   },
   {
     parentName: "About Manager",
     icon: "",
-    link: "/",
+    link: "/cms/about",
     child: [
       //   {
       //     childName: "",
@@ -61,7 +61,7 @@ const cmsNavbar = [
   {
     parentName: "Journey Manager",
     icon: "",
-    link: "/",
+    link: "/cms/journey",
     child: [
       //   {
       //     childName: "",
@@ -73,7 +73,7 @@ const cmsNavbar = [
   {
     parentName: "Contact Manager",
     icon: "",
-    link: "/",
+    link: "/cms/contact",
     child: [
       //   {
       //     childName: "",
@@ -85,7 +85,7 @@ const cmsNavbar = [
   {
     parentName: "Query Manager",
     icon: "",
-    link: "/",
+    link: "/cms/query",
     child: [
       //   {
       //     childName: "",
