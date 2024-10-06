@@ -1,3 +1,4 @@
+"use client";
 import {
   FormControl,
   FormErrorMessage,
@@ -25,6 +26,7 @@ export default function ISinput(props) {
     hasNumber: false,
     hasSymbol: false,
     hasSyntax: false,
+    hasValue: false,
   });
   const handleBrowseClick = () => {
     if (fileInputRef.current) {
@@ -85,28 +87,37 @@ export default function ISinput(props) {
     const isInvalidNumber = props.noNumber && hasNumber.test(value);
     const isInvalidSymbol = props.noSymbol && hasSymbol.test(value);
     const isInvalidSyntax = props.noSyntax && hasSyntax.test(value);
+    const isValue = value;
 
-    setValidationState({
+    setValidationState((prevState) => ({
+      ...prevState,
       hasNumber: isInvalidNumber,
       hasSymbol: isInvalidSymbol,
       hasSyntax: isInvalidSyntax,
-    });
+      hasValue: isValue,
+    }));
   };
 
   const handleChange = (e) => {
     const value = e.target.value;
+    handleValidation(value); // Validate input
+
     if (props.onChange) {
       props.onChange(e); // Call parent onChange
-      handleValidation(value); // Validate input
     } else {
-      console.log("no parent onChange function");
+      console.log("No parent onChange function");
     }
   };
 
-  const isError =
-    validationState.hasNumber ||
-    validationState.hasSymbol ||
-    validationState.hasSyntax;
+  const isError = () => {
+    let check =
+      !validationState.hasValue ||
+      validationState.hasNumber ||
+      validationState.hasSymbol ||
+      validationState.hasSyntax;
+
+    return check;
+  };
 
   const formatDate = (dateString) => {
     if (!dateString) return ""; // Handle empty date values
@@ -117,9 +128,10 @@ export default function ISinput(props) {
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
+
   return (
     <FormControl
-      isInvalid={isError}
+      isInvalid={isError()}
       isRequired={props.required}
       isDisabled={props.disabled}
       readOnly={props.readOnly}
@@ -142,6 +154,12 @@ export default function ISinput(props) {
             errorBorderColor="red.300"
             isInvalid={isError}
           />
+          {!props.value && (
+            <FormErrorMessage color={"red.300"}>
+              <div className="h-3 w-3 rounded-full bg-white mr-1"></div>
+              {props.label} required
+            </FormErrorMessage>
+          )}
         </>
       )}
 
@@ -152,9 +170,9 @@ export default function ISinput(props) {
             variant="filled"
             placeholder={props.placeholder}
             size="sm"
-            className="rounded-lg text-black bg-white border border-black h-[42px]"
+            className="rounded-lg text-black bg-white  h-[42px]"
             errorBorderColor="red.300"
-            isInvalid={isError} // Use the combined error state
+            isInvalid={isError()} // Use the combined error state
             type={props.type}
             name={props.name}
             value={props.value}
@@ -179,6 +197,12 @@ export default function ISinput(props) {
                 Syntax isn&apos;t allowed
               </FormErrorMessage>
             )}
+            {!props.value && (
+              <FormErrorMessage color={"red.300"}>
+                <div className="h-3 w-3 rounded-full bg-white mr-1"></div>
+                {props.label} required
+              </FormErrorMessage>
+            )}
           </div>
         </>
       )}
@@ -191,16 +215,29 @@ export default function ISinput(props) {
               ref={inputRef}
               variant="filled"
               size="sm"
-              className="rounded-lg text-black bg-white border border-black cursor-pointer h-[42px]"
+              className="rounded-lg text-black bg-white  cursor-pointer h-[42px]"
               errorBorderColor="red.300"
-              isInvalid={isError} // Use the combined error state
+              isInvalid={isError()} // Use the combined error state
               type="date"
               name={props.name}
               value={props.value ? formatDate(props.value) : ""} // Format the date
-              onChange={handleChange}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (props.onChange) {
+                  props.onChange(e); // Call parent onChange with the formatted value
+                  handleValidation(value); // Validate input
+                }
+              }}
               onClick={handleClickDate}
               disabled={props.disabled} // Include the disabled prop
+              readOnly={props.readOnly}
             />
+            {!props.value && (
+              <FormErrorMessage color={"red.300"}>
+                <div className="h-3 w-3 rounded-full bg-white mr-1"></div>
+                {props.label} required
+              </FormErrorMessage>
+            )}
           </div>
         </>
       )}

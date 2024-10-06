@@ -11,7 +11,7 @@ import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
 const CreatePage = () => {
   const [isDisabled, setISdisabled] = useState({
-    save: false,
+    save: true, // Initially disabled
     edit: false,
     add: false,
   });
@@ -21,6 +21,7 @@ const CreatePage = () => {
       return { ...prev, [name]: value };
     });
   };
+
   const [detail, setDetail] = useState({
     createdAt: "",
     description_1: "",
@@ -34,6 +35,22 @@ const CreatePage = () => {
 
   const router = useRouter(); // For navigation
   const toast = useToast(); // Chakra UI toast hook
+
+  // Disable the Save button if any detail field is empty
+  useEffect(() => {
+    let body = {
+      description_1: detail.description_1,
+      description_2: detail.description_2,
+      image: detail.image,
+      imageName: detail.imageName,
+      title_1: detail.title_1,
+      year: detail.year,
+    };
+    const isFormValid = Object.values(body).every(
+      (value) => value.trim() !== ""
+    );
+    changeIsdisabled("save", !isFormValid);
+  }, [detail]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -107,7 +124,7 @@ const CreatePage = () => {
         save={handleSubmit} // Attach save action to the handleSubmit function
         back
         title="Create Journey"
-        disabled={isDisabled.save}
+        disabled={isDisabled.save} // Disable save if form is invalid
       />
       <div className="bg-gray-100 py-10 px-20 relative">
         <div className="w-full grid grid-cols-2 gap-x-[80px] gap-y-[10px]">
@@ -165,7 +182,7 @@ const CreatePage = () => {
           type="image"
           name="image"
           label="Image"
-          value={detail}
+          value={detail.image}
         />
       </div>
     </div>
