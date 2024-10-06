@@ -19,6 +19,8 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
+import ISinput from "../components/input/ISinput";
+import ImagesInput from "../components/input/ImagesInput";
 
 export default function Page() {
   const [homePageDatas, setHomePageDatas] = useState({
@@ -138,8 +140,12 @@ export default function Page() {
                 </p>
               </div>
             </div>
-            <div className="border bg-white h-[120px] w-[400px] rounded-lg relative p-2">
-              <div className="  text-end">edit</div>
+            <div className="border bg-white h-[120px] w-[400px] rounded-lg relative p-2 flex justify-between">
+              <div className="font-medium text-lg">CV</div>
+              <div className="text-blue-500 cursor-pointer" onClick={onOpen}>
+                edit
+              </div>
+
               <div className="absolute top-0 bottom-0 right-0 left-0 m-auto w-20 h-20">
                 <div
                   className="h-full w-full rounded-lg cursor-pointer"
@@ -185,32 +191,59 @@ export default function Page() {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Edit Profile</ModalHeader>
+          <ModalHeader className=" text-black bg-gray-100">
+            Edit Profile
+          </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
-            <form onSubmit={handleSubmit}>
-              <FormControl mb={4} isRequired>
-                <FormLabel>Name</FormLabel>
-                <Input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Enter your name"
-                />
-              </FormControl>
+          <ModalBody className="bg-gray-100">
+            <div className="grid gap-5">
+              <ImagesInput
+                // onChange={(fileName, base64) => {
+                //   setDetail((prev) => ({
+                //     ...prev,
+                //     image: base64,
+                //     imageName: fileName,
+                //   }));
+                // }}
+                type="image"
+                name="image"
+                label="Image"
+                // value={detail}
+              />
+              <ImagesInput
+                // onChange={(fileName, base64) => {
+                //   setDetail((prev) => ({
+                //     ...prev,
+                //     image: base64,
+                //     imageName: fileName,
+                //   }));
+                // }}
+                type="file"
+                name="cv"
+                label="CV"
+                // value={detail}
+              />
+              <ISinput
+                // onChange={handleInputChange}
+                type="text"
+                name="title_1"
+                placeholder="Write your full name"
+                // value={detail.title_1}
+                required
+                label="Name"
+              />
 
-              <FormControl mb={4} isRequired>
-                <FormLabel>Description</FormLabel>
-                <Textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  placeholder="Enter a description"
-                />
-              </FormControl>
+              <ISinput
+                // onChange={handleInputChange}
+                type="textarea"
+                name="title_1"
+                placeholder="Write your full name"
+                // value={detail.title_1}
+                required
+                label="Description"
+              />
 
-              <FormControl mb={4}>
+              {/* <FormControl mb={4}>
                 <FormLabel>Upload PDF</FormLabel>
                 <Input
                   type="file"
@@ -218,7 +251,7 @@ export default function Page() {
                   accept=".pdf"
                   onChange={handleChange}
                 />
-              </FormControl>
+              </FormControl> */}
 
               <ModalFooter>
                 <Button colorScheme="blue" mr={3} type="submit">
@@ -228,7 +261,7 @@ export default function Page() {
                   Cancel
                 </Button>
               </ModalFooter>
-            </form>
+            </div>
           </ModalBody>
         </ModalContent>
       </Modal>

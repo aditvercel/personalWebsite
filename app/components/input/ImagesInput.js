@@ -1,9 +1,9 @@
 import React, { useState, useRef } from "react";
-import { ImageOutlined } from "@mui/icons-material";
+import { ImageOutlined, Description } from "@mui/icons-material";
 
-export default function ImagesInput(props) {
+export default function FileInput(props) {
   const [fileName, setFileName] = useState("");
-  const [imagePreview, setImagePreview] = useState(null); // Store the image preview URL
+  const [filePreview, setFilePreview] = useState(null); // Store the image preview URL
   const [showModal, setShowModal] = useState(false); // Control the visibility of the modal
   const [zoom, setZoom] = useState(1); // Store zoom level
   const [dragging, setDragging] = useState(false); // Track dragging state
@@ -23,20 +23,28 @@ export default function ImagesInput(props) {
     if (file) {
       setFileName(file.name); // Set the file name as the text
 
-      // Create an image preview URL
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64 = reader.result; // Store the Base64 string
-        setImagePreview(base64); // Update the image preview state
-
-        // Send the file name and Base64 string to the parent component
-        props.onChange(file.name, base64); // Call the parent function with the file name and Base64
-      };
-
-      // Read the file as a data URL (Base64)
-      reader.readAsDataURL(file);
+      // Handle image files
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64 = reader.result; // Store the Base64 string
+          setFilePreview(base64); // Update the image preview state
+          props.onChange(file.name, base64); // Call the parent function with the file name and Base64
+        };
+        reader.readAsDataURL(file); // Read the image file as a data URL
+      } else {
+        // For PDF files
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64 = reader.result; // Store the Base64 string
+          setFilePreview(base64); // Set preview state
+          props.onChange(file.name, base64); // Call the parent function with the file name and Base64
+        };
+        reader.readAsArrayBuffer(file); // Read the PDF file as an array buffer
+      }
     }
   };
+
   const handleZoomIn = () => setZoom((prev) => Math.min(prev + 0.2, 3)); // Maximum zoom level
   const handleZoomOut = () => setZoom((prev) => Math.max(prev - 0.2, 0.2)); // Minimum zoom level is 1 (no zoom out beyond original size)
 
@@ -66,50 +74,53 @@ export default function ImagesInput(props) {
   return (
     <div className="mt-3">
       <div className="mb-[8px] text-base font-medium">
-        {props.label || "title"}
+        {props.label || "Title"}
         <span className="text-red-500 ml-1">*</span>
       </div>
-      {/* Display the input field for the image */}
-      <div className="bg-red w-full h-[80px] bg-white rounded-lg border-dashed border-[4px] border-gray-500 flex items-center justify-between p-5">
+      <div className="bg-white rounded-lg border-dashed border-[4px] border-gray-500 flex items-center justify-between p-5">
         <button
           className="flex items-center"
           onClick={() => setShowModal(true)}
         >
           <div>
-            {imagePreview || props.value?.image ? (
-              <img
-                src={imagePreview || props.value.image}
-                alt="Uploaded"
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  objectFit: "cover", // Ensures the image fits the space
-                  borderRadius: "4px",
-                }}
-              />
+            {props.type === "image" ? (
+              filePreview ? (
+                <img
+                  src={filePreview}
+                  alt="Uploaded"
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    objectFit: "cover", // Ensures the image fits the space
+                    borderRadius: "4px",
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    backgroundColor: "#e0e0e0", // Placeholder background
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: "4px",
+                  }}
+                >
+                  <span>+</span>
+                </div>
+              )
             ) : (
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  backgroundColor: "#e0e0e0", // Placeholder background
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderRadius: "4px",
-                }}
-              >
-                <span>+</span>
-              </div>
+              <Description style={{ fontSize: "40px" }} />
             )}
           </div>
           <div className="ml-2">
-            <div>{fileName || props.value?.imageName || ""}</div>
+            <div>{fileName || props.value?.fileName || ""}</div>
           </div>
         </button>
         <div className="flex justify-end border-2 border-black p-2 bg-gray-500 rounded-lg text-white">
           {props.disabled ? (
-            <button onClick={() => setShowModal(true)}>preview</button>
+            <button onClick={() => setShowModal(true)}>Preview</button>
           ) : (
             <button onClick={handleBrowseClick}>Browse</button>
           )}
@@ -118,14 +129,14 @@ export default function ImagesInput(props) {
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/*"
+          accept={props.type === "image" ? "image/*" : "application/pdf"}
           className="hidden"
           onChange={handleFileChange}
         />
       </div>
 
       {/* Modal for image zoom */}
-      {showModal && (imagePreview || props.value?.image) && (
+      {showModal && (filePreview || props.value?.file) && (
         <div
           ref={modalRef}
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-20"
@@ -135,41 +146,58 @@ export default function ImagesInput(props) {
             className="bg-white p-5 rounded-lg relative overflow-hidden"
             style={{ width: "90vw", height: "90vh" }}
           >
-            <img
-              ref={imgRef}
-              src={imagePreview || props.value?.image}
-              alt="Zoomed"
-              style={{
-                transform: `scale(${zoom})`, // Apply zoom scale
-                transition: "transform 0.3s ease-in-out",
-                maxWidth: "100%",
-                maxHeight: "100%",
-                position: "absolute",
-                left: "0",
-                top: "0",
-                cursor: dragging ? "grabbing" : "grab",
-              }}
-              onMouseDown={handleDragStart}
-              onMouseMove={handleDrag}
-              onMouseUp={handleDragEnd}
-              draggable="false"
-              onMouseLeave={handleDragEnd} // To handle cases where mouse leaves the image during drag
-            />
+            {props.type === "image" ? (
+              <img
+                ref={imgRef}
+                src={filePreview}
+                alt="Zoomed"
+                style={{
+                  transform: `scale(${zoom})`, // Apply zoom scale
+                  transition: "transform 0.3s ease-in-out",
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  position: "absolute",
+                  left: "0",
+                  top: "0",
+                  cursor: dragging ? "grabbing" : "grab",
+                }}
+                onMouseDown={handleDragStart}
+                onMouseMove={handleDrag}
+                onMouseUp={handleDragEnd}
+                draggable="false"
+                onMouseLeave={handleDragEnd} // To handle cases where mouse leaves the image during drag
+              />
+            ) : (
+              <div
+                className="flex justify-center items-center"
+                style={{ height: "100%" }}
+              >
+                <a
+                  href={filePreview}
+                  download={fileName}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                >
+                  Download {fileName}
+                </a>
+              </div>
+            )}
             {/* Zoom buttons */}
-            <div className="absolute bottom-2 left-2 flex space-x-2">
-              <button
-                onClick={handleZoomOut}
-                className="px-4 py-2 bg-gray-300 rounded-lg"
-              >
-                Zoom Out
-              </button>
-              <button
-                onClick={handleZoomIn}
-                className="px-4 py-2 bg-gray-300 rounded-lg"
-              >
-                Zoom In
-              </button>
-            </div>
+            {props.type === "image" && (
+              <div className="absolute bottom-2 left-2 flex space-x-2">
+                <button
+                  onClick={handleZoomOut}
+                  className="px-4 py-2 bg-gray-300 rounded-lg"
+                >
+                  Zoom Out
+                </button>
+                <button
+                  onClick={handleZoomIn}
+                  className="px-4 py-2 bg-gray-300 rounded-lg"
+                >
+                  Zoom In
+                </button>
+              </div>
+            )}
             {/* Close button */}
             <button
               onClick={() => setShowModal(false)}
