@@ -12,15 +12,17 @@ import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
 const UpdatePage = () => {
   const [isDisabled, setISdisabled] = useState({
-    save: false,
+    save: true, // Initially disabled
     edit: false,
     add: false,
   });
+
   const changeIsdisabled = (name, value) => {
     setISdisabled((prev) => {
       return { ...prev, [name]: value };
     });
   };
+
   const params = useParams();
   const { slug } = params; // Access slug directly from params
   const router = useRouter(); // Router for navigation
@@ -58,6 +60,22 @@ const UpdatePage = () => {
   useEffect(() => {
     getDetail();
   }, []);
+
+  // Disable the Save button if any detail field is empty
+  useEffect(() => {
+    let body = {
+      description_1: detail.description_1,
+      description_2: detail.description_2,
+      image: detail.image,
+      imageName: detail.imageName,
+      title_1: detail.title_1,
+      year: detail.year,
+    };
+    const isFormValid = Object.values(body).every(
+      (value) => value.trim() !== ""
+    );
+    changeIsdisabled("save", !isFormValid);
+  }, [detail]);
 
   const handleSave = async () => {
     changeIsdisabled("save", true);
@@ -111,6 +129,7 @@ const UpdatePage = () => {
       }
     } catch (error) {
       // Show error toast
+      changeIsdisabled("save", false);
       toast.update(toastId, {
         title: "Error",
         description: "An error occurred while updating.",
@@ -127,7 +146,7 @@ const UpdatePage = () => {
         save={handleSave}
         back
         title="Update Journey"
-        disabled={isDisabled.save}
+        disabled={isDisabled.save} // Disable save if form is invalid
       />
       <div className="bg-gray-100 py-10 px-20 relative">
         <div className="w-full grid grid-cols-2 gap-x-[80px] gap-y-[10px]">

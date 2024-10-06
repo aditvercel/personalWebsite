@@ -97,6 +97,7 @@ const CreatePage = () => {
         });
       } else {
         // Show error toast
+        changeIsdisabled("save", false);
         toast.update(toastId, {
           title: "Creation Failed",
           description: "Something went wrong during creation.",
@@ -182,7 +183,7 @@ const CreatePage = () => {
           type="image"
           name="image"
           label="Image"
-          value={detail.image}
+          value={detail}
         />
       </div>
     </div>

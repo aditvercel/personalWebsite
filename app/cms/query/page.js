@@ -276,8 +276,8 @@ export default function Page() {
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure you want to delete this item? You can't undo this
-              action.
+              Are you sure you want to delete this item? You can&apos;t undo
+              this action.
             </AlertDialogBody>
 
             <AlertDialogFooter>
