@@ -163,7 +163,9 @@ export default function ISinput(props) {
         </>
       )}
 
-      {(props.type === "email" || props.type === "text") && (
+      {(props.type === "email" ||
+        props.type === "text" ||
+        props.type === "number") && (
         <>
           {props.label && <FormLabel>{props.label}</FormLabel>}
           <Input

@@ -42,7 +42,7 @@ import Image from "next/image";
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure(); // Chakra Disclosure for AlertDialog
   const [homePageDatas, setHomePageDatas] = useState({
-    journeyDatas: [],
+    latestProjectDatas: [],
     deletedItemId: "",
     totalPage: 1,
   });
@@ -63,19 +63,18 @@ export default function Page() {
   const fetchData = async (page = 1, query = "") => {
     try {
       const res = await api.get(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/all-list?page=${page}&search=${query}`
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject/all-list?page=${page}&search=${query}`
       );
 
       if (res.data.statusCode === 200) {
         setHomePageDatas((item) => ({
           ...item,
           totalPage: res.data.result.totalPages,
-          journeyDatas: res.data.result.items.map((itemChild) => {
+          latestProjectDatas: res.data.result.items.map((itemChild) => {
             return {
               ...itemChild,
               createdAt: convertToIndonesianDate(itemChild.createdAt),
               updatedAt: convertToIndonesianDate(itemChild.updatedAt),
-              year: convertToIndonesianDateMonthAndYear(itemChild.year),
             };
           }),
         }));
@@ -100,7 +99,7 @@ export default function Page() {
     setLoadingDelete(true); // Set loading to true during deletion process
     try {
       const res = await api.delete(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/delete`,
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject/delete`,
         {
           data: { id: homePageDatas.deletedItemId },
         }
@@ -109,7 +108,7 @@ export default function Page() {
       if (res.data.statusCode === 200) {
         setHomePageDatas((prev) => ({
           ...prev,
-          journeyDatas: prev.journeyDatas.filter(
+          latestProjectDatas: prev.latestProjectDatas.filter(
             (item) => item._id !== homePageDatas.deletedItemId
           ),
           deletedItemId: "", // Clear the deletedItemId
@@ -162,7 +161,10 @@ export default function Page() {
 
   return (
     <div>
-      <IStoolbar title="Latest Project Manager" add="/cms/journey/create" />
+      <IStoolbar
+        title="Latest Project Manager"
+        add="/cms/latestProject/create"
+      />
       <div className="rounded-lg bg-white p-5">
         <div className="my-5">
           <InputGroup>
@@ -180,11 +182,11 @@ export default function Page() {
         </div>
         <TableContainer className="overflow-x-auto">
           <Table variant="striped" colorScheme="gray" border={1}>
-            {homePageDatas.journeyDatas.length > 0 && (
+            {homePageDatas.latestProjectDatas.length > 0 && (
               <Thead className="bg-gray-400 h-[60px]">
                 <Tr>
                   <Th>NO.</Th>
-                  {Object.keys(homePageDatas.journeyDatas[0]).map(
+                  {Object.keys(homePageDatas.latestProjectDatas[0]).map(
                     (key, index) => (
                       <Th key={index}>{key}</Th>
                     )
@@ -194,7 +196,7 @@ export default function Page() {
               </Thead>
             )}
             <Tbody>
-              {homePageDatas.journeyDatas.map((item, index) => (
+              {homePageDatas.latestProjectDatas.map((item, index) => (
                 <Tr key={index}>
                   <Td>{index + 1}</Td>
 
@@ -217,7 +219,7 @@ export default function Page() {
                   {/* actions button */}
                   <Td>
                     <HStack spacing="4">
-                      <Link href={`/cms/journey/detail/${item._id}`}>
+                      <Link href={`/cms/latestProject/detail/${item._id}`}>
                         <IconButton
                           icon={<InfoOutlineIcon />}
                           colorScheme="blue"
@@ -225,7 +227,7 @@ export default function Page() {
                           aria-label="Detail"
                         />
                       </Link>
-                      <Link href={`/cms/journey/update/${item._id}`}>
+                      <Link href={`/cms/latestProject/update/${item._id}`}>
                         <IconButton
                           icon={<EditIcon />}
                           colorScheme="yellow"

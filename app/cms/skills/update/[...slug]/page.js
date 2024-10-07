@@ -11,10 +11,22 @@ import JoditInput from "@/app/components/input/JoditInput";
 import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
 const UpdatePage = () => {
+  const params = useParams();
+  const { slug } = params; // Access slug directly from params
+  const router = useRouter(); // Router for navigation
+  const toast = useToast(); // Chakra UI toast hook
+
   const [isDisabled, setISdisabled] = useState({
     save: true, // Initially disabled
     edit: false,
     add: false,
+  });
+
+  const [detail, setDetail] = useState({
+    createdAt: "",
+    updatedAt: "",
+    title: "",
+    percentage: "",
   });
 
   const changeIsdisabled = (name, value) => {
@@ -23,31 +35,16 @@ const UpdatePage = () => {
     });
   };
 
-  const params = useParams();
-  const { slug } = params; // Access slug directly from params
-  const router = useRouter(); // Router for navigation
-  const toast = useToast(); // Chakra UI toast hook
-
-  const [detail, setDetail] = useState({
-    createdAt: "",
-    description_1: "",
-    description_2: "",
-    image: "",
-    title_1: "",
-    updatedAt: "",
-    year: "",
-    imageName: "",
-  });
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setDetail((prev) => ({ ...prev, [name]: value }));
+    console.log(detail);
   };
 
   const getDetail = async () => {
     try {
       let res = await api.get(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/getById?id=${slug}`
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills/getById?id=${slug}`
       );
       if (res && res.data.statusCode === 200) {
         setDetail(res.data.result);
@@ -64,15 +61,11 @@ const UpdatePage = () => {
   // Disable the Save button if any detail field is empty
   useEffect(() => {
     let body = {
-      description_1: detail.description_1,
-      description_2: detail.description_2,
-      image: detail.image,
-      imageName: detail.imageName,
-      title_1: detail.title_1,
-      year: detail.year,
+      title: detail.title,
+      percentage: detail.percentage,
     };
     const isFormValid = Object.values(body).every(
-      (value) => value.trim() !== ""
+      (value) => value !== "" && value !== 0 && value !== null
     );
     changeIsdisabled("save", !isFormValid);
   }, [detail]);
@@ -81,12 +74,8 @@ const UpdatePage = () => {
     changeIsdisabled("save", true);
     let body = {
       id: slug,
-      description_1: detail.description_1,
-      description_2: detail.description_2,
-      image: detail.image,
-      imageName: detail.imageName,
-      title_1: detail.title_1,
-      year: detail.year,
+      title: detail.title,
+      percentage: detail.percentage,
     };
 
     // Show loading toast
@@ -100,7 +89,7 @@ const UpdatePage = () => {
 
     try {
       let res = await api.put(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/update`,
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills/update`,
         body
       );
       if (res && res.data.statusCode === 200) {
@@ -145,7 +134,7 @@ const UpdatePage = () => {
       <IStoolbar
         save={handleSave}
         back
-        title="Update Journey"
+        title="Update Skills"
         disabled={isDisabled.save} // Disable save if form is invalid
       />
       <div className="bg-gray-100 py-10 px-20 relative">
@@ -153,13 +142,22 @@ const UpdatePage = () => {
           <ISinput
             onChange={handleInputChange}
             type="text"
-            name="title_1"
+            name="title"
             placeholder="Write your full name"
-            value={detail.title_1}
+            value={detail.title}
             required
             label="Title"
           />
           <ISinput
+            onChange={handleInputChange}
+            type="number"
+            name="percentage"
+            placeholder="0"
+            value={detail.percentage}
+            required
+            label="Percentage"
+          />
+          {/* <ISinput
             onChange={handleInputChange}
             type="date"
             name="year"
@@ -188,10 +186,10 @@ const UpdatePage = () => {
             onBlur={(newContent) =>
               setDetail((prev) => ({ ...prev, description_2: newContent }))
             }
-          />
+          /> */}
         </div>
 
-        <ImagesInput
+        {/* <ImagesInput
           onChange={(fileName, base64) => {
             setDetail((prev) => ({
               ...prev,
@@ -203,7 +201,7 @@ const UpdatePage = () => {
           name="image"
           label="Image"
           value={detail}
-        />
+        /> */}
       </div>
     </div>
   );

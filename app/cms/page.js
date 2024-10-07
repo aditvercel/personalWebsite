@@ -29,6 +29,14 @@ export default function Page() {
       totalPages: 0,
       currentPage: 0,
     },
+    profile: {
+      name: "",
+      description: "",
+      image: "",
+      imageName: "",
+      cv: "",
+      cvName: "",
+    },
     skeletons: {
       latestProject: false,
     },
@@ -48,11 +56,13 @@ export default function Page() {
     file: null,
   });
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files ? files[0] : value, // Handle file input separately
+    setHomePageDatas((prev) => {
+      return {
+        ...prev,
+        profile: { ...prev.profile, [name]: files ? files[0] : value },
+      };
     });
   };
 
@@ -73,13 +83,15 @@ export default function Page() {
       }));
 
       try {
-        const res = await api.get(
-          `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject?category=${latestProjectQuery.category}&page=1`
-        );
+        const [res, tes] = await Promise.all([
+          api.get(
+            `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject?category=${latestProjectQuery.category}&page=1`
+          ),
+          api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/profile`),
+        ]);
 
         if (res.data.statusCode === 200) {
           setHomePageDatas((item) => ({
-            ...item,
             latestProject: {
               items: [...res.data.result.items],
               totalPages: res.data.result.totalPages,
@@ -89,6 +101,13 @@ export default function Page() {
               ...item.skeletons,
               latestProject: true,
             },
+          }));
+        }
+
+        if (tes.data.statusCode === 200) {
+          setHomePageDatas((item) => ({
+            ...item,
+            profile: tes.data.result[0],
           }));
         }
       } catch (err) {
@@ -105,6 +124,10 @@ export default function Page() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    console.log(homePageDatas.profile);
+  }, [homePageDatas.profile]);
+
   return (
     <div className="relative">
       <IStoolbar title="Dashboard" />
@@ -116,14 +139,18 @@ export default function Page() {
               <div
                 className="h-full w-[120px] rounded-lg bg-gray-300"
                 style={{
-                  backgroundImage: `url(${photosaya.src || ""})`,
+                  backgroundImage: `url(${
+                    homePageDatas.profile?.image || photosaya.src
+                  })`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
               ></div>
               <div className="grid ml-2 w-[90%] h-[90%] justify-between">
                 <div className="mb-2 flex justify-between">
-                  <div className=" font-medium text-lg">Adityamms</div>
+                  <div className=" font-medium text-lg">
+                    {homePageDatas.profile?.name}
+                  </div>
                   <div
                     className="cursor-pointer text-blue-500"
                     onClick={onOpen}
@@ -132,11 +159,16 @@ export default function Page() {
                   </div>
                 </div>
                 <p className="w-[90%] h-[90%] overflow-y-scroll">
-                  a full-stack developer skilled in both front-end and back-end
-                  technologies. I design user interfaces, build server-side
-                  logic, and manage databases to create complete, efficient web
-                  applications. If you need someone who can handle all aspects
-                  of development, I`m here to help!
+                  {homePageDatas.profile?.description || (
+                    <>
+                      a full-stack developer skilled in both front-end and
+                      back-end technologies. I design user interfaces, build
+                      server-side logic, and manage databases to create
+                      complete, efficient web applications. If you need someone
+                      who can handle all aspects of development, I`m here to
+                      help!
+                    </>
+                  )}
                 </p>
               </div>
             </div>
@@ -198,60 +230,56 @@ export default function Page() {
           <ModalBody className="bg-gray-100">
             <div className="grid gap-5">
               <ImagesInput
-                // onChange={(fileName, base64) => {
-                //   setDetail((prev) => ({
-                //     ...prev,
-                //     image: base64,
-                //     imageName: fileName,
-                //   }));
-                // }}
+                onChange={(fileName, base64) => {
+                  setHomePageDatas((prev) => ({
+                    ...prev,
+                    profile: {
+                      ...prev.profile,
+                      image: base64,
+                      imageName: fileName,
+                    },
+                  }));
+                }}
                 type="image"
                 name="image"
                 label="Image"
-                // value={detail}
+                value={homePageDatas?.profile}
               />
               <ImagesInput
-                // onChange={(fileName, base64) => {
-                //   setDetail((prev) => ({
-                //     ...prev,
-                //     image: base64,
-                //     imageName: fileName,
-                //   }));
-                // }}
+                onChange={(fileName, base64) => {
+                  setHomePageDatas((prev) => ({
+                    ...prev,
+                    profile: {
+                      ...prev.profile,
+                      cv: base64,
+                      cvName: fileName,
+                    },
+                  }));
+                }}
                 type="file"
                 name="cv"
                 label="CV"
-                // value={detail}
+                value={homePageDatas?.profile}
               />
               <ISinput
-                // onChange={handleInputChange}
+                onChange={handleInputChange}
                 type="text"
-                name="title_1"
+                name="name"
                 placeholder="Write your full name"
-                // value={detail.title_1}
+                value={homePageDatas.profile?.name}
                 required
                 label="Name"
               />
 
               <ISinput
-                // onChange={handleInputChange}
+                onChange={handleInputChange}
                 type="textarea"
-                name="title_1"
+                name="description"
                 placeholder="Write your full name"
-                // value={detail.title_1}
+                value={homePageDatas.profile?.description}
                 required
                 label="Description"
               />
-
-              {/* <FormControl mb={4}>
-                <FormLabel>Upload PDF</FormLabel>
-                <Input
-                  type="file"
-                  name="file"
-                  accept=".pdf"
-                  onChange={handleChange}
-                />
-              </FormControl> */}
 
               <ModalFooter>
                 <Button colorScheme="blue" mr={3} type="submit">

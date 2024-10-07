@@ -50,6 +50,7 @@ export default function Home() {
     packageService: [],
     faqs: [],
     mySkills: [],
+    profile: {},
     latestProject: {
       items: [],
       totalPages: 0,
@@ -57,6 +58,7 @@ export default function Home() {
     },
     testimonial: [],
     skeletons: {
+      profile: false,
       packageService: false,
       faqs: false,
       mySkills: false,
@@ -115,18 +117,17 @@ export default function Home() {
           api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq`),
           api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills`),
           api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/testimonial`),
-          // api.post(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey`, {
-          //   image:
-          //     "https://res.cloudinary.com/drymuerks/image/upload/v1726801891/362927132_675384167972498_3833124988285082399_n_2_-_Copy_sp2rsp.jpg",
-          //   year: new Date(),
-          //   title_1: "title",
-          //   description_1: "description1",
-          //   description_2: "description2",
-          // }),
-
+          api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/profile`),
           // api.get(
           //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject?category=${latestProjectQuery.category}`
           // ),
+          // api.post(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/profile`, {
+          //   name: "test aditya",
+          //   description: "test aditya",
+          //   image:
+          //     "https://res.cloudinary.com/drymuerks/image/upload/v1726801891/362927132_675384167972498_3833124988285082399_n_2_-_Copy_sp2rsp.jpg",
+          //   cv: "https://res.cloudinary.com/drymuerks/image/upload/v1728219777/kxo4rwzlafvelbckxkky.pdf",
+          // }),
         ]);
 
         if (res.data.statusCode === 200) {
@@ -154,6 +155,12 @@ export default function Home() {
           setHomePageDatas((item) => ({
             ...item,
             testimonial: ies.data.result,
+          }));
+        }
+        if (wry.data.statusCode === 200) {
+          setHomePageDatas((item) => ({
+            ...item,
+            profile: wry.data.result[0],
           }));
         }
 
@@ -239,7 +246,9 @@ export default function Home() {
   const handleDownload = () => {
     // Create a temporary link element
     const link = document.createElement("a");
-    link.href = "/data/pdf/aditya_frontend.pdf"; // Correct path to the PDF
+    link.href = `${
+      homePageDatas.profile?.cv || "/data/pdf/aditya_frontend.pdf"
+    }`; // Correct path to the PDF
     link.download = "aditya_frontend.pdf"; // Filename to download
     document.body.appendChild(link);
     link.click(); // Trigger the download
@@ -262,7 +271,12 @@ export default function Home() {
         <div className="w-[500px]">
           <div className="bg-[#0f1628] relative rounded-md top-5 flex md:hidden shadow-sm shadow-white items-center align-middle justify-center overflow-hidden h-[180px] mb-10">
             <div className="relative top-5">
-              <Image src={photosaya} alt="me" width={210} height={200} />
+              <Image
+                src={homePageDatas.profile?.image || photosaya}
+                alt="me"
+                width={210}
+                height={200}
+              />
             </div>
           </div>
           <div className="mb-3 h-5">
@@ -276,14 +290,18 @@ export default function Home() {
             />
           </div>
           <div className=" text-4xl mb-5 font-bold textLight">
-            I&apos;m Aditya Marzuk
+            I&apos;m {homePageDatas.profile?.name}
           </div>
           <p>
-            a full-stack developer skilled in both front-end and back-end
-            technologies. I design user interfaces, build server-side logic, and
-            manage databases to create complete, efficient web applications. If
-            you need someone who can handle all aspects of development, I`m here
-            to help!
+            {homePageDatas.profile?.description || (
+              <>
+                a full-stack developer skilled in both front-end and back-end
+                technologies. I design user interfaces, build server-side logic,
+                and manage databases to create complete, efficient web
+                applications. If you need someone who can handle all aspects of
+                development, I`m here to help!
+              </>
+            )}
           </p>
         </div>
         <div className="bg-[#0f1628] relative rounded-md shadow-md shadow-black top-5 hidden md:flex">

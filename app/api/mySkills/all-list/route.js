@@ -1,5 +1,5 @@
 import { connectToDB } from "@/utils/ConnectDB";
-import latestProject from "@/model/latestProject";
+import mySkills from "@/model/mySkills";
 import { NextResponse } from "next/server";
 import { encrypt, decrypt } from "@/utils/axiosInstance";
 import mongoose from "mongoose";
@@ -22,7 +22,7 @@ export async function GET(request) {
   try {
     // Fetch a single item by ID
     if (id) {
-      const item = await latestProject.findById(id);
+      const item = await mySkills.findById(id);
       if (!item) {
         return NextResponse.json(
           {
@@ -60,13 +60,13 @@ export async function GET(request) {
       };
 
       // Pagination and filtering
-      const items = await latestProject
+      const items = await mySkills
         .find(query)
         .skip((page - 1) * pageSize)
         .limit(pageSize);
 
       // Total count for pagination
-      const totalCount = await latestProject.countDocuments(query);
+      const totalCount = await mySkills.countDocuments(query);
       const totalPages = Math.ceil(totalCount / pageSize);
 
       return NextResponse.json(

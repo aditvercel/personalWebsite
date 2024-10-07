@@ -1,5 +1,5 @@
 import { connectToDB } from "@/utils/ConnectDB";
-import mySkills from "@/model/mySkills";
+import profile from "@/model/profile";
 import { NextResponse } from "next/server";
 import { encrypt, decrypt } from "@/utils/axiosInstance";
 
@@ -9,10 +9,10 @@ export async function GET(request) {
 
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
-  console.log(id, "myskills");
+
   try {
     if (id) {
-      const item = await mySkills.findById(id);
+      const item = await profile.findById(id);
       if (!item) {
         return NextResponse.json(
           {
@@ -33,7 +33,7 @@ export async function GET(request) {
         { status: 200 }
       );
     } else {
-      const items = await mySkills.find();
+      const items = await profile.find();
       return NextResponse.json(
         {
           status: "success",
@@ -62,13 +62,13 @@ export async function POST(request) {
   console.log(request);
   await connectToDB();
   try {
-    const itemCount = await mySkills.countDocuments();
-    if (itemCount >= 10) {
+    const itemCount = await profile.countDocuments();
+    if (itemCount >= 1) {
       return NextResponse.json(
         {
           status: "error",
           statusCode: 403,
-          message: "Cannot create more than 10 items",
+          message: "Cannot create more than 1 items",
         },
         { status: 403 }
       );
@@ -84,7 +84,7 @@ export async function POST(request) {
     const data = JSON.parse(decryptedString);
 
     // Create new item with decrypted data
-    const newItem = await mySkills.create(data);
+    const newItem = await profile.create(data);
 
     // Encrypt the response
     return NextResponse.json(
@@ -123,7 +123,7 @@ export async function PUT(request) {
     const { id, ...updateData } = JSON.parse(decryptedString);
 
     // Find and update the item
-    const updatedItem = await mySkills.findByIdAndUpdate(id, updateData, {
+    const updatedItem = await profile.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
     });
@@ -175,7 +175,7 @@ export async function DELETE(request) {
     const { id } = JSON.parse(decryptedString);
 
     // Find and delete the item
-    const deletedItem = await mySkills.findByIdAndDelete(id);
+    const deletedItem = await profile.findByIdAndDelete(id);
 
     if (!deletedItem) {
       return NextResponse.json(

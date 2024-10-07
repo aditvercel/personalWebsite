@@ -84,9 +84,9 @@ export default function FileInput(props) {
         >
           <div>
             {props.type === "image" ? (
-              filePreview ? (
+              filePreview || props.value?.image ? (
                 <img
-                  src={filePreview}
+                  src={filePreview || props.value?.image}
                   alt="Uploaded"
                   style={{
                     width: "40px",
@@ -115,7 +115,9 @@ export default function FileInput(props) {
             )}
           </div>
           <div className="ml-2">
-            <div>{fileName || props.value?.fileName || ""}</div>
+            <div>
+              {fileName || props.value?.fileName || props.value?.imageName}
+            </div>
           </div>
         </button>
         <div className="flex justify-end border-2 border-black p-2 bg-gray-500 rounded-lg text-white">
@@ -136,78 +138,79 @@ export default function FileInput(props) {
       </div>
 
       {/* Modal for image zoom */}
-      {showModal && (filePreview || props.value?.file) && (
-        <div
-          ref={modalRef}
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-20"
-          onClick={handleModalClick}
-        >
+      {showModal &&
+        (filePreview || props.value?.file || props.value?.image) && (
           <div
-            className="bg-white p-5 rounded-lg relative overflow-hidden"
-            style={{ width: "90vw", height: "90vh" }}
+            ref={modalRef}
+            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-20"
+            onClick={handleModalClick}
           >
-            {props.type === "image" ? (
-              <img
-                ref={imgRef}
-                src={filePreview}
-                alt="Zoomed"
-                style={{
-                  transform: `scale(${zoom})`, // Apply zoom scale
-                  transition: "transform 0.3s ease-in-out",
-                  maxWidth: "100%",
-                  maxHeight: "100%",
-                  position: "absolute",
-                  left: "0",
-                  top: "0",
-                  cursor: dragging ? "grabbing" : "grab",
-                }}
-                onMouseDown={handleDragStart}
-                onMouseMove={handleDrag}
-                onMouseUp={handleDragEnd}
-                draggable="false"
-                onMouseLeave={handleDragEnd} // To handle cases where mouse leaves the image during drag
-              />
-            ) : (
-              <div
-                className="flex justify-center items-center"
-                style={{ height: "100%" }}
-              >
-                <a
-                  href={filePreview}
-                  download={fileName}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                >
-                  Download {fileName}
-                </a>
-              </div>
-            )}
-            {/* Zoom buttons */}
-            {props.type === "image" && (
-              <div className="absolute bottom-2 left-2 flex space-x-2">
-                <button
-                  onClick={handleZoomOut}
-                  className="px-4 py-2 bg-gray-300 rounded-lg"
-                >
-                  Zoom Out
-                </button>
-                <button
-                  onClick={handleZoomIn}
-                  className="px-4 py-2 bg-gray-300 rounded-lg"
-                >
-                  Zoom In
-                </button>
-              </div>
-            )}
-            {/* Close button */}
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-2 right-2 px-4 py-2 bg-red-500 text-white rounded-lg"
+            <div
+              className="bg-white p-5 rounded-lg relative overflow-hidden"
+              style={{ width: "90vw", height: "90vh" }}
             >
-              Close
-            </button>
+              {props.type === "image" ? (
+                <img
+                  ref={imgRef}
+                  src={filePreview || props.value?.image}
+                  alt="Zoomed"
+                  style={{
+                    transform: `scale(${zoom})`, // Apply zoom scale
+                    transition: "transform 0.3s ease-in-out",
+                    maxWidth: "100%",
+                    maxHeight: "100%",
+                    position: "absolute",
+                    left: "0",
+                    top: "0",
+                    cursor: dragging ? "grabbing" : "grab",
+                  }}
+                  onMouseDown={handleDragStart}
+                  onMouseMove={handleDrag}
+                  onMouseUp={handleDragEnd}
+                  draggable="false"
+                  onMouseLeave={handleDragEnd} // To handle cases where mouse leaves the image during drag
+                />
+              ) : (
+                <div
+                  className="flex justify-center items-center"
+                  style={{ height: "100%" }}
+                >
+                  <a
+                    href={filePreview}
+                    download={fileName}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                  >
+                    Download {fileName}
+                  </a>
+                </div>
+              )}
+              {/* Zoom buttons */}
+              {props.type === "image" && (
+                <div className="absolute bottom-2 left-2 flex space-x-2">
+                  <button
+                    onClick={handleZoomOut}
+                    className="px-4 py-2 bg-gray-300 rounded-lg"
+                  >
+                    Zoom Out
+                  </button>
+                  <button
+                    onClick={handleZoomIn}
+                    className="px-4 py-2 bg-gray-300 rounded-lg"
+                  >
+                    Zoom In
+                  </button>
+                </div>
+              )}
+              {/* Close button */}
+              <button
+                onClick={() => setShowModal(false)}
+                className="absolute top-2 right-2 px-4 py-2 bg-red-500 text-white rounded-lg"
+              >
+                Close
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
     </div>
   );
 }

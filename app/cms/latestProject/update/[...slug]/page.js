@@ -29,14 +29,13 @@ const UpdatePage = () => {
   const toast = useToast(); // Chakra UI toast hook
 
   const [detail, setDetail] = useState({
-    createdAt: "",
-    description_1: "",
-    description_2: "",
     image: "",
-    title_1: "",
-    updatedAt: "",
-    year: "",
     imageName: "",
+    title_1: "",
+    description: "",
+    category: null,
+    createdAt: "",
+    updatedAt: "",
   });
 
   const handleInputChange = (e) => {
@@ -47,7 +46,7 @@ const UpdatePage = () => {
   const getDetail = async () => {
     try {
       let res = await api.get(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/getById?id=${slug}`
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject/getById?id=${slug}`
       );
       if (res && res.data.statusCode === 200) {
         setDetail(res.data.result);
@@ -64,15 +63,14 @@ const UpdatePage = () => {
   // Disable the Save button if any detail field is empty
   useEffect(() => {
     let body = {
-      description_1: detail.description_1,
-      description_2: detail.description_2,
       image: detail.image,
       imageName: detail.imageName,
       title_1: detail.title_1,
-      year: detail.year,
+      description: detail.description,
+      category: detail.category,
     };
     const isFormValid = Object.values(body).every(
-      (value) => value.trim() !== ""
+      (value) => value !== "" || value !== 0 || value !== null
     );
     changeIsdisabled("save", !isFormValid);
   }, [detail]);
@@ -81,12 +79,11 @@ const UpdatePage = () => {
     changeIsdisabled("save", true);
     let body = {
       id: slug,
-      description_1: detail.description_1,
-      description_2: detail.description_2,
       image: detail.image,
       imageName: detail.imageName,
       title_1: detail.title_1,
-      year: detail.year,
+      description: detail.description,
+      category: detail.category,
     };
 
     // Show loading toast
@@ -99,34 +96,35 @@ const UpdatePage = () => {
     });
 
     try {
-      let res = await api.put(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/update`,
-        body
-      );
-      if (res && res.data.statusCode === 200) {
-        // Close the loading toast and show success toast
-        changeIsdisabled("save", false);
-        toast.update(toastId, {
-          title: "Update Successful",
-          description: "Your data has been updated successfully.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-          onCloseComplete: () => {
-            router.back(); // Navigate back only when the toast is closed
-          },
-        });
-      } else {
-        // Show error toast
-        changeIsdisabled("save", false);
-        toast.update(toastId, {
-          title: "Update Failed",
-          description: "Something went wrong during the update.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
+      console.log(body);
+      // let res = await api.put(
+      //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject/update`,
+      //   body
+      // );
+      // if (res && res.data.statusCode === 200) {
+      //   // Close the loading toast and show success toast
+      //   changeIsdisabled("save", false);
+      //   toast.update(toastId, {
+      //     title: "Update Successful",
+      //     description: "Your data has been updated successfully.",
+      //     status: "success",
+      //     duration: 3000,
+      //     isClosable: true,
+      //     onCloseComplete: () => {
+      //       router.back(); // Navigate back only when the toast is closed
+      //     },
+      //   });
+      // } else {
+      //   // Show error toast
+      //   changeIsdisabled("save", false);
+      //   toast.update(toastId, {
+      //     title: "Update Failed",
+      //     description: "Something went wrong during the update.",
+      //     status: "error",
+      //     duration: 3000,
+      //     isClosable: true,
+      //   });
+      // }
     } catch (error) {
       // Show error toast
       changeIsdisabled("save", false);
@@ -145,7 +143,7 @@ const UpdatePage = () => {
       <IStoolbar
         save={handleSave}
         back
-        title="Update Journey"
+        title="Update Latest Project"
         disabled={isDisabled.save} // Disable save if form is invalid
       />
       <div className="bg-gray-100 py-10 px-20 relative">
@@ -154,12 +152,22 @@ const UpdatePage = () => {
             onChange={handleInputChange}
             type="text"
             name="title_1"
-            placeholder="Write your full name"
+            placeholder="Write your title_1 name"
             value={detail.title_1}
             required
             label="Title"
           />
+
           <ISinput
+            onChange={handleInputChange}
+            type="number"
+            name="category"
+            placeholder="0"
+            value={detail.category}
+            required
+            label="Category"
+          />
+          {/* <ISinput
             onChange={handleInputChange}
             type="date"
             name="year"
@@ -167,9 +175,9 @@ const UpdatePage = () => {
             required
             label="Date"
             value={detail.year}
-          />
+          /> */}
 
-          <JoditInput
+          {/* <JoditInput
             tabIndex={3}
             name="description_1"
             label="Description 1"
@@ -179,18 +187,27 @@ const UpdatePage = () => {
               setDetail((prev) => ({ ...prev, description_1: newContent }))
             }
           />
-          <JoditInput
-            tabIndex={3}
-            name="description_2"
-            label="Description 2"
-            required
-            value={detail.description_2}
-            onBlur={(newContent) =>
-              setDetail((prev) => ({ ...prev, description_2: newContent }))
-            }
-          />
+           */}
         </div>
-
+        <ISinput
+          onChange={handleInputChange}
+          type="textarea"
+          name="description"
+          placeholder="Write your description"
+          required
+          label="Description"
+          value={detail.description}
+        />
+        {/* <JoditInput
+          tabIndex={3}
+          name="description"
+          label="Description"
+          required
+          value={detail.description}
+          onBlur={(newContent) =>
+            setDetail((prev) => ({ ...prev, description: newContent }))
+          }
+        /> */}
         <ImagesInput
           onChange={(fileName, base64) => {
             setDetail((prev) => ({

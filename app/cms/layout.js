@@ -9,6 +9,7 @@ import {
   AccordionIcon,
   Button,
 } from "@chakra-ui/react";
+import Image from "next/image";
 import cmsNavbar from "@/public/data/cmsNavbar";
 import Link from "next/link";
 import { usePathname } from "next/navigation"; // Replacing useRouter with usePathname
@@ -51,17 +52,23 @@ export default function CMSlayout({ children }) {
                   {cmsNavbar.map((item, index) => {
                     return item.child && item.child.length > 0 ? (
                       <AccordionItem key={index}>
-                        <AccordionButton className="flex items-center justify-center p-0">
-                          <div className="flex items-center justify-center">
+                        <AccordionButton className="flex items-center justify-start p-0">
+                          <div className="flex items-center space-x-2">
                             <div
                               className="text-xl cursor-pointer"
                               onClick={openDrawer}
                             >
-                              📄
+                              <Image
+                                src={item.icon}
+                                alt={"quote icon"}
+                                width={25}
+                                height={25}
+                                className="inline-block" // Remove absolute positioning
+                              />
                             </div>
                             {isOpen && (
                               <span
-                                className="flex-grow text-center"
+                                className="flex-grow text-[14px]"
                                 style={{ fontWeight: 600 }}
                               >
                                 {item.parentName}
@@ -70,15 +77,16 @@ export default function CMSlayout({ children }) {
                           </div>
                           <AccordionIcon />
                         </AccordionButton>
+
                         <AccordionPanel pb={4}>
                           <div className="mt-5">
                             {item.child.map((itemChild, index) => (
                               <Link
                                 href={itemChild.link}
                                 key={index}
-                                className={`bg-white flex text-start items-center align-middle mb-3 cursor-pointer  ${
+                                className={`bg-white flex items-center mb-3 cursor-pointer ${
                                   pathname === itemChild.link
-                                    ? "text-blue-500" // Change color if the link matches the current path
+                                    ? "text-blue-500"
                                     : ""
                                 }`}
                               >
@@ -86,9 +94,20 @@ export default function CMSlayout({ children }) {
                                   className="text-xl cursor-pointer"
                                   onClick={openDrawer}
                                 >
-                                  📄
+                                  <Image
+                                    src={itemChild.icon}
+                                    alt={"quote icon"}
+                                    width={18}
+                                    height={18}
+                                    className="inline-block" // Remove absolute positioning
+                                  />
                                 </div>
-                                {isOpen && <span>{itemChild.childName}</span>}
+                                {isOpen && (
+                                  <span className="ml-2">
+                                    {itemChild.childName}
+                                  </span>
+                                )}{" "}
+                                {/* Added margin-left */}
                               </Link>
                             ))}
                           </div>
@@ -97,10 +116,8 @@ export default function CMSlayout({ children }) {
                     ) : (
                       <Link key={index} href={item.link}>
                         <div
-                          className={`bg-white flex items-center text-center ${
-                            pathname === item.link
-                              ? "text-blue-500" // Change color if the link matches the current path
-                              : ""
+                          className={`bg-white flex items-center text-start ${
+                            pathname === item.link ? "text-blue-500" : ""
                           }`}
                           style={{ fontWeight: 600 }}
                         >
@@ -108,9 +125,18 @@ export default function CMSlayout({ children }) {
                             className="text-xl cursor-pointer"
                             onClick={openDrawer}
                           >
-                            📄
+                            <Image
+                              src={item.icon}
+                              alt={"quote icon"}
+                              width={25}
+                              height={25}
+                              className="inline-block" // Removed absolute positioning
+                            />
                           </div>
-                          {isOpen && <span>{item.parentName}</span>}
+                          {isOpen && (
+                            <span className="ml-2">{item.parentName}</span>
+                          )}{" "}
+                          {/* Added margin-left */}
                         </div>
                       </Link>
                     );
