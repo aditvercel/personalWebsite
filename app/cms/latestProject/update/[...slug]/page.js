@@ -33,14 +33,32 @@ const UpdatePage = () => {
     imageName: "",
     title_1: "",
     description: "",
-    category: null,
+    category: "",
     createdAt: "",
     updatedAt: "",
   });
 
+  let categoryItems = [
+    {
+      text: "Web Development",
+      value: 1,
+    },
+    {
+      text: "Mobile App",
+      value: 2,
+    },
+    {
+      text: "Graphic Design",
+      value: 3,
+    },
+  ];
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setDetail((prev) => ({ ...prev, [name]: value }));
+    setDetail((prevDetail) => ({
+      ...prevDetail,
+      [name]: value, // Update the corresponding field, e.g., "category"
+    }));
   };
 
   const getDetail = async () => {
@@ -70,20 +88,19 @@ const UpdatePage = () => {
       category: detail.category,
     };
     const isFormValid = Object.values(body).every(
-      (value) => value !== "" || value !== 0 || value !== null
+      (value) => value !== "" && value !== 0 && value !== null
     );
-    changeIsdisabled("save", !isFormValid);
+    changeIsdisabled("save", !isFormValid); // Disable if the form is invalid
   }, [detail]);
 
   const handleSave = async () => {
     changeIsdisabled("save", true);
     let body = {
-      id: slug,
       image: detail.image,
       imageName: detail.imageName,
       title_1: detail.title_1,
       description: detail.description,
-      category: detail.category,
+      category: Number(detail.category),
     };
 
     // Show loading toast
@@ -97,34 +114,34 @@ const UpdatePage = () => {
 
     try {
       console.log(body);
-      // let res = await api.put(
-      //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject/update`,
-      //   body
-      // );
-      // if (res && res.data.statusCode === 200) {
-      //   // Close the loading toast and show success toast
-      //   changeIsdisabled("save", false);
-      //   toast.update(toastId, {
-      //     title: "Update Successful",
-      //     description: "Your data has been updated successfully.",
-      //     status: "success",
-      //     duration: 3000,
-      //     isClosable: true,
-      //     onCloseComplete: () => {
-      //       router.back(); // Navigate back only when the toast is closed
-      //     },
-      //   });
-      // } else {
-      //   // Show error toast
-      //   changeIsdisabled("save", false);
-      //   toast.update(toastId, {
-      //     title: "Update Failed",
-      //     description: "Something went wrong during the update.",
-      //     status: "error",
-      //     duration: 3000,
-      //     isClosable: true,
-      //   });
-      // }
+      let res = await api.post(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject/create`,
+        body
+      );
+      if (res && res.data.statusCode === 200) {
+        // Close the loading toast and show success toast
+        changeIsdisabled("save", false);
+        toast.update(toastId, {
+          title: "Update Successful",
+          description: "Your data has been updated successfully.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          onCloseComplete: () => {
+            router.back(); // Navigate back only when the toast is closed
+          },
+        });
+      } else {
+        // Show error toast
+        changeIsdisabled("save", false);
+        toast.update(toastId, {
+          title: "Update Failed",
+          description: "Something went wrong during the update.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
     } catch (error) {
       // Show error toast
       changeIsdisabled("save", false);
@@ -160,8 +177,9 @@ const UpdatePage = () => {
 
           <ISinput
             onChange={handleInputChange}
-            type="number"
+            type="select"
             name="category"
+            items={categoryItems}
             placeholder="0"
             value={detail.category}
             required
@@ -198,6 +216,7 @@ const UpdatePage = () => {
           label="Description"
           value={detail.description}
         />
+
         {/* <JoditInput
           tabIndex={3}
           name="description"

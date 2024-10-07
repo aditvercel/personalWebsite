@@ -207,11 +207,12 @@ export default function Page() {
             {homePageDatas.latestProject?.items?.map((item, index) => (
               <div
                 key={index}
-                className="bg-black w-[200px] h-[140px] rounded-lg"
+                className=" w-[200px] h-[140px] rounded-lg shadow-md shadow-black "
                 style={{
                   backgroundImage: `url(${item.image || ""})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
+                  border: "10px solid #e8e8e8",
                 }}
               ></div>
             ))}

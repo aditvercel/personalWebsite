@@ -33,32 +33,50 @@ const UpdatePage = () => {
     imageName: "",
     title_1: "",
     description: "",
-    category: null,
+    category: "",
     createdAt: "",
     updatedAt: "",
   });
 
+  let categoryItems = [
+    {
+      text: "Web Development",
+      value: 1,
+    },
+    {
+      text: "Mobile App",
+      value: 2,
+    },
+    {
+      text: "Graphic Design",
+      value: 3,
+    },
+  ];
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setDetail((prev) => ({ ...prev, [name]: value }));
+    setDetail((prevDetail) => ({
+      ...prevDetail,
+      [name]: value, // Update the corresponding field, e.g., "category"
+    }));
   };
 
-  const getDetail = async () => {
-    try {
-      let res = await api.get(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject/getById?id=${slug}`
-      );
-      if (res && res.data.statusCode === 200) {
-        setDetail(res.data.result);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getDetail = async () => {
+  //   try {
+  //     let res = await api.get(
+  //       `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject/getById?id=${slug}`
+  //     );
+  //     if (res && res.data.statusCode === 200) {
+  //       setDetail(res.data.result);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  useEffect(() => {
-    getDetail();
-  }, []);
+  // useEffect(() => {
+  //   getDetail();
+  // }, []);
 
   // Disable the Save button if any detail field is empty
   useEffect(() => {
@@ -70,9 +88,9 @@ const UpdatePage = () => {
       category: detail.category,
     };
     const isFormValid = Object.values(body).every(
-      (value) => value !== "" || value !== 0 || value !== null
+      (value) => value !== "" && value !== 0 && value !== null
     );
-    changeIsdisabled("save", !isFormValid);
+    changeIsdisabled("save", !isFormValid); // Disable if the form is invalid
   }, [detail]);
 
   const handleSave = async () => {
@@ -82,7 +100,7 @@ const UpdatePage = () => {
       imageName: detail.imageName,
       title_1: detail.title_1,
       description: detail.description,
-      category: detail.category,
+      category: Number(detail.category),
     };
 
     // Show loading toast
@@ -159,8 +177,9 @@ const UpdatePage = () => {
 
           <ISinput
             onChange={handleInputChange}
-            type="number"
+            type="select"
             name="category"
+            items={categoryItems}
             placeholder="0"
             value={detail.category}
             required

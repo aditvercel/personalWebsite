@@ -4,6 +4,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Select,
   Textarea,
 } from "@chakra-ui/react";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
@@ -154,6 +155,36 @@ export default function ISinput(props) {
             errorBorderColor="red.300"
             isInvalid={isError}
           />
+          {!props.value && (
+            <FormErrorMessage color={"red.300"}>
+              <div className="h-3 w-3 rounded-full bg-white mr-1"></div>
+              {props.label} required
+            </FormErrorMessage>
+          )}
+        </>
+      )}
+
+      {props.type === "select" && (
+        <>
+          <div className=" text-base font-medium mb-2">
+            {props.label}
+            {props.required && <span className="text-red-500 pl-1">*</span>}
+          </div>
+          <Select
+            onChange={handleChange}
+            placeholder="Select option"
+            value={props.value || ""}
+            name={props.name}
+          >
+            {/* hoping items = [{value : number , text : string }] */}
+            {props.items?.map((item, index) => {
+              return (
+                <option key={index} value={item.value}>
+                  {item.text}
+                </option>
+              );
+            })}
+          </Select>
           {!props.value && (
             <FormErrorMessage color={"red.300"}>
               <div className="h-3 w-3 rounded-full bg-white mr-1"></div>

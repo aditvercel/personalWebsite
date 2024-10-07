@@ -203,7 +203,10 @@ export default function Page() {
                       {key === "image" ? (
                         <div
                           className="bg-gray-500 shadow-sm shadow-black rounded-lg h-[70px] w-[100px] bg-cover bg-center"
-                          style={{ backgroundImage: `url(${item[key]})` }}
+                          style={{
+                            backgroundImage: `url(${item[key]})`,
+                            border: "10px solid #e8e8e8",
+                          }}
                         ></div>
                       ) : key === "description_1" || key === "description_2" ? (
                         <div className="w-[300px] overflow-hidden text-ellipsis">
