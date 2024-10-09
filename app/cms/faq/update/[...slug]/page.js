@@ -29,25 +29,39 @@ const UpdatePage = () => {
   const toast = useToast(); // Chakra UI toast hook
 
   const [detail, setDetail] = useState({
-    createdAt: "",
-    description_1: "",
-    description_2: "",
-    image: "",
     title_1: "",
+    description: "",
+    createdAt: "",
     updatedAt: "",
-    year: "",
-    imageName: "",
   });
+
+  let categoryItems = [
+    {
+      text: "Web Development",
+      value: 1,
+    },
+    {
+      text: "Mobile App",
+      value: 2,
+    },
+    {
+      text: "Graphic Design",
+      value: 3,
+    },
+  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setDetail((prev) => ({ ...prev, [name]: value }));
+    setDetail((prevDetail) => ({
+      ...prevDetail,
+      [name]: value, // Update the corresponding field, e.g., "category"
+    }));
   };
 
   const getDetail = async () => {
     try {
       let res = await api.get(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/getById?id=${slug}`
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq/getById?id=${slug}`
       );
       if (res && res.data.statusCode === 200) {
         setDetail(res.data.result);
@@ -64,31 +78,21 @@ const UpdatePage = () => {
   // Disable the Save button if any detail field is empty
   useEffect(() => {
     let body = {
-      description_1: detail.description_1,
-      description_2: detail.description_2,
-      image: detail.image,
-      imageName: detail.imageName,
       title_1: detail.title_1,
-      year: detail.year,
+      description: detail.description,
     };
     const isFormValid = Object.values(body).every(
-      (value) => value.trim() !== ""
+      (value) => value !== "" && value !== 0 && value !== null
     );
-    changeIsdisabled("save", !isFormValid);
+    changeIsdisabled("save", !isFormValid); // Disable if the form is invalid
   }, [detail]);
 
   const handleSave = async () => {
     changeIsdisabled("save", true);
     let body = {
-      id: slug,
-      description_1: detail.description_1,
-      description_2: detail.description_2,
-      image: detail.image,
-      imageName: detail.imageName,
       title_1: detail.title_1,
-      year: detail.year,
+      description: detail.description,
     };
-
     // Show loading toast
     const toastId = toast({
       title: "Updating...",
@@ -99,8 +103,9 @@ const UpdatePage = () => {
     });
 
     try {
-      let res = await api.put(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/update`,
+      console.log(body);
+      let res = await api.post(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq/create`,
         body
       );
       if (res && res.data.statusCode === 200) {
@@ -145,7 +150,7 @@ const UpdatePage = () => {
       <IStoolbar
         save={handleSave}
         back
-        title="Update Journey"
+        title="Update FAQ"
         disabled={isDisabled.save} // Disable save if form is invalid
       />
       <div className="bg-gray-100 py-10 px-20 relative">
@@ -154,12 +159,23 @@ const UpdatePage = () => {
             onChange={handleInputChange}
             type="text"
             name="title_1"
-            placeholder="Write your full name"
+            placeholder="Write your title_1 name"
             value={detail.title_1}
             required
             label="Title"
           />
-          <ISinput
+
+          {/* <ISinput
+            onChange={handleInputChange}
+            type="select"
+            name="category"
+            items={categoryItems}
+            placeholder="0"
+            value={detail.category}
+            required
+            label="Category"
+          /> */}
+          {/* <ISinput
             onChange={handleInputChange}
             type="date"
             name="year"
@@ -167,9 +183,9 @@ const UpdatePage = () => {
             required
             label="Date"
             value={detail.year}
-          />
+          /> */}
 
-          <JoditInput
+          {/* <JoditInput
             tabIndex={3}
             name="description_1"
             label="Description 1"
@@ -178,20 +194,29 @@ const UpdatePage = () => {
             onBlur={(newContent) =>
               setDetail((prev) => ({ ...prev, description_1: newContent }))
             }
-          />
-          <JoditInput
-            tabIndex={3}
-            name="description_2"
-            label="Description 2"
-            required
-            value={detail.description_2}
-            onBlur={(newContent) =>
-              setDetail((prev) => ({ ...prev, description_2: newContent }))
-            }
-          />
+          /> */}
         </div>
-
-        <ImagesInput
+        <ISinput
+          onChange={handleInputChange}
+          type="textarea"
+          name="description"
+          placeholder="Write your description"
+          required
+          label="Description"
+          value={detail.description}
+        />
+        <div className="mt-5">
+          {/* <JoditInput
+            tabIndex={3}
+            name="description"
+            label="Description"
+            required
+            value={detail.description}
+            onBlur={(newContent) =>
+              setDetail((prev) => ({ ...prev, description: newContent }))
+            }
+          /> */}
+          {/* <ImagesInput
           onChange={(fileName, base64) => {
             setDetail((prev) => ({
               ...prev,
@@ -203,7 +228,8 @@ const UpdatePage = () => {
           name="image"
           label="Image"
           value={detail}
-        />
+        /> */}
+        </div>
       </div>
     </div>
   );

@@ -3,13 +3,14 @@
 import ImagesInput from "@/app/components/input/ImagesInput";
 import ISinput from "@/app/components/input/ISinput";
 import IStoolbar from "@/app/components/utils/IStoolbar";
+import { useParams } from "next/navigation"; // Use next/navigation in App Router
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // For navigation
 import api from "@/utils/axiosInstance";
 import JoditInput from "@/app/components/input/JoditInput";
-import { useRouter } from "next/navigation";
 import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
-const CreatePage = () => {
+const UpdatePage = () => {
   const [isDisabled, setISdisabled] = useState({
     save: true, // Initially disabled
     edit: false,
@@ -22,72 +23,109 @@ const CreatePage = () => {
     });
   };
 
+  const params = useParams();
+  const { slug } = params; // Access slug directly from params
+  const router = useRouter(); // Router for navigation
+  const toast = useToast(); // Chakra UI toast hook
+
   const [detail, setDetail] = useState({
-    createdAt: "",
-    description_1: "",
-    description_2: "",
+    name: "",
     image: "",
-    title_1: "",
+    job_title: "",
+    message: "",
+    createdAt: "",
     updatedAt: "",
-    year: "",
-    imageName: "",
   });
 
-  const router = useRouter(); // For navigation
-  const toast = useToast(); // Chakra UI toast hook
+  let categoryItems = [
+    {
+      text: "Popular",
+      value: "POPULAR",
+    },
+    {
+      text: "Mobile App",
+      value: 2,
+    },
+    {
+      text: "Graphic Design",
+      value: 3,
+    },
+  ];
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setDetail((prevDetail) => ({
+      ...prevDetail,
+      [name]: value, // Update the corresponding field, e.g., "category"
+    }));
+  };
+
+  // const getDetail = async () => {
+  //   try {
+  //     let res = await api.get(
+  //       `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/testimonial/getById?id=${slug}`
+  //     );
+  //     if (res && res.data.statusCode === 200) {
+  //       setDetail(res.data.result);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getDetail();
+  // }, []);
 
   // Disable the Save button if any detail field is empty
   useEffect(() => {
     let body = {
-      description_1: detail.description_1,
-      description_2: detail.description_2,
+      name: detail.name,
       image: detail.image,
-      imageName: detail.imageName,
-      title_1: detail.title_1,
-      year: detail.year,
+      job_title: detail.job_title,
+      message: detail.message,
     };
     const isFormValid = Object.values(body).every(
-      (value) => value.trim() !== ""
+      (value) =>
+        value !== "" &&
+        value !== 0 &&
+        value !== null &&
+        (!Array.isArray(value) || value.length > 0)
     );
-    changeIsdisabled("save", !isFormValid);
+
+    changeIsdisabled("save", !isFormValid); // Disable if the form is invalid
   }, [detail]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setDetail((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async () => {
+  const handleSave = async () => {
     changeIsdisabled("save", true);
     let body = {
-      description_1: detail.description_1,
-      description_2: detail.description_2,
+      name: detail.name,
       image: detail.image,
-      imageName: detail.imageName,
-      title_1: detail.title_1,
-      year: detail.year,
+      job_title: detail.job_title,
+      message: detail.message,
     };
 
     // Show loading toast
     const toastId = toast({
-      title: "Creating...",
-      description: "Your journey is being created.",
+      title: "Updating...",
+      description: "Your update is in progress.",
       status: "loading",
       duration: null, // Keep loading until action finishes
       isClosable: false,
     });
 
     try {
+      console.log(body);
       let res = await api.post(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/create`,
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/testimonial/create`,
         body
       );
       if (res && res.data.statusCode === 200) {
         // Close the loading toast and show success toast
         changeIsdisabled("save", false);
         toast.update(toastId, {
-          title: "Creation Successful",
-          description: "Your journey has been created successfully.",
+          title: "Update Successful",
+          description: "Your data has been updated successfully.",
           status: "success",
           duration: 3000,
           isClosable: true,
@@ -99,8 +137,8 @@ const CreatePage = () => {
         // Show error toast
         changeIsdisabled("save", false);
         toast.update(toastId, {
-          title: "Creation Failed",
-          description: "Something went wrong during creation.",
+          title: "Update Failed",
+          description: "Something went wrong during the update.",
           status: "error",
           duration: 3000,
           isClosable: true,
@@ -111,7 +149,7 @@ const CreatePage = () => {
       changeIsdisabled("save", false);
       toast.update(toastId, {
         title: "Error",
-        description: "An error occurred while creating the journey.",
+        description: "An error occurred while updating.",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -122,9 +160,9 @@ const CreatePage = () => {
   return (
     <div className="relative">
       <IStoolbar
-        save={handleSubmit} // Attach save action to the handleSubmit function
+        save={handleSave}
         back
-        title="Create Journey"
+        title="Create testimonial"
         disabled={isDisabled.save} // Disable save if form is invalid
       />
       <div className="bg-gray-100 py-10 px-20 relative">
@@ -132,13 +170,33 @@ const CreatePage = () => {
           <ISinput
             onChange={handleInputChange}
             type="text"
-            name="title_1"
-            placeholder="Write your full name"
-            value={detail.title_1}
+            name="name"
+            placeholder="Write your name"
+            value={detail.name}
             required
-            label="Title"
+            label="name"
           />
           <ISinput
+            onChange={handleInputChange}
+            type="text"
+            name="job_title"
+            placeholder="Write your Job title"
+            value={detail.job_title}
+            required
+            label="Job title"
+          />
+
+          {/* <ISinput
+            onChange={handleInputChange}
+            type="select"
+            name="category"
+            items={categoryItems}
+            placeholder="0"
+            value={detail.category}
+            required
+            label="Category"
+          /> */}
+          {/* <ISinput
             onChange={handleInputChange}
             type="date"
             name="year"
@@ -146,48 +204,57 @@ const CreatePage = () => {
             required
             label="Date"
             value={detail.year}
-          />
-          <JoditInput
-            tabIndex={3} // tabIndex of textarea
+          /> */}
+
+          {/* <JoditInput
+            tabIndex={3}
             name="description_1"
             label="Description 1"
             required
             value={detail.description_1}
-            onBlur={(newContent) => {
-              setDetail((item) => {
-                return { ...item, description_1: newContent };
-              });
-            }}
-          />
-          <JoditInput
+            onBlur={(newContent) =>
+              setDetail((prev) => ({ ...prev, description_1: newContent }))
+            }
+          /> */}
+        </div>
+
+        <div className="mt-5">
+          {/* <JoditInput
             tabIndex={3}
-            name="description_2"
-            label="Description 2"
+            name="description"
+            label="Description"
             required
-            value={detail.description_2}
-            onBlur={(newContent) => {
-              setDetail((item) => {
-                return { ...item, description_2: newContent };
-              });
+            value={detail.description}
+            onBlur={(newContent) =>
+              setDetail((prev) => ({ ...prev, description: newContent }))
+            }
+          /> */}
+          <ImagesInput
+            onChange={(fileName, base64) => {
+              setDetail((prev) => ({
+                ...prev,
+                image: base64,
+                imageName: fileName,
+              }));
             }}
+            type="image"
+            name="image"
+            label="Image"
+            value={detail}
+          />
+          <ISinput
+            onChange={handleInputChange}
+            type="textarea"
+            name="message"
+            placeholder="Write your messsages"
+            required
+            label="Messages"
+            value={detail.message}
           />
         </div>
-        <ImagesInput
-          onChange={(fileName, base64) => {
-            setDetail((prev) => ({
-              ...prev,
-              image: base64,
-              imageName: fileName,
-            }));
-          }}
-          type="image"
-          name="image"
-          label="Image"
-          value={detail}
-        />
       </div>
     </div>
   );
 };
 
-export default CreatePage;
+export default UpdatePage;

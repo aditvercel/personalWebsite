@@ -18,6 +18,7 @@ function LatestProjectCards({ item }) {
           backgroundImage: `url(${item.image || ""})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
+          border: "10px solid #e8e8e8",
         }}
       >
         <div>

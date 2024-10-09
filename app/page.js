@@ -575,19 +575,13 @@ export default function Home() {
                             />
                             <div className="grid">
                               <div className=" text-md font-bold">
-                                Marlian martezze
+                                {item.name}
                               </div>
                               <div className=" text-xs">{item.job_title}</div>
                             </div>
                           </div>
                           <div className="h-[80px] overflow-hidden text-ellipsis line-clamp-4 z-10 text-xs">
-                            Ex culpa exercitation nulla magna consectetur. Ut
-                            voluptate sunt nulla ipsum cupidatat esse dolore sit
-                            veniam veniam esse reprehenderit cupidatat. Irure
-                            irure dolor incididunt sint laborum aute proident.
-                            Aute eiusmod irure sunt eiusmod. Officia anim et qui
-                            ad nostrud consectetur amet commodo elit incididunt.
-                            Dolore veniam anim qui nulla sint.
+                            {item.message}
                           </div>
                           <Image
                             src={quoteIcon}
