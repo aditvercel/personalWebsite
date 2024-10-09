@@ -71,7 +71,7 @@ const CreatePage = () => {
     // Show loading toast
     const toastId = toast({
       title: "Creating...",
-      description: "Your journey is being created.",
+      description: "Your query is being created.",
       status: "loading",
       duration: null, // Keep loading until action finishes
       isClosable: false,
@@ -79,7 +79,7 @@ const CreatePage = () => {
 
     try {
       let res = await api.post(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/create`,
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/query/create`,
         body
       );
       if (res && res.data.statusCode === 200) {
@@ -87,7 +87,7 @@ const CreatePage = () => {
         changeIsdisabled("save", false);
         toast.update(toastId, {
           title: "Creation Successful",
-          description: "Your journey has been created successfully.",
+          description: "Your query has been created successfully.",
           status: "success",
           duration: 3000,
           isClosable: true,
@@ -111,7 +111,7 @@ const CreatePage = () => {
       changeIsdisabled("save", false);
       toast.update(toastId, {
         title: "Error",
-        description: "An error occurred while creating the journey.",
+        description: "An error occurred while creating the query.",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -124,7 +124,7 @@ const CreatePage = () => {
       <IStoolbar
         save={handleSubmit} // Attach save action to the handleSubmit function
         back
-        title="Create Journey"
+        title="Create query"
         disabled={isDisabled.save} // Disable save if form is invalid
       />
       <div className="bg-gray-100 py-10 px-20 relative">

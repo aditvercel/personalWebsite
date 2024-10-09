@@ -149,7 +149,7 @@ export default function Page() {
               <div className="grid ml-2 w-[90%] h-[90%] justify-between">
                 <div className="mb-2 flex justify-between">
                   <div className=" font-medium text-lg">
-                    {homePageDatas.profile?.name}
+                    {homePageDatas.profile?.name || "Aditya Marzuk"}
                   </div>
                   <div
                     className="cursor-pointer text-blue-500"

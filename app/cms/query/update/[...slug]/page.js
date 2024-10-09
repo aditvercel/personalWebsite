@@ -47,7 +47,7 @@ const UpdatePage = () => {
   const getDetail = async () => {
     try {
       let res = await api.get(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/getById?id=${slug}`
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/query/getById?id=${slug}`
       );
       if (res && res.data.statusCode === 200) {
         setDetail(res.data.result);
@@ -100,7 +100,7 @@ const UpdatePage = () => {
 
     try {
       let res = await api.put(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/update`,
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/query/update`,
         body
       );
       if (res && res.data.statusCode === 200) {
@@ -145,7 +145,7 @@ const UpdatePage = () => {
       <IStoolbar
         save={handleSave}
         back
-        title="Update Journey"
+        title="Update query"
         disabled={isDisabled.save} // Disable save if form is invalid
       />
       <div className="bg-gray-100 py-10 px-20 relative">

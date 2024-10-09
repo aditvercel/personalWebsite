@@ -3,7 +3,7 @@ import Image from "next/image";
 import marz_logo from "@/public/images/logo.png";
 import navbarMenuData from "@/public/data/navbarMenus";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Hashtag from "@/public/icons/hashtag.svg";
 import {
   Menu,
@@ -37,6 +37,7 @@ import { Kbd } from "@chakra-ui/react";
 import { ChevronDownIcon, HamburgerIcon, SearchIcon } from "@chakra-ui/icons";
 import { Search2Icon, ExternalLinkIcon } from "@chakra-ui/icons";
 import ButtonFilled from "../buttons/buttonFilled";
+import api from "@/utils/axiosInstance";
 import { grey } from "@mui/material/colors";
 
 export default function Navbar() {
@@ -52,6 +53,45 @@ export default function Navbar() {
   } = useDisclosure();
   const [activeIndex, setActiveIndex] = useState(null);
   const [isPartiallyClosed, setIsPartiallyClosed] = useState(false);
+  const [queryDatas, setQueryDatas] = useState({
+    items: [],
+  });
+  const [searchQueries, setSearchQueries] = useState("");
+  const cancelRef = useRef(); // Ref for AlertDialog cancellation
+  const searchTimeoutRef = useRef(null); // Ref to store the timeout ID
+
+  const fetchData = async (page = 1, query = "") => {
+    try {
+      const res = await api.get(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/query/all-list?page=${page}&search=${query}`
+      );
+
+      if (res.data.statusCode === 200) {
+        setQueryDatas({
+          ...res.data.result,
+        });
+        console.log(res.data.result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    // Clear the previous timeout to avoid multiple API calls
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Set a new timeout to wait for 1 second before triggering the API call
+
+    searchTimeoutRef.current = setTimeout(() => {
+      // Trigger the fetchData function with the current page and query
+      if (searchQueries) {
+        fetchData(1, searchQueries);
+      }
+    }, 800); // 1 second delay
+  }, [searchQueries]);
   const handleClose = () => {
     // Trigger the drawer to "partially close"
     setIsPartiallyClosed(true);
@@ -174,28 +214,44 @@ export default function Navbar() {
               <InputLeftElement pointerEvents="none">
                 <Search2Icon color="gray.300" />
               </InputLeftElement>
-              <Input type="text" placeholder="Search..." />
+              <Input
+                type="text"
+                placeholder="Search..."
+                onChange={(e) => {
+                  setSearchQueries(e.target.value);
+                  console.log(searchQueries);
+                }}
+              />
             </InputGroup>
             <div className="w-full mt-4 p-4 cursor-pointer rounded-lg grid gap-5">
-              <div className="min-h-[80px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567] hover:bg-[#309794] flex justify-between align-middle text-black items-center">
-                <div className="flex gap-3 ">
-                  <Image
-                    src={Hashtag}
-                    alt="hashtag_icon"
-                    width={30}
-                    className=" text-gray-300"
-                  />
-                  <div>
-                    <div className=" text-sm">top title</div>
-                    <div className=" text-lg font-medium">bottom title</div>
-                  </div>
-                </div>
-                <ExternalLinkIcon
-                  width={15}
-                  height={15}
-                  className="text-gray-300"
-                />
-              </div>
+              {queryDatas.items?.map((item, index) => {
+                return (
+                  <Link href={item.link} key={index}>
+                    <div className="min-h-[80px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567] hover:bg-[#309794] flex justify-between align-middle text-black items-center">
+                      <div className="flex gap-3 ">
+                        <Image
+                          src={Hashtag}
+                          alt="hashtag_icon"
+                          width={30}
+                          className=" text-gray-300"
+                        />
+                        <div>
+                          <div className=" text-sm">{item.top_title}</div>
+                          <div className=" text-lg font-medium">
+                            {item.bottom_title}
+                          </div>
+                        </div>
+                      </div>
+
+                      <ExternalLinkIcon
+                        width={15}
+                        height={15}
+                        className="text-gray-300"
+                      />
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </ModalBody>
         </ModalContent>

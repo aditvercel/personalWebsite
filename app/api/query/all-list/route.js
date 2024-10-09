@@ -1,5 +1,5 @@
 import { connectToDB } from "@/utils/ConnectDB";
-import query from "@/model/query";
+import queries from "@/model/query";
 import { NextResponse } from "next/server";
 import { encrypt, decrypt } from "@/utils/axiosInstance";
 import mongoose from "mongoose";
@@ -51,22 +51,22 @@ export async function GET(request) {
         ...(search && {
           $or: [
             // Search functionality
-            { title_1: { $regex: search, $options: "i" } }, // Case-insensitive search in 'title_1'
-            { description_1: { $regex: search, $options: "i" } }, // Case-insensitive search in 'description_1'
-            { description_2: { $regex: search, $options: "i" } }, // Case-insensitive search in 'description_2'
+            { top_title: { $regex: search, $options: "i" } }, // Case-insensitive search in 'title_1'
+            { bottom_title: { $regex: search, $options: "i" } }, // Case-insensitive search in 'description_1'
+            // { description_2: { $regex: search, $options: "i" } }, // Case-insensitive search in 'description_2'
             ...(isObjectId ? [{ _id: search }] : []), // Only search by _id if the search string is a valid ObjectId
           ],
         }),
       };
 
       // Pagination and filtering
-      const items = await query
+      const items = await queries
         .find(query)
         .skip((page - 1) * pageSize)
         .limit(pageSize);
 
       // Total count for pagination
-      const totalCount = await query.countDocuments(query);
+      const totalCount = await queries.countDocuments(query);
       const totalPages = Math.ceil(totalCount / pageSize);
 
       return NextResponse.json(

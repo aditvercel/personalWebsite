@@ -25,7 +25,7 @@ const DetailPage = () => {
   const getDetail = async () => {
     try {
       let res = await api.get(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/journey/getById?id=${slug}`
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/query/getById?id=${slug}`
       );
       if (res && res.data.statusCode === 200) {
         setDetail(res.data.result);
@@ -41,11 +41,7 @@ const DetailPage = () => {
 
   return (
     <div className=" relative">
-      <IStoolbar
-        edit={`/cms/journey/update/${slug}`}
-        back
-        title="Detail Journey"
-      />
+      <IStoolbar edit={`/cms/query/update/${slug}`} back title="Detail query" />
       <div className="bg-gray-100 py-10 px-20 relative">
         {/* <h1 className=" text-black">Edit Page for Item: {slug}</h1> */}
         <div className=" w-full grid grid-cols-2 gap-x-[80px] gap-y-[10px]">
