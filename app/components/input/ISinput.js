@@ -84,7 +84,7 @@ export default function ISinput(props) {
     const hasNumber = /\d/; // Regular expression to check for numbers
     const hasSymbol = /[!@#$%^&*()_+{}\[\]:;"'<>,.?/~`|\\]/; // Regular expression to check for specific symbols
     const hasSyntax = /[><{}:]/; // Regular expression to check for specific syntax
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     const isInvalidNumber = props.noNumber && hasNumber.test(value);
     const isInvalidSymbol = props.noSymbol && hasSymbol.test(value);
@@ -103,21 +103,24 @@ export default function ISinput(props) {
   };
 
   const handleChange = (e) => {
-    const value = e.target.value;
+    const value = e.target.value; // Get the current input value
+    console.log(value);
     handleValidation(value); // Validate input
 
-    // If there's a validation error, send an empty string
-    if (isError()) {
-      if (props.onChange) {
-        props.onChange({
-          ...e,
-          target: { ...e.target, name: props.name, value: "" },
-        }); // Send an empty string if validation fails
-      }
-    } else {
-      if (props.onChange) {
-        props.onChange(e); // Otherwise, send the actual value
-      }
+    // Update validation state based on current input value
+    const hasError = isError(); // Check for errors
+
+    // Update the parent component if there's a change
+    if (props.onChange) {
+      props.onChange({
+        ...e,
+        target: {
+          ...e.target,
+          name: props.name,
+          value: value,
+          isValid: props.type === "email" && hasError ? false : true,
+        },
+      });
     }
   };
 
@@ -222,6 +225,7 @@ export default function ISinput(props) {
             name={props.name}
             value={props.value}
             onChange={handleChange}
+            autoComplete={props.type === "email" ? "off" : "on"}
           />
           <div className="grid grid-cols-2 gap-x-1">
             {props.noNumber && validationState.hasNumber && (

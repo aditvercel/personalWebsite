@@ -1,42 +1,119 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
-import { Input, Textarea } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { Input, Textarea, useToast } from "@chakra-ui/react"; // Import useToast
 import Image from "next/image";
 import marz_logo from "@/public/images/logo.png";
 import ISinput from "../input/ISinput";
 import ButtonFilled from "../buttons/buttonFilled";
+import api from "@/utils/axiosInstance"; // Import your Axios instance
 
 export default function Footer() {
-  const [content, setContent] = useState("");
-
-  // Track the form state
-  const [letsConnectForm, setLetsConnectForm] = useState({});
+  const toast = useToast(); // Initialize the toast
+  const [letsConnectForm, setLetsConnectForm] = useState({
+    fullName: "",
+    email: {
+      emaill: "",
+      isValid: false,
+    },
+    message: "",
+  });
 
   useEffect(() => {
     console.log("Form state updated:", letsConnectForm);
-  }, [letsConnectForm]); // Logs the updated state whenever letsConnectForm changes
+  }, [letsConnectForm]);
 
   // Handle input changes
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setLetsConnectForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    const { name, value, isValid } = e.target;
+    name === "email"
+      ? setLetsConnectForm((prev) => ({
+          ...prev,
+          email: {
+            emaill: value,
+            isValid: isValid,
+          },
+        }))
+      : setLetsConnectForm((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
   };
 
   const isFormValid =
     letsConnectForm.fullName &&
-    letsConnectForm.email &&
-    letsConnectForm.messages;
+    letsConnectForm.email.isValid &&
+    letsConnectForm.message;
 
-  const handleSendEmail = () => {
+  // Send the email using the API endpoint
+  const handleSendEmail = async () => {
+    let body = {
+      fullName: letsConnectForm.fullName,
+      email: letsConnectForm.email.emaill,
+      message: letsConnectForm.message,
+    };
+
+    // Toast indicating the email is being sent
+    toast({
+      title: "Sending Email...",
+      description: "Please wait while we send your message.",
+      status: "info",
+      duration: 3000, // Duration in milliseconds
+      isClosable: true,
+    });
+
     if (isFormValid) {
-      // Here you can integrate an API call to send the email.
-      console.log("Sending email", letsConnectForm);
-      alert("Email sent successfully!");
+      try {
+        const response = await api.post("/api/sendMail", body);
+        if (response.status === 200) {
+          // Success toast
+          toast({
+            title: "Email sent.",
+            description: response.message,
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+          // Reset the form after successful submission
+          setLetsConnectForm({
+            fullName: "",
+            email: {
+              emaill: "",
+              isValid: false,
+            },
+            message: "",
+          });
+        } else {
+          // Error toast
+          toast({
+            title: "Error.",
+            description:
+              response.data.message ||
+              "There was an error sending your message.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+      } catch (error) {
+        console.error("Error sending email:", error);
+        // Error toast
+        toast({
+          title: "Failed to send email.",
+          description: "Please try again later.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     } else {
-      alert("Please fill in all the fields");
+      // Warning toast
+      toast({
+        title: "Invalid input.",
+        description: "Please fill in all the fields.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
@@ -89,6 +166,7 @@ export default function Footer() {
               noSyntax
               required
               label="Full name"
+              value={letsConnectForm.fullName}
             />
 
             <ISinput
@@ -98,15 +176,17 @@ export default function Footer() {
               placeholder="Write your email..."
               required
               label="Email"
+              value={letsConnectForm.email.emaill}
             />
 
             <ISinput
               onChange={handleInputChange}
               type="textarea"
-              name="messages"
+              name="message"
               placeholder="Write your messages..."
               required
               label="Messages"
+              value={letsConnectForm.message}
             />
           </div>
         </div>
