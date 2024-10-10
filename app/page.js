@@ -83,7 +83,7 @@ export default function Home() {
   // Function to update chunk size based on screen size
   const updateSlides = () => {
     // Check if screen is small (Tailwind `sm` screen size)
-    const isSmallScreen = window.matchMedia("(max-width: 640px)").matches;
+    const isSmallScreen = window.matchMedia("(max-width: 768px)").matches;
 
     // Adjust chunk size depending on the screen size
     const chunkSize = isSmallScreen ? 1 : 3; // 1 slide for small screens, 3 for larger

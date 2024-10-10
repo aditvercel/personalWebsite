@@ -205,11 +205,11 @@ export default function Navbar() {
       >
         <ModalOverlay />
         <ModalContent className="flex flex-col relative bg-[#2e3748]">
-          <ModalBody className=" text-gray-300 rounded-xl w-full h-full overflow-auto">
+          <ModalBody className="  rounded-xl w-full h-full overflow-auto">
             <ModalCloseButton className="absolute top-[-30px] right-[-30px] border border-black rounded-full p-2 bg-black text-white" />
             <InputGroup
               variant="flushed"
-              className="sticky top-0 bg-[#2e3748] z-10 text-gray-300"
+              className="sticky top-0 bg-[#2e3748] z-10 "
             >
               <InputLeftElement pointerEvents="none">
                 <Search2Icon color="gray.300" />
@@ -235,7 +235,7 @@ export default function Navbar() {
                           width={30}
                           className=" text-gray-300"
                         />
-                        <div>
+                        <div className=" text-gray-300">
                           <div className=" text-sm">{item.top_title}</div>
                           <div className=" text-lg font-medium">
                             {item.bottom_title}

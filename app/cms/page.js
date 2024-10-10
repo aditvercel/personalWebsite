@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import ISinput from "../components/input/ISinput";
 import ImagesInput from "../components/input/ImagesInput";
+import Link from "next/link";
 
 export default function Page() {
   const [homePageDatas, setHomePageDatas] = useState({
@@ -51,8 +52,7 @@ export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [formData, setFormData] = useState({
     name: "Adityamms",
-    description:
-      "a full-stack developer skilled in both front-end and back-end technologies...",
+    description: "",
     file: null,
   });
 
@@ -159,16 +159,7 @@ export default function Page() {
                   </div>
                 </div>
                 <p className="w-[90%] h-[90%] overflow-y-scroll">
-                  {homePageDatas.profile?.description || (
-                    <>
-                      a full-stack developer skilled in both front-end and
-                      back-end technologies. I design user interfaces, build
-                      server-side logic, and manage databases to create
-                      complete, efficient web applications. If you need someone
-                      who can handle all aspects of development, I`m here to
-                      help!
-                    </>
-                  )}
+                  {homePageDatas.profile?.description}
                 </p>
               </div>
             </div>
@@ -205,16 +196,17 @@ export default function Page() {
           <div className="mb-3 font-semibold text-lg">Project</div>
           <div className="w-full h-[95%] overflow-y-scroll grid gap-3 justify-center">
             {homePageDatas.latestProject?.items?.map((item, index) => (
-              <div
+              <Link
+                href={`/cms/latestProject/detail/${item._id}`}
                 key={index}
-                className=" w-[200px] h-[140px] rounded-lg shadow-md shadow-black "
+                className=" w-[200px] h-[140px] rounded-lg shadow-md shadow-black hover:shadow-blue-300 "
                 style={{
                   backgroundImage: `url(${item.image || ""})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   border: "10px solid #e8e8e8",
                 }}
-              ></div>
+              ></Link>
             ))}
           </div>
         </div>

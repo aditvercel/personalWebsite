@@ -84,10 +84,12 @@ export default function ISinput(props) {
     const hasNumber = /\d/; // Regular expression to check for numbers
     const hasSymbol = /[!@#$%^&*()_+{}\[\]:;"'<>,.?/~`|\\]/; // Regular expression to check for specific symbols
     const hasSyntax = /[><{}:]/; // Regular expression to check for specific syntax
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const isInvalidNumber = props.noNumber && hasNumber.test(value);
     const isInvalidSymbol = props.noSymbol && hasSymbol.test(value);
     const isInvalidSyntax = props.noSyntax && hasSyntax.test(value);
+    const isInvalidEmail = props.type === "email" && !emailRegex.test(value);
     const isValue = value;
 
     setValidationState((prevState) => ({
@@ -96,6 +98,7 @@ export default function ISinput(props) {
       hasSymbol: isInvalidSymbol,
       hasSyntax: isInvalidSyntax,
       hasValue: isValue,
+      isInvalidEmail: isInvalidEmail,
     }));
   };
 
@@ -103,10 +106,18 @@ export default function ISinput(props) {
     const value = e.target.value;
     handleValidation(value); // Validate input
 
-    if (props.onChange) {
-      props.onChange(e); // Call parent onChange
+    // If there's a validation error, send an empty string
+    if (isError()) {
+      if (props.onChange) {
+        props.onChange({
+          ...e,
+          target: { ...e.target, name: props.name, value: "" },
+        }); // Send an empty string if validation fails
+      }
     } else {
-      console.log("No parent onChange function");
+      if (props.onChange) {
+        props.onChange(e); // Otherwise, send the actual value
+      }
     }
   };
 
@@ -115,7 +126,8 @@ export default function ISinput(props) {
       !validationState.hasValue ||
       validationState.hasNumber ||
       validationState.hasSymbol ||
-      validationState.hasSyntax;
+      validationState.hasSyntax ||
+      validationState.isInvalidEmail;
 
     return check;
   };
@@ -228,6 +240,12 @@ export default function ISinput(props) {
               <FormErrorMessage color={"red.300"}>
                 <div className="h-3 w-3 rounded-full bg-white mr-1"></div>
                 Syntax isn&apos;t allowed
+              </FormErrorMessage>
+            )}
+            {props.type === "email" && validationState.isInvalidEmail && (
+              <FormErrorMessage color={"red.300"}>
+                <div className="h-3 w-3 rounded-full bg-white mr-1"></div>
+                Invalid email format
               </FormErrorMessage>
             )}
             {!props.value && (
