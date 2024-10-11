@@ -131,7 +131,7 @@ export default function CMSlayout({ children }) {
                     >
                       {cmsNavbar.map((item, index) =>
                         item.child && item.child.length > 0 ? (
-                          <AccordionItem key={index}>
+                          <AccordionItem key={crypto.randomUUID()}>
                             <AccordionButton className="flex items-center justify-start p-0">
                               <div className="flex items-center space-x-2">
                                 <div
@@ -163,7 +163,7 @@ export default function CMSlayout({ children }) {
                                 {item.child.map((itemChild, index) => (
                                   <Link
                                     href={itemChild.link}
-                                    key={index}
+                                    key={crypto.randomUUID()}
                                     className={`bg-white flex items-center mb-3 cursor-pointer ${
                                       pathname === itemChild.link
                                         ? "text-blue-500"
@@ -193,7 +193,7 @@ export default function CMSlayout({ children }) {
                             </AccordionPanel>
                           </AccordionItem>
                         ) : (
-                          <Link key={index} href={item.link}>
+                          <Link key={crypto.randomUUID()} href={item.link}>
                             <div
                               className={`bg-white flex items-center text-start ${
                                 pathname === item.link ? "text-blue-500" : ""

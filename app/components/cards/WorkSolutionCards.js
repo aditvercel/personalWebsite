@@ -1,11 +1,12 @@
 "use client";
 import React from "react";
 import { CheckIcon } from "@chakra-ui/icons";
-import { Button } from "@chakra-ui/react";
 import { formatCurrencyIDR } from "../utils/formatCurrency";
+import api from "@/utils/axiosInstance";
 
 function WorkSolutionCards(props) {
-  const finalPriceProduct = props.price - props.price * props.discount || 0;
+  const finalPriceProduct = props.price || 0;
+  const discountedPrice = props.price + props.price * props.discount || 0;
   const phoneNumber = "6282320664029"; // Your phone number with country code
   const message = `Hello, I would like to know more about your ${
     props.title
@@ -14,11 +15,27 @@ Price: ${formatCurrencyIDR(finalPriceProduct)}
 List of Benefits:
 ${props.whatYouGet.map((item) => `* ${item}`).join("\n")}
 
-I want to ask you about...
-`;
+I want to ask you about...`;
 
   const encodedMessage = encodeURIComponent(message);
   const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+  const handlyBuy = async (idnya) => {
+    try {
+      let res = await api.post(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/Checkout`,
+        {
+          id: idnya,
+        }
+      );
+      if (res.data?.redirectUrl) {
+        window.location.href = res.data.redirectUrl;
+      } else {
+        console.error("No redirect URL found in response.");
+      }
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    }
+  };
 
   return (
     <>
@@ -51,7 +68,10 @@ I want to ask you about...
             </div>
           </div>
           <div className="flex mt-5 justify-between">
-            <button className="px-2 font-medium py-1 rounded-full border-[#13a5d4] border w-[100px] text-center">
+            <button
+              className="px-2 font-medium py-1 rounded-full border-[#13a5d4] border w-[100px] text-center"
+              onClick={() => handlyBuy(props.id)}
+            >
               Buy service
             </button>
 
@@ -71,12 +91,12 @@ I want to ask you about...
                 </div>
               ) : (
                 <div className=" font-medium text-lg">
-                  {formatCurrencyIDR(props.price || 0)}
+                  {formatCurrencyIDR(discountedPrice)}
                 </div>
               )}
               {props.discount && (
                 <div className=" font-medium text-sm line-through">
-                  {formatCurrencyIDR(props.price || 0)}
+                  {formatCurrencyIDR(discountedPrice)}
                 </div>
               )}
             </div>
@@ -85,7 +105,7 @@ I want to ask you about...
               {props.whatYouGet?.map((item, index) => (
                 <div
                   className="flex gap-2 align-middle items-center"
-                  key={index}
+                  key={crypto.randomUUID()}
                 >
                   <div className="rounded-full w-4 h-4 bg-[#13a5d4] justify-center flex items-center">
                     <CheckIcon w={10} color={"black"} />

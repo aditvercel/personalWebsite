@@ -39,7 +39,6 @@ import {
   convertToIndonesianDateMonthAndYear,
 } from "@/utils/formmattedValue";
 import { Pagination } from "@mui/material";
-import Image from "next/image";
 
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure(); // Chakra Disclosure for AlertDialog
@@ -190,7 +189,7 @@ export default function Page() {
                   <Th>NO.</Th>
                   {Object.keys(homePageDatas.queryDatas[0]).map(
                     (key, index) => (
-                      <Th key={index}>{key}</Th>
+                      <Th key={crypto.randomUUID()}>{key}</Th>
                     )
                   )}
                   <Th>Action</Th>
@@ -199,7 +198,7 @@ export default function Page() {
             )}
             <Tbody>
               {homePageDatas.queryDatas.map((item, index) => (
-                <Tr key={index}>
+                <Tr key={crypto.randomUUID()}>
                   <Td>{index + 1}</Td>
 
                   {Object.keys(item).map((key) => (

@@ -39,7 +39,6 @@ import { ChevronDownIcon, HamburgerIcon, SearchIcon } from "@chakra-ui/icons";
 import { Search2Icon, ExternalLinkIcon } from "@chakra-ui/icons";
 import ButtonFilled from "../buttons/buttonFilled";
 import api from "@/utils/axiosInstance";
-import { grey } from "@mui/material/colors";
 
 export default function Navbar() {
   const {
@@ -52,14 +51,14 @@ export default function Navbar() {
     onOpen: onDrawerOpen,
     onClose: onDrawerClose,
   } = useDisclosure();
-  const [activeIndex, setActiveIndex] = useState(null);
+
   const [isPartiallyClosed, setIsPartiallyClosed] = useState(false);
   const [queryDatas, setQueryDatas] = useState({
     items: [],
     loaded: false,
   });
   const [searchQueries, setSearchQueries] = useState("");
-  const cancelRef = useRef(); // Ref for AlertDialog cancellation
+
   const searchTimeoutRef = useRef(null); // Ref to store the timeout ID
 
   const fetchData = async (page = 1, query = "") => {
@@ -96,19 +95,19 @@ export default function Navbar() {
       }
     }, 800); // 1 second delay
   }, [searchQueries]);
-  const handleClose = () => {
-    // Trigger the drawer to "partially close"
-    setIsPartiallyClosed(true);
-  };
+  // const handleClose = () => {
+  //   // Trigger the drawer to "partially close"
+  //   setIsPartiallyClosed(true);
+  // };
 
-  const handleFullyOpen = () => {
-    setIsPartiallyClosed(false);
-    onOpen();
-  };
+  // const handleFullyOpen = () => {
+  //   setIsPartiallyClosed(false);
+  //   onOpen();
+  // };
 
-  const handleClick = (index) => {
-    setActiveIndex(index === activeIndex ? null : index); // Toggle the active state
-  };
+  // const handleClick = (index) => {
+  //   setActiveIndex(index === activeIndex ? null : index); // Toggle the active state
+  // };
   const handleShortcut = (event) => {
     if (event.ctrlKey && event.key === "k") {
       onSearchOpen(true);
@@ -138,7 +137,7 @@ export default function Navbar() {
         </Link>
         <div className=" hidden md:flex justify-evenly gap-10 text-sm">
           {navbarMenuData.map((item, index) => (
-            <Menu key={index}>
+            <Menu key={crypto.randomUUID()}>
               {item.link ? (
                 <Link href={item.link} className={` hover:text-[#00ffff]`}>
                   {item.title}
@@ -237,14 +236,14 @@ export default function Navbar() {
                 ? [...Array(3)].map((_, index) => (
                     // Skeleton loading placeholder for when the items are still loading
                     <Skeleton
-                      key={index}
+                      key={crypto.randomUUID()}
                       height="80px"
                       className="min-h-[80px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567]"
                     />
                   ))
                 : queryDatas.items?.map((item, index) => (
                     <Skeleton
-                      key={index}
+                      key={crypto.randomUUID()}
                       isLoaded={queryDatas.items.length > 0}
                     >
                       <Link href={item.link}>
@@ -296,7 +295,7 @@ export default function Navbar() {
           <DrawerBody>
             <div className="grid text-md gap-6 mt-5 text-slate-400">
               {navbarMenuData.map((item, index) => (
-                <Menu key={index}>
+                <Menu key={crypto.randomUUID()}>
                   {item.link ? (
                     <Link href={item.link} className="hover:text-[#00ffff]">
                       {item.title}

@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { Input, Textarea, useToast } from "@chakra-ui/react"; // Import useToast
+import React, { useState } from "react";
+import { useToast } from "@chakra-ui/react"; // Import useToast
 import Image from "next/image";
 import marz_logo from "@/public/images/logo.png";
 import ISinput from "../input/ISinput";
@@ -18,9 +18,9 @@ export default function Footer() {
     message: "",
   });
 
-  useEffect(() => {
-    console.log("Form state updated:", letsConnectForm);
-  }, [letsConnectForm]);
+  // useEffect(() => {
+  //   console.log("Form state updated:", letsConnectForm);
+  // }, [letsConnectForm]);
 
   // Handle input changes
   const handleInputChange = (e) => {

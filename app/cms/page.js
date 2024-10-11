@@ -13,16 +13,12 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
 import ISinput from "../components/input/ISinput";
 import ImagesInput from "../components/input/ImagesInput";
 import Link from "next/link";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 export default function Page() {
   const { data: session } = useSession(); // Get session data to check login state
   const [homePageDatas, setHomePageDatas] = useState({
@@ -51,11 +47,6 @@ export default function Page() {
   });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [formData, setFormData] = useState({
-    name: "Adityamms",
-    description: "",
-    file: null,
-  });
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
@@ -67,10 +58,10 @@ export default function Page() {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onClose(); // Close the modal after submitting
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   onClose(); // Close the modal after submitting
+  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -202,7 +193,7 @@ export default function Page() {
             {homePageDatas.latestProject?.items?.map((item, index) => (
               <Link
                 href={`/cms/latestProject/detail/${item._id}`}
-                key={index}
+                key={crypto.randomUUID()}
                 className=" w-[200px] h-[140px] rounded-lg shadow-md shadow-black hover:shadow-blue-300 "
                 style={{
                   backgroundImage: `url(${item.image || ""})`,

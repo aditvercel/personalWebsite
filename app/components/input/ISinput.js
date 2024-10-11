@@ -7,21 +7,15 @@ import {
   Select,
   Textarea,
 } from "@chakra-ui/react";
-import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
+
 import React, { useState, useRef } from "react";
-import Image from "next/image";
 
 export default function ISinput(props) {
   const inputRef = useRef(null);
-  const [fileName, setFileName] = useState("Upload a picture...");
-  const [imagePreview, setImagePreview] = useState(null); // Store the image preview URL
-  const [showModal, setShowModal] = useState(false); // Control the visibility of the modal
-  const [zoom, setZoom] = useState(1); // Store zoom level
-  const [dragging, setDragging] = useState(false); // Track dragging state
-  const [position, setPosition] = useState({ x: 0, y: 0 }); // Track the image position
-  const fileInputRef = useRef(null);
-  const imgRef = useRef(null); // Ref for the image element
-  const modalRef = useRef(null); // Ref for the modal background
+  // const [fileName, setFileName] = useState("Upload a picture...");
+  // const [imagePreview, setImagePreview] = useState(null); // Store the image preview URL
+  // const [showModal, setShowModal] = useState(false); // Control the visibility of the modal
+  // const [zoom, setZoom] = useState(1); // Store zoom level
 
   const [validationState, setValidationState] = useState({
     hasNumber: false,
@@ -29,51 +23,11 @@ export default function ISinput(props) {
     hasSyntax: false,
     hasValue: false,
   });
-  const handleBrowseClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click(); // Trigger the hidden file input
-    }
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setFileName(file.name); // Set the file name as the text
-
-      // Create an image preview URL
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result); // Store the preview image in the state
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleZoomIn = () => setZoom((prev) => Math.min(prev + 0.2, 3)); // Maximum zoom level
-  const handleZoomOut = () => setZoom((prev) => Math.max(prev - 0.2, 1)); // Minimum zoom level is 1 (no zoom out beyond original size)
-
-  const handleDragStart = (event) => {
-    setDragging(true);
-    setPosition({
-      x: event.clientX - imgRef.current.offsetLeft,
-      y: event.clientY - imgRef.current.offsetTop,
-    });
-  };
-
-  const handleDrag = (event) => {
-    if (dragging) {
-      imgRef.current.style.left = `${event.clientX - position.x}px`;
-      imgRef.current.style.top = `${event.clientY - position.y}px`;
-    }
-  };
-
-  const handleDragEnd = () => setDragging(false);
-
-  const handleModalClick = (event) => {
-    if (modalRef.current === event.target) {
-      setShowModal(false); // Close modal if the background is clicked
-    }
-  };
+  // const handleBrowseClick = () => {
+  //   if (fileInputRef.current) {
+  //     fileInputRef.current.click(); // Trigger the hidden file input
+  //   }
+  // };
 
   const handleClickDate = () => {
     if (inputRef.current) {
@@ -193,7 +147,7 @@ export default function ISinput(props) {
             {/* hoping items = [{value : number , text : string }] */}
             {props.items?.map((item, index) => {
               return (
-                <option key={index} value={item.value}>
+                <option key={crypto.randomUUID()} value={item.value}>
                   {item.text}
                 </option>
               );

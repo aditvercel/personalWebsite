@@ -1,25 +1,17 @@
 "use client";
 import * as React from "react";
-import { useState, useRef, useMemo, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import photosaya from "@/public/images/photo_saya.png";
 import ButtonFilled from "./components/buttons/buttonFilled.js";
 import aboutDatas from "@/public/data/aboutData";
-import skilldatas from "@/public/data/skillsData.js";
+
 import latestProjectFilter from "@/public/data/latestProjectFilter.js";
 import Typewriter from "typewriter-effect";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import quoteIcon from "@/public/icons/quote-close-editor-svgrepo-com.svg";
 import "@splidejs/react-splide/css/skyblue";
 import api from "@/utils/axiosInstance.js";
-
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-} from "@chakra-ui/icons";
-
 import Footer from "./components/utils/Footer.js";
 import {
   Accordion,
@@ -27,23 +19,23 @@ import {
   AccordionItem,
   AccordionButton,
   AccordionPanel,
-  CircularProgress,
-  CircularProgressLabel,
-  Center,
   Slider,
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
   Skeleton,
-  SkeletonText,
 } from "@chakra-ui/react";
-import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  MinusIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
+} from "@chakra-ui/icons";
 import ScrollOnTop from "./components/utils/ScrollOnTop.js";
 import LatestProjectCards from "./components/cards/latestProjectCards.js";
 import { AnimatePresence } from "framer-motion";
 import WorkSolutionCards from "./components/cards/WorkSolutionCards.js";
-import { Pagination, Stack, Switch } from "@mui/material";
-import axios from "axios";
+import { Pagination } from "@mui/material";
 
 export default function Home() {
   const [homePageDatas, setHomePageDatas] = useState({
@@ -103,14 +95,14 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-      let body = {
-        image:
-          "https://res.cloudinary.com/drymuerks/image/upload/v1726801891/362927132_675384167972498_3833124988285082399_n_2_-_Copy_sp2rsp.jpg",
-        year: "2024",
-        title_1: "title",
-        description_1: "description1",
-        description_2: "description2",
-      };
+      // let body = {
+      //   image:
+      //     "https://res.cloudinary.com/drymuerks/image/upload/v1726801891/362927132_675384167972498_3833124988285082399_n_2_-_Copy_sp2rsp.jpg",
+      //   year: "2024",
+      //   title_1: "title",
+      //   description_1: "description1",
+      //   description_2: "description2",
+      // };
       try {
         const [res, tes, ues, ies, wry] = await Promise.all([
           api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService`),
@@ -328,7 +320,10 @@ export default function Home() {
         id="keys"
       >
         {aboutDatas.map((item, index) => (
-          <div className=" grid p-2 rounded-md mb-5 min-h-[150px]" key={index}>
+          <div
+            className=" grid p-2 rounded-md mb-5 min-h-[150px]"
+            key={crypto.randomUUID()}
+          >
             <div className="flex align-middle justify-center md:justify-start">
               <div className="mb-5 w-10 h-10 bg-white rounded-full p-2">
                 {item.icon}
@@ -356,7 +351,7 @@ export default function Home() {
           </div>
           <div className="w-full grid grid-cols-3 md:grid-cols-4 mt-10 gap-x-5 md:gap-y-16 gap-y-10">
             {homePageDatas.mySkills.map((item, index) => (
-              <div key={index}>
+              <div key={crypto.randomUUID()}>
                 <div>{item.title}</div>
                 <div className=" flex gap-2">
                   <Slider
@@ -375,10 +370,10 @@ export default function Home() {
               </div>
               // <div
               //   className="flex items-center justify-center align-middle relative"
-              //   key={index}
+              //   key={crypto.randomUUID()}
               // >
               //   <CircularProgress
-              //     key={index}
+              //     key={crypto.randomUUID()}
               //     value={item.percentage}
               //     color="teal.400" // Color of the progress ring
               //     trackColor="gray.200" // Color of the track (background of the progress ring)
@@ -436,7 +431,7 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-3 align-middle justify-center items-center gap-y-2 md:gap-x-3 md:gap-y-5">
             <AnimatePresence>
               {homePageDatas.latestProject?.items?.map((item, index) => (
-                <div key={index}>
+                <div key={crypto.randomUUID()}>
                   <Skeleton
                     isLoaded={homePageDatas.skeletons.latestProject}
                     className="rounded-xl"
@@ -484,7 +479,7 @@ export default function Home() {
         <div className="grid md:grid-cols-3 gap-x-5">
           {homePageDatas?.packageService?.map((item, index) => {
             return (
-              <div key={index}>
+              <div key={crypto.randomUUID()}>
                 <WorkSolutionCards
                   title={item.title_1}
                   bestFor={item.title_2}
@@ -493,6 +488,7 @@ export default function Home() {
                   discount={10 / 100}
                   whatYouGet={item.benefit}
                   statusType={item.statusType}
+                  id={item._id}
                 />
               </div>
             );
@@ -510,7 +506,7 @@ export default function Home() {
                 return (
                   <AccordionItem
                     className="border-y border-[#131b2e] py-5"
-                    key={index}
+                    key={crypto.randomUUID()}
                   >
                     {({ isExpanded }) => (
                       <>
@@ -555,7 +551,7 @@ export default function Home() {
           <div>
             <Splide aria-label="My Favorite Images" ref={splideRef}>
               {slides.map((slide, index) => (
-                <SplideSlide key={index}>
+                <SplideSlide key={crypto.randomUUID()}>
                   <div className="border-border-red-500 w-full grid grid-cols-1 md:grid-cols-3 gap-3">
                     {slide.map((item, itemIndex) => (
                       <div

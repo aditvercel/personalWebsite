@@ -1,5 +1,5 @@
 "use client";
-import { StepNumber } from "@chakra-ui/react";
+
 import React, { useState, useEffect } from "react";
 import api from "@/utils/axiosInstance";
 import { Chrono } from "react-chrono";
@@ -17,33 +17,10 @@ export default function Page() {
         ]);
 
         if (res.data.statusCode === 200) {
+          const transformedJourneyData = transformJourneyData(res.data.result);
           setHomePageDatas((prev) => ({
             ...prev,
-            journeyDatas: res.data.result
-              .map((item) => {
-                const date = new Date(item.year);
-                const formattedDate = date.toLocaleDateString("en-GB", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                });
-
-                return {
-                  title: formattedDate,
-                  textTitle: item.title_1,
-                  url: item.image,
-                  cardSubtitle: item.description_1,
-                  // cardDetailedText: item.description_2,
-                  media: {
-                    type: "IMAGE",
-                    source: {
-                      url: item.image,
-                    },
-                  },
-                  year: date.getFullYear(), // Add year property for sorting
-                };
-              })
-              .sort((a, b) => b.year - a.year), // Sort by year from recent to oldest
+            journeyDatas: transformedJourneyData,
           }));
         }
       } catch (error) {
@@ -51,9 +28,36 @@ export default function Page() {
       }
     };
 
-    fetchData();
-  }, []);
+    fetchData(); // Call fetchData inside useEffect
+  }, []); // Add dependencies as necessary
 
+  // Move the data transformation logic to a separate function
+  const transformJourneyData = (data) => {
+    return data
+      .map((item) => {
+        const date = new Date(item.year);
+        const formattedDate = date.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+
+        return {
+          title: formattedDate,
+          textTitle: item.title_1,
+          url: item.image,
+          cardSubtitle: item.description_1,
+          media: {
+            type: "IMAGE",
+            source: {
+              url: item.image,
+            },
+          },
+          year: date,
+        };
+      })
+      .sort((a, b) => b.year - a.year); // Sort by year with the most recent first
+  };
   return (
     <div className="w-full">
       {homePageDatas.journeyDatas.length > 1 && (
@@ -80,7 +84,7 @@ export default function Page() {
         >
           {homePageDatas.journeyDatas.map((item, index) => (
             <div
-              key={index}
+              key={crypto.randomUUID()}
               className=" text-black grid align-middle justify-center self-center text-center"
             >
               <div className=" text-center font-medium text-[16px]">

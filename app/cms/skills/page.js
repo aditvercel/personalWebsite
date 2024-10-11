@@ -189,7 +189,7 @@ export default function Page() {
                   <Th>NO.</Th>
                   {Object.keys(homePageDatas.mySkillsDatas[0]).map(
                     (key, index) => (
-                      <Th key={index}>{key}</Th>
+                      <Th key={crypto.randomUUID()}>{key}</Th>
                     )
                   )}
                   <Th>Action</Th>
@@ -198,7 +198,7 @@ export default function Page() {
             )}
             <Tbody>
               {homePageDatas.mySkillsDatas.map((item, index) => (
-                <Tr key={index}>
+                <Tr key={crypto.randomUUID()}>
                   <Td>{index + 1}</Td>
 
                   {Object.keys(item).map((key) => (
