@@ -121,12 +121,9 @@ export default function Home() {
           // api.get(
           //   `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject?category=${latestProjectQuery.category}`
           // ),
-          // api.post(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/profile`, {
-          //   name: "test aditya",
-          //   description: "test aditya",
-          //   image:
-          //     "https://res.cloudinary.com/drymuerks/image/upload/v1726801891/362927132_675384167972498_3833124988285082399_n_2_-_Copy_sp2rsp.jpg",
-          //   cv: "https://res.cloudinary.com/drymuerks/image/upload/v1728219777/kxo4rwzlafvelbckxkky.pdf",
+          // api.post(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/users/create`, {
+          //   userName: "adityamms",
+          //   password: "081277012300",
           // }),
         ]);
 
@@ -178,10 +175,10 @@ export default function Home() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    // see updated datas
-    console.log("Updated homePageDatas", homePageDatas);
-  }, [homePageDatas]);
+  // useEffect(() => {
+  //   // see updated datas
+  //   console.log("Updated homePageDatas", homePageDatas);
+  // }, [homePageDatas]);
 
   useEffect(() => {
     const fetchData = async () => {

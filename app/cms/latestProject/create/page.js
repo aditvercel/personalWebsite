@@ -113,7 +113,6 @@ const UpdatePage = () => {
     });
 
     try {
-      console.log(body);
       let res = await api.post(
         `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject/create`,
         body

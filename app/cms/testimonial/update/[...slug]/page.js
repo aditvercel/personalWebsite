@@ -110,7 +110,6 @@ const UpdatePage = () => {
     });
 
     try {
-      console.log(body);
       let res = await api.put(
         `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/testimonial/update`,
         body

@@ -1,31 +1,33 @@
 import { connectToDB } from "@/utils/ConnectDB";
-import User from "@/model/User";
+import user from "@/model/user";
 import { NextResponse } from "next/server";
 
 export async function POST(request) {
-  await connectToDB();
   try {
-    // Parse the request body to get user login credentials
-    const { UserName, Password } = await request.json();
+    // Parse the incoming JSON request
+    const { userName, password } = await request.json();
 
-    // Query the database to check if the user exists
-    const user = await User.findOne({ UserName });
+    // Connect to the database
+    await connectToDB();
 
-    if (!user) {
-      // User not found
+    // Find the user by username
+    const foundUser = await user.findOne({ userName });
+
+    if (!foundUser) {
+      // Return 404 if user is not found
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Check if the provided password matches the stored password
-    if (user.Password !== Password) {
-      // Password doesn't match
+    // Compare the plain-text password
+    if (foundUser.password !== password) {
+      // Return 401 if password doesn't match
       return NextResponse.json({ error: "Invalid password" }, { status: 401 });
     }
 
-    // If username and password match, you can consider the user logged in
-    return NextResponse.json({ message: "Login successful", user });
+    // Login successful, return user data
+    return NextResponse.json({ message: "Login successful", user: foundUser });
   } catch (error) {
-    console.error(error);
+    console.error("Login error:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

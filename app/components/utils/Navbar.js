@@ -186,8 +186,8 @@ export default function Navbar() {
               <Kbd>ctrl</Kbd> + <Kbd>k</Kbd>
             </span> */}
           </div>
-          <div className="hidden md:flex cursor-pointer">
-            <ButtonFilled title="subscribe" color="#00ffffaf" />
+          <div className="hidden md:flex">
+            <ButtonFilled title="subscribe" color="#00ffffaf" disabled />
           </div>
         </div>
         <Button

@@ -26,7 +26,7 @@ export async function POST(request) {
     }
 
     // Create new item with decrypted data
-    console.log(data, "datanya");
+    // console.log(data, "datanya");
     const newItem = await contact.create(data);
 
     return NextResponse.json(

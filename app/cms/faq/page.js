@@ -21,8 +21,10 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Tooltip,
   useToast, // Import Toast for notifications
 } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
 import {
   DeleteIcon,
   EditIcon,
@@ -41,6 +43,8 @@ import Image from "next/image";
 
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure(); // Chakra Disclosure for AlertDialog
+  const { data: session } = useSession(); // Get session data to check login state
+  const loginTooltip = "You need to log in to perform this action.";
   const [homePageDatas, setHomePageDatas] = useState({
     faqDatas: [],
     deletedItemId: "",
@@ -236,16 +240,26 @@ export default function Page() {
                           aria-label="Update"
                         />
                       </Link>
-                      <IconButton
-                        icon={<DeleteIcon />}
-                        colorScheme="red"
-                        size="sm"
-                        aria-label="Delete"
-                        onClick={() => {
-                          changeDeletedId(item._id); // Set deletedItemId
-                          onOpen(); // Open the confirmation dialog
-                        }}
-                      />
+                      <Tooltip
+                        label={!session ? loginTooltip : ""}
+                        isDisabled={!!session} // Show tooltip only if not logged in
+                      >
+                        <span>
+                          {" "}
+                          {/* This span wrapper is needed for tooltips on disabled buttons */}
+                          <IconButton
+                            icon={<DeleteIcon />}
+                            colorScheme="red"
+                            size="sm"
+                            aria-label="Delete"
+                            isDisabled={!session} // Disable button if not logged in
+                            onClick={() => {
+                              changeDeletedId(item._id); // Set deletedItemId
+                              onOpen(); // Open the confirmation dialog
+                            }}
+                          />
+                        </span>
+                      </Tooltip>
                     </HStack>
                   </Td>
                 </Tr>

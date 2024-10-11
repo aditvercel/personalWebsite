@@ -127,8 +127,6 @@ const UpdatePage = () => {
     });
 
     try {
-      console.log(body);
-      s;
       let res = await api.post(
         `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService/create`,
         body

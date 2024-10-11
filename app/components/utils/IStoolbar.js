@@ -1,27 +1,29 @@
 "use client";
-import { Button } from "@chakra-ui/react";
+import { Button, Tooltip } from "@chakra-ui/react";
 import React from "react";
-import { useRouter } from "next/navigation"; // Import router from next/navigation
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function IStoolbar(props) {
+  const { data: session } = useSession(); // Get session data to check login state
   const router = useRouter();
 
   const handleGoToLink = (link) => {
-    console.log(link);
     if (link && typeof link !== "boolean") {
       router.push(link);
     }
   };
 
   const handleGoBack = (link) => {
-    console.log(link);
-    console.log(typeof link);
     if (link && typeof link !== "boolean") {
       router.push(link);
     } else {
       window.history.back();
     }
   };
+
+  const loginTooltip = "You need to log in to perform this action.";
+  const actionDisabledTooltip = "Action disabled.";
 
   return (
     <div className="w-full bg-white h-16 flex items-center align-middle px-2 text-2xl mb-5 justify-between font-bold">
@@ -33,39 +35,80 @@ export default function IStoolbar(props) {
       </div>
 
       {props.add && (
-        <Button
-          colorScheme={props.disabled ? "gray" : "green"}
-          size="md"
-          onClick={props.disabled ? null : () => handleGoToLink(props.add)}
-          className={props.disabled ? "cursor-not-allowed" : ""}
-          isDisabled={props.disabled} // Disable button if disabled is true
+        <Tooltip
+          label={
+            !session
+              ? loginTooltip
+              : props.disabled
+              ? actionDisabledTooltip
+              : ""
+          }
+          isDisabled={session && !props.disabled} // Show tooltip only if not logged in or action is disabled
         >
-          Add
-        </Button>
+          <Button
+            colorScheme={!session || props.disabled ? "gray" : "green"}
+            size="md"
+            onClick={
+              !session || props.disabled
+                ? null
+                : () => handleGoToLink(props.add)
+            }
+            className={!session || props.disabled ? "cursor-not-allowed" : ""}
+            isDisabled={!session || props.disabled} // Disable button if not logged in or disabled
+          >
+            Add
+          </Button>
+        </Tooltip>
       )}
 
       {props.edit && (
-        <Button
-          colorScheme={props.disabled ? "gray" : "green"}
-          size="md"
-          onClick={props.disabled ? null : () => handleGoToLink(props.edit)}
-          className={props.disabled ? "cursor-not-allowed" : ""}
-          isDisabled={props.disabled} // Disable button if disabled is true
+        <Tooltip
+          label={
+            !session
+              ? loginTooltip
+              : props.disabled
+              ? actionDisabledTooltip
+              : ""
+          }
+          isDisabled={session && !props.disabled} // Show tooltip if not logged in or action is disabled
         >
-          Edit
-        </Button>
+          <Button
+            colorScheme={!session || props.disabled ? "gray" : "green"}
+            size="md"
+            onClick={
+              !session || props.disabled
+                ? null
+                : () => handleGoToLink(props.edit)
+            }
+            className={!session || props.disabled ? "cursor-not-allowed" : ""}
+            isDisabled={!session || props.disabled} // Disable button if disabled
+          >
+            Edit
+          </Button>
+        </Tooltip>
       )}
 
       {props.save && (
-        <Button
-          colorScheme={props.disabled ? "gray" : "green"}
-          size="md"
-          onClick={props.disabled ? null : props.save}
-          className={props.disabled ? "cursor-not-allowed" : ""}
-          isDisabled={props.disabled} // Disable button if disabled is true
+        <Tooltip
+          label={
+            !session
+              ? loginTooltip
+              : props.disabled
+              ? actionDisabledTooltip
+              : ""
+          }
+          isDisabled={session && !props.disabled} // Show tooltip if not logged in or action is disabled
         >
-          Save
-        </Button>
+          <Button
+            colorScheme={!session || props.disabled ? "gray" : "green"}
+            size="md"
+            onClick={!session || props.disabled ? null : props.save}
+            className={!session || props.disabled ? "cursor-not-allowed" : ""}
+            isDisabled={!session || props.disabled} // Disable button if disabled
+          >
+            Save
+          </Button>
+        </Tooltip>
       )}
     </div>
   );

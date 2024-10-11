@@ -58,7 +58,6 @@ const CreatePage = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(detail);
     setDetail((prevDetail) => ({
       ...prevDetail,
       [name]: value, // Update the corresponding field, e.g., "category"
@@ -125,7 +124,6 @@ const CreatePage = () => {
     });
 
     try {
-      console.log(body);
       let res = await api.post(
         `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService/create`,
         body

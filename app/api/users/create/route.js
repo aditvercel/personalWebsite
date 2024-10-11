@@ -1,5 +1,5 @@
 import { connectToDB } from "@/utils/ConnectDB";
-import testimonial from "@/model/testimonial";
+import user from "@/model/user";
 import { NextResponse } from "next/server";
 import { encrypt, decrypt } from "@/utils/axiosInstance";
 import { v2 as cloudinary } from "cloudinary";
@@ -26,8 +26,8 @@ export async function POST(request) {
     }
 
     // Create new item with decrypted data
-    // console.log(data, "datanya");
-    const newItem = await testimonial.create(data);
+
+    const newItem = await user.create(data);
 
     return NextResponse.json(
       {

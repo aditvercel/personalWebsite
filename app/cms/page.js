@@ -22,8 +22,9 @@ import {
 import ISinput from "../components/input/ISinput";
 import ImagesInput from "../components/input/ImagesInput";
 import Link from "next/link";
-
+import { useSession, signIn, signOut } from "next-auth/react";
 export default function Page() {
+  const { data: session } = useSession(); // Get session data to check login state
   const [homePageDatas, setHomePageDatas] = useState({
     latestProject: {
       items: [],
@@ -68,7 +69,6 @@ export default function Page() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
     onClose(); // Close the modal after submitting
   };
 
@@ -124,9 +124,9 @@ export default function Page() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log(homePageDatas.profile);
-  }, [homePageDatas.profile]);
+  // useEffect(() => {
+  //   console.log(homePageDatas.profile);
+  // }, [homePageDatas.profile]);
 
   return (
     <div className="relative">
@@ -151,12 +151,14 @@ export default function Page() {
                   <div className=" font-medium text-lg">
                     {homePageDatas.profile?.name || "Aditya Marzuk"}
                   </div>
-                  <div
-                    className="cursor-pointer text-blue-500"
-                    onClick={onOpen}
-                  >
-                    edit
-                  </div>
+                  {session && (
+                    <div
+                      className="cursor-pointer text-blue-500"
+                      onClick={onOpen}
+                    >
+                      edit
+                    </div>
+                  )}
                 </div>
                 <p className="w-[90%] h-[90%] overflow-y-scroll">
                   {homePageDatas.profile?.description}
@@ -165,9 +167,11 @@ export default function Page() {
             </div>
             <div className="border bg-white h-[120px] w-[400px] rounded-lg relative p-2 flex justify-between">
               <div className="font-medium text-lg">CV</div>
-              <div className="text-blue-500 cursor-pointer" onClick={onOpen}>
-                edit
-              </div>
+              {session && (
+                <div className="text-blue-500 cursor-pointer" onClick={onOpen}>
+                  edit
+                </div>
+              )}
 
               <div className="absolute top-0 bottom-0 right-0 left-0 m-auto w-20 h-20">
                 <div
