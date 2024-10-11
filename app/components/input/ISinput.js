@@ -104,7 +104,6 @@ export default function ISinput(props) {
 
   const handleChange = (e) => {
     const value = e.target.value; // Get the current input value
-    console.log(value);
     handleValidation(value); // Validate input
 
     // Update validation state based on current input value

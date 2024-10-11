@@ -495,6 +495,7 @@ export default function Home() {
                   price={item.hargaService}
                   discount={10 / 100}
                   whatYouGet={item.benefit}
+                  statusType={item.statusType}
                 />
               </div>
             );

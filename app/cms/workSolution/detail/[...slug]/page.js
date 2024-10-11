@@ -29,27 +29,31 @@ const UpdatePage = () => {
   const toast = useToast(); // Chakra UI toast hook
 
   const [detail, setDetail] = useState({
-    image: "",
-    imageName: "",
+    namaService: "",
     title_1: "",
-    description: "",
-    category: "",
+    title_2: "",
+    deskripsi: "",
+    whatsappLink: "",
+    statusType: "",
+    benefit: [],
+    hargaService: 0,
+    stock: 0,
     createdAt: "",
     updatedAt: "",
   });
 
   let categoryItems = [
     {
-      text: "Web Development",
-      value: 1,
+      text: "No category",
+      value: "false",
     },
     {
-      text: "Mobile App",
-      value: 2,
+      text: "POPULAR",
+      value: "POPULAR",
     },
     {
-      text: "Graphic Design",
-      value: 3,
+      text: "PREMIUM",
+      value: "PREMIUM",
     },
   ];
 
@@ -81,11 +85,15 @@ const UpdatePage = () => {
   // Disable the Save button if any detail field is empty
   useEffect(() => {
     let body = {
-      image: detail.image,
-      imageName: detail.imageName,
+      namaService: detail.namaService,
       title_1: detail.title_1,
-      description: detail.description,
-      category: detail.category,
+      title_2: detail.title_2,
+      deskripsi: detail.deskripsi,
+      whatsappLink: detail.whatsappLink,
+      statusType: detail.statusType,
+      benefit: detail.benefit,
+      hargaService: detail.hargaService,
+      stock: detail.stock,
     };
     const isFormValid = Object.values(body).every(
       (value) => value !== "" && value !== 0 && value !== null
@@ -96,13 +104,19 @@ const UpdatePage = () => {
   const handleSave = async () => {
     changeIsdisabled("save", true);
     let body = {
-      image: detail.image,
-      imageName: detail.imageName,
+      namaService: detail.namaService,
       title_1: detail.title_1,
-      description: detail.description,
-      category: Number(detail.category),
-    };
+      title_2: detail.title_2,
 
+      whatsappLink: detail.whatsappLink,
+      statusType: detail.statusType,
+      benefit:
+        typeof detail.benefit === "string"
+          ? detail.benefit.split(",")
+          : detail.benefit,
+      hargaService: detail.hargaService,
+      stock: detail.stock,
+    };
     // Show loading toast
     const toastId = toast({
       title: "Updating...",
@@ -114,6 +128,7 @@ const UpdatePage = () => {
 
     try {
       console.log(body);
+      s;
       let res = await api.post(
         `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService/create`,
         body
@@ -169,23 +184,63 @@ const UpdatePage = () => {
           <ISinput
             onChange={handleInputChange}
             type="text"
+            name="namaService"
+            placeholder="Write your namaService name"
+            value={detail.namaService}
+            required
+            label="Nama Service"
+            disabled
+          />
+          <ISinput
+            onChange={handleInputChange}
+            type="number"
+            name="hargaService"
+            placeholder="Write your hargaService"
+            value={detail.hargaService}
+            required
+            label="Harga Service"
+            disabled
+          />
+          <ISinput
+            onChange={handleInputChange}
+            type="text"
             name="title_1"
             placeholder="Write your title_1 name"
             value={detail.title_1}
             required
-            label="Title"
+            label="Title 1"
+            disabled
+          />
+          <ISinput
+            onChange={handleInputChange}
+            type="text"
+            name="title_2"
+            placeholder="Write your title_1 name"
+            value={detail.title_2}
+            required
+            label="Title 2"
             disabled
           />
 
           <ISinput
             onChange={handleInputChange}
             type="select"
-            name="category"
+            name="statusType"
             items={categoryItems}
             placeholder="0"
-            value={detail.category}
+            value={detail.statusType}
             required
             label="Category"
+            disabled
+          />
+          <ISinput
+            onChange={handleInputChange}
+            type="number"
+            name="stock"
+            placeholder="Write your title_1 name"
+            value={detail.stock}
+            required
+            label="Stock"
             disabled
           />
           {/* <ISinput
@@ -213,11 +268,20 @@ const UpdatePage = () => {
         <ISinput
           onChange={handleInputChange}
           type="textarea"
-          name="description"
-          placeholder="Write your description"
+          name="deskripsi"
+          placeholder="Write your deskripsi"
           required
-          label="Description"
-          value={detail.description}
+          label="Deskripsi"
+          value={detail.deskripsi}
+        />
+        <ISinput
+          onChange={handleInputChange}
+          type="textarea"
+          name="benefit"
+          placeholder="Write your Benefit"
+          required
+          label="Benefit"
+          value={detail.benefit}
           disabled
         />
 
@@ -231,7 +295,7 @@ const UpdatePage = () => {
             setDetail((prev) => ({ ...prev, description: newContent }))
           }
         /> */}
-        <ImagesInput
+        {/* <ImagesInput
           onChange={(fileName, base64) => {
             setDetail((prev) => ({
               ...prev,
@@ -243,8 +307,7 @@ const UpdatePage = () => {
           name="image"
           label="Image"
           value={detail}
-          disabled
-        />
+        /> */}
       </div>
     </div>
   );

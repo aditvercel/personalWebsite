@@ -51,9 +51,9 @@ I want to ask you about...
             </div>
           </div>
           <div className="flex mt-5 justify-between">
-            {/* <button className="px-2 font-medium py-1 rounded-full border-[#13a5d4] border w-[100px] text-center">
+            <button className="px-2 font-medium py-1 rounded-full border-[#13a5d4] border w-[100px] text-center">
               Buy service
-            </button> */}
+            </button>
 
             <a href={url} target="_blank" rel="noopener noreferrer">
               <button className="py-1 border-b border-[#13a5d4]">

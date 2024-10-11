@@ -102,9 +102,8 @@ button.splide__arrow--prev {
   transform: scale(0.95) !important;
 }
 
-*,
-::before,
-::after {
+.css-17mg6aq,
+.css-17mg6aq:last-of-type {
   border: 0px;
   border-color: #ffffff !important;
 }

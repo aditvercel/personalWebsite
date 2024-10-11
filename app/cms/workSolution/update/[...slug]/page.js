@@ -32,8 +32,6 @@ const UpdatePage = () => {
     namaService: "",
     title_1: "",
     title_2: "",
-    deskripsi: "",
-    whatsappLink: "",
     statusType: "",
     benefit: [],
     hargaService: 0,
@@ -44,20 +42,21 @@ const UpdatePage = () => {
 
   let categoryItems = [
     {
-      text: "Web Development",
-      value: 1,
+      text: "No category",
+      value: "false",
     },
     {
-      text: "Mobile App",
-      value: 2,
+      text: "POPULAR",
+      value: "POPULAR",
     },
     {
-      text: "Graphic Design",
-      value: 3,
+      text: "PREMIUM",
+      value: "PREMIUM",
     },
   ];
 
   const handleInputChange = (e) => {
+    console.log(detail);
     const { name, value } = e.target;
     setDetail((prevDetail) => ({
       ...prevDetail,
@@ -85,11 +84,14 @@ const UpdatePage = () => {
   // Disable the Save button if any detail field is empty
   useEffect(() => {
     let body = {
-      image: detail.image,
-      imageName: detail.imageName,
+      namaService: detail.namaService,
       title_1: detail.title_1,
-      description: detail.description,
-      category: detail.category,
+      title_2: detail.title_2,
+      deskripsi: detail.deskripsi,
+      statusType: detail.statusType,
+      benefit: detail.benefit,
+      hargaService: detail.hargaService,
+      stock: detail.stock,
     };
     const isFormValid = Object.values(body).every(
       (value) => value !== "" && value !== 0 && value !== null
@@ -100,16 +102,20 @@ const UpdatePage = () => {
   const handleSave = async () => {
     changeIsdisabled("save", true);
     let body = {
-      namaService: "",
-      title_1: "",
-      title_2: "",
-      deskripsi: "",
-      whatsappLink: "",
-      statusType: "",
-      benefit: [],
-      createdAt: "",
-      updatedAt: "",
+      id: slug,
+      namaService: detail.namaService,
+      title_1: detail.title_1,
+      title_2: detail.title_2,
+      deskripsi: detail.deskripsi,
+      statusType: detail.statusType,
+      benefit:
+        typeof detail.benefit === "string"
+          ? detail.benefit.split(",")
+          : detail.benefit,
+      hargaService: detail.hargaService,
+      stock: detail.stock,
     };
+
     // Show loading toast
     const toastId = toast({
       title: "Updating...",
@@ -120,9 +126,8 @@ const UpdatePage = () => {
     });
 
     try {
-      console.log(body);
-      let res = await api.post(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService/create`,
+      let res = await api.put(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/packageService/update`,
         body
       );
       if (res && res.data.statusCode === 200) {
@@ -212,10 +217,10 @@ const UpdatePage = () => {
           <ISinput
             onChange={handleInputChange}
             type="select"
-            name="category"
+            name="statusType"
             items={categoryItems}
             placeholder="0"
-            value={detail.category}
+            value={detail.statusType}
             required
             label="Category"
           />
@@ -250,6 +255,15 @@ const UpdatePage = () => {
           />
            */}
         </div>
+        <ISinput
+          onChange={handleInputChange}
+          type="textarea"
+          name="deskripsi"
+          placeholder="Write your deskripsi"
+          required
+          label="Deskripsi"
+          value={detail.deskripsi}
+        />
         <ISinput
           onChange={handleInputChange}
           type="textarea"

@@ -26,7 +26,18 @@ export async function POST(request) {
     }
 
     // Create new item with decrypted data
-    console.log(data, "datanya");
+    const itemCount = await packageService.countDocuments();
+    if (itemCount >= 3) {
+      return NextResponse.json(
+        {
+          status: "error",
+          statusCode: 403,
+          message: "Cannot create more than 3 items",
+        },
+        { status: 403 }
+      );
+    }
+
     const newItem = await packageService.create(data);
 
     return NextResponse.json(

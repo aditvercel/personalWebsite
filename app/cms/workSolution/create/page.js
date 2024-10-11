@@ -10,7 +10,7 @@ import api from "@/utils/axiosInstance";
 import JoditInput from "@/app/components/input/JoditInput";
 import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
-const UpdatePage = () => {
+const CreatePage = () => {
   const [isDisabled, setISdisabled] = useState({
     save: true, // Initially disabled
     edit: false,
@@ -33,9 +33,8 @@ const UpdatePage = () => {
     title_1: "",
     title_2: "",
     deskripsi: "",
-    whatsappLink: "",
     statusType: "",
-    benefit: [],
+    benefit: "",
     hargaService: 0,
     stock: 0,
     createdAt: "",
@@ -44,21 +43,22 @@ const UpdatePage = () => {
 
   let categoryItems = [
     {
-      text: "Popular",
+      text: "No category",
+      value: "false",
+    },
+    {
+      text: "POPULAR",
       value: "POPULAR",
     },
     {
-      text: "Mobile App",
-      value: 2,
-    },
-    {
-      text: "Graphic Design",
-      value: 3,
+      text: "PREMIUM",
+      value: "PREMIUM",
     },
   ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log(detail);
     setDetail((prevDetail) => ({
       ...prevDetail,
       [name]: value, // Update the corresponding field, e.g., "category"
@@ -88,32 +88,33 @@ const UpdatePage = () => {
       namaService: detail.namaService,
       title_1: detail.title_1,
       title_2: detail.title_2,
-      deskripsi: detail.deskripsi,
-      whatsappLink: detail.whatsappLink,
       statusType: detail.statusType,
       benefit: detail.benefit,
+      hargaService: detail.hargaService,
+      stock: detail.stock,
+      deskripsi: detail.deskripsi,
     };
     const isFormValid = Object.values(body).every(
-      (value) =>
-        value !== "" &&
-        value !== 0 &&
-        value !== null &&
-        (!Array.isArray(value) || value.length > 0)
+      (value) => value !== "" && value !== 0 && value !== null
     );
-
     changeIsdisabled("save", !isFormValid); // Disable if the form is invalid
   }, [detail]);
 
   const handleSave = async () => {
     changeIsdisabled("save", true);
     let body = {
-      image: detail.image,
-      imageName: detail.imageName,
+      namaService: detail.namaService,
       title_1: detail.title_1,
-      description: detail.description,
-      category: Number(detail.category),
+      title_2: detail.title_2,
+      deskripsi: detail.deskripsi,
+      statusType: detail.statusType,
+      benefit:
+        typeof detail.benefit === "string"
+          ? detail.benefit.split(",")
+          : detail.benefit,
+      hargaService: detail.hargaService,
+      stock: detail.stock,
     };
-
     // Show loading toast
     const toastId = toast({
       title: "Updating...",
@@ -179,22 +180,58 @@ const UpdatePage = () => {
           <ISinput
             onChange={handleInputChange}
             type="text"
+            name="namaService"
+            placeholder="Write your namaService name"
+            value={detail.namaService}
+            required
+            label="Nama Service"
+          />
+          <ISinput
+            onChange={handleInputChange}
+            type="number"
+            name="hargaService"
+            placeholder="Write your hargaService"
+            value={detail.hargaService}
+            required
+            label="Harga Service"
+          />
+          <ISinput
+            onChange={handleInputChange}
+            type="text"
             name="title_1"
             placeholder="Write your title_1 name"
             value={detail.title_1}
             required
-            label="Title"
+            label="Title 1"
+          />
+          <ISinput
+            onChange={handleInputChange}
+            type="text"
+            name="title_2"
+            placeholder="Write your title_1 name"
+            value={detail.title_2}
+            required
+            label="Title 2"
           />
 
           <ISinput
             onChange={handleInputChange}
             type="select"
-            name="category"
+            name="statusType"
             items={categoryItems}
             placeholder="0"
-            value={detail.category}
+            value={detail.statusType}
             required
             label="Category"
+          />
+          <ISinput
+            onChange={handleInputChange}
+            type="number"
+            name="stock"
+            placeholder="Write your title_1 name"
+            value={detail.stock}
+            required
+            label="Stock"
           />
           {/* <ISinput
             onChange={handleInputChange}
@@ -221,11 +258,20 @@ const UpdatePage = () => {
         <ISinput
           onChange={handleInputChange}
           type="textarea"
-          name="description"
-          placeholder="Write your description"
+          name="deskripsi"
+          placeholder="Write your deskripsi"
           required
-          label="Description"
-          value={detail.description}
+          label="Deskripsi"
+          value={detail.deskripsi}
+        />
+        <ISinput
+          onChange={handleInputChange}
+          type="textarea"
+          name="benefit"
+          placeholder="Write your Benefit"
+          required
+          label="Benefit"
+          value={detail.benefit}
         />
 
         {/* <JoditInput
@@ -238,7 +284,7 @@ const UpdatePage = () => {
             setDetail((prev) => ({ ...prev, description: newContent }))
           }
         /> */}
-        <ImagesInput
+        {/* <ImagesInput
           onChange={(fileName, base64) => {
             setDetail((prev) => ({
               ...prev,
@@ -250,10 +296,10 @@ const UpdatePage = () => {
           name="image"
           label="Image"
           value={detail}
-        />
+        /> */}
       </div>
     </div>
   );
 };
 
-export default UpdatePage;
+export default CreatePage;

@@ -14,7 +14,6 @@ const packageServiceSchema = new Schema(
     title_1: { type: String, required: true },
     title_2: { type: String, required: false },
     deskripsi: { type: String, required: true },
-    whatsappLink: { type: String, required: true },
     statusType: { type: String, required: true },
     benefit: [{ type: String, required: false }], // Array of strings ["String","String"]
   },
