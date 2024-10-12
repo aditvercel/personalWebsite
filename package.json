@@ -17,6 +17,8 @@
     "@mui/material": "^6.1.1",
     "@splidejs/react-splide": "^0.7.12",
     "@splidejs/splide": "^4.1.4",
+    "@upstash/ratelimit": "^2.0.3",
+    "@upstash/redis": "^1.34.3",
     "axios": "^1.7.7",
     "cloudinary": "^2.5.0",
     "crypto-js": "^4.2.0",

@@ -3,9 +3,9 @@ import { ImageOutlined, Description } from "@mui/icons-material";
 
 export default function FileInput(props) {
   const [fileName, setFileName] = useState("");
-  const [filePreview, setFilePreview] = useState(null); // Store the image preview URL
+  const [filePreview, setFilePreview] = useState(null); // Store the image/CV preview URL
   const [showModal, setShowModal] = useState(false); // Control the visibility of the modal
-  const [zoom, setZoom] = useState(1); // Store zoom level
+  const [zoom, setZoom] = useState(1); // Store zoom level for images
   const [dragging, setDragging] = useState(false); // Track dragging state
   const [position, setPosition] = useState({ x: 0, y: 0 }); // Track the image position
   const fileInputRef = useRef(null);
@@ -21,32 +21,27 @@ export default function FileInput(props) {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setFileName(file.name); // Set the file name as the text
+      setFileName(file.name); // Set the file name
 
-      // Handle image files
+      const reader = new FileReader();
+
+      // Convert both images and PDFs to Base64
+      reader.onloadend = () => {
+        const base64 = reader.result;
+        setFilePreview(base64); // Update the preview state for images or PDFs
+        props.onChange(file.name, base64); // Call the parent function with the file name and Base64 string
+      };
+
       if (file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64 = reader.result; // Store the Base64 string
-          setFilePreview(base64); // Update the image preview state
-          props.onChange(file.name, base64); // Call the parent function with the file name and Base64
-        };
         reader.readAsDataURL(file); // Read the image file as a data URL
-      } else {
-        // For PDF files
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const base64 = reader.result; // Store the Base64 string
-          setFilePreview(base64); // Set preview state
-          props.onChange(file.name, base64); // Call the parent function with the file name and Base64
-        };
-        reader.readAsArrayBuffer(file); // Read the PDF file as an array buffer
+      } else if (file.type === "application/pdf") {
+        reader.readAsDataURL(file); // Read the PDF file as a data URL
       }
     }
   };
 
-  const handleZoomIn = () => setZoom((prev) => Math.min(prev + 0.2, 3)); // Maximum zoom level
-  const handleZoomOut = () => setZoom((prev) => Math.max(prev - 0.2, 0.2)); // Minimum zoom level is 1 (no zoom out beyond original size)
+  const handleZoomIn = () => setZoom((prev) => Math.min(prev + 0.2, 3));
+  const handleZoomOut = () => setZoom((prev) => Math.max(prev - 0.2, 0.2));
 
   const handleDragStart = (event) => {
     setDragging(true);
@@ -67,7 +62,7 @@ export default function FileInput(props) {
 
   const handleModalClick = (event) => {
     if (modalRef.current === event.target) {
-      setShowModal(false); // Close modal if the background is clicked
+      setShowModal(false); // Close modal if background is clicked
     }
   };
 
@@ -91,7 +86,7 @@ export default function FileInput(props) {
                   style={{
                     width: "40px",
                     height: "40px",
-                    objectFit: "cover", // Ensures the image fits the space
+                    objectFit: "cover",
                     borderRadius: "4px",
                   }}
                 />
@@ -100,7 +95,7 @@ export default function FileInput(props) {
                   style={{
                     width: "40px",
                     height: "40px",
-                    backgroundColor: "#e0e0e0", // Placeholder background
+                    backgroundColor: "#e0e0e0",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
@@ -115,9 +110,7 @@ export default function FileInput(props) {
             )}
           </div>
           <div className="ml-2">
-            <div>
-              {fileName || props.value?.fileName || props.value?.imageName}
-            </div>
+            <div>{props.valueName}</div>
           </div>
         </button>
         <div className="flex justify-end border-2 border-black p-2 bg-gray-500 rounded-lg text-white">
@@ -127,7 +120,6 @@ export default function FileInput(props) {
             <button onClick={handleBrowseClick}>Browse</button>
           )}
         </div>
-        {/* Hidden file input */}
         <input
           ref={fileInputRef}
           type="file"
@@ -137,9 +129,12 @@ export default function FileInput(props) {
         />
       </div>
 
-      {/* Modal for image zoom */}
+      {/* Modal for image/PDF zoom and download */}
       {showModal &&
-        (filePreview || props.value?.file || props.value?.image) && (
+        (filePreview ||
+          props.value?.file ||
+          props.value?.cv ||
+          props.value?.image) && (
           <div
             ref={modalRef}
             className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-20"
@@ -155,7 +150,7 @@ export default function FileInput(props) {
                   src={filePreview || props.value?.image}
                   alt="Zoomed"
                   style={{
-                    transform: `scale(${zoom})`, // Apply zoom scale
+                    transform: `scale(${zoom})`,
                     transition: "transform 0.3s ease-in-out",
                     maxWidth: "100%",
                     maxHeight: "100%",
@@ -168,7 +163,7 @@ export default function FileInput(props) {
                   onMouseMove={handleDrag}
                   onMouseUp={handleDragEnd}
                   draggable="false"
-                  onMouseLeave={handleDragEnd} // To handle cases where mouse leaves the image during drag
+                  onMouseLeave={handleDragEnd}
                 />
               ) : (
                 <div
@@ -176,15 +171,16 @@ export default function FileInput(props) {
                   style={{ height: "100%" }}
                 >
                   <a
-                    href={filePreview}
-                    download={fileName}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                    href={filePreview || props.value?.file || props.value?.cv}
+                    download={`${fileName}.pdf`}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg cursor-pointer"
                   >
-                    Download {fileName}
+                    Download{" "}
+                    {fileName || props.value?.fileName || props.value?.cvName}
                   </a>
                 </div>
               )}
-              {/* Zoom buttons */}
+              {/* Zoom buttons for images */}
               {props.type === "image" && (
                 <div className="absolute bottom-2 left-2 flex space-x-2">
                   <button
@@ -201,7 +197,6 @@ export default function FileInput(props) {
                   </button>
                 </div>
               )}
-              {/* Close button */}
               <button
                 onClick={() => setShowModal(false)}
                 className="absolute top-2 right-2 px-4 py-2 bg-red-500 text-white rounded-lg"

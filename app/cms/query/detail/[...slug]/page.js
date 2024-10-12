@@ -5,22 +5,42 @@ import ISinput from "@/app/components/input/ISinput";
 import IStoolbar from "@/app/components/utils/IStoolbar";
 import { useParams } from "next/navigation"; // Use next/navigation in App Router
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // For navigation
 import api from "@/utils/axiosInstance";
 import JoditInput from "@/app/components/input/JoditInput";
+import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
-const DetailPage = () => {
+const UpdatePage = () => {
   const params = useParams();
   const { slug } = params; // Access slug directly from params
+  const router = useRouter(); // Router for navigation
+  const toast = useToast(); // Chakra UI toast hook
+
+  const [isDisabled, setISdisabled] = useState({
+    save: true, // Initially disabled
+    edit: false,
+    add: false,
+  });
+
   const [detail, setDetail] = useState({
     createdAt: "",
-    description_1: "",
-    description_2: "",
-    image: "",
-    title_1: "",
     updatedAt: "",
-    year: "",
-    imageName: "",
+    top_title: "",
+    bottom_title: "",
+    link: "",
   });
+
+  const changeIsdisabled = (name, value) => {
+    setISdisabled((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setDetail((prev) => ({ ...prev, [name]: value }));
+    console.log(detail);
+  };
 
   const getDetail = async () => {
     try {
@@ -39,73 +59,167 @@ const DetailPage = () => {
     getDetail();
   }, []);
 
+  // Disable the Save button if any detail field is empty
+  useEffect(() => {
+    let body = {
+      top_title: detail.top_title,
+      bottom_title: detail.bottom_title,
+      link: detail.link,
+    };
+    const isFormValid = Object.values(body).every(
+      (value) => value !== "" && value !== 0 && value !== null
+    );
+    changeIsdisabled("save", !isFormValid);
+  }, [detail]);
+
+  const handleSave = async () => {
+    changeIsdisabled("save", true);
+    let body = {
+      id: slug,
+      top_title: detail.top_title,
+      bottom_title: detail.bottom_title,
+      link: detail.link,
+    };
+
+    // Show loading toast
+    const toastId = toast({
+      title: "Updating...",
+      description: "Your update is in progress.",
+      status: "loading",
+      duration: null, // Keep loading until action finishes
+      isClosable: false,
+    });
+
+    try {
+      let res = await api.put(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/query/update`,
+        body
+      );
+      if (res && res.data.statusCode === 200) {
+        // Close the loading toast and show success toast
+        changeIsdisabled("save", false);
+        toast.update(toastId, {
+          title: "Update Successful",
+          description: "Your data has been updated successfully.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          onCloseComplete: () => {
+            router.back(); // Navigate back only when the toast is closed
+          },
+        });
+      } else {
+        // Show error toast
+        changeIsdisabled("save", false);
+        toast.update(toastId, {
+          title: "Update Failed",
+          description: "Something went wrong during the update.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      // Show error toast
+      changeIsdisabled("save", false);
+      toast.update(toastId, {
+        title: "Error",
+        description: "An error occurred while updating.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
-    <div className=" relative">
-      <IStoolbar edit={`/cms/query/update/${slug}`} back title="Detail query" />
+    <div className="relative">
+      <IStoolbar
+        edit={`/cms/query/update/${slug}`}
+        back
+        title="Detail query"
+        disabled={isDisabled.save} // Disable save if form is invalid
+      />
       <div className="bg-gray-100 py-10 px-20 relative">
-        {/* <h1 className=" text-black">Edit Page for Item: {slug}</h1> */}
-        <div className=" w-full grid grid-cols-2 gap-x-[80px] gap-y-[10px]">
+        <div className="w-full grid grid-cols-2 gap-x-[80px] gap-y-[10px]">
           <ISinput
-            // onChange={handleInputChange}
+            onChange={handleInputChange}
             type="text"
-            name="fullName"
+            name="top_title"
             placeholder="Write your full name"
-            value={detail.title_1}
-            disabled
+            value={detail.top_title}
             required
-            label="Title"
+            label="Top title"
+            disabled
           />
           <ISinput
-            // onChange={handleInputChange}
+            onChange={handleInputChange}
+            type="text"
+            name="bottom_title"
+            placeholder="0"
+            value={detail.bottom_title}
+            required
+            label="Bottom title"
+            disabled
+          />
+          <ISinput
+            onChange={handleInputChange}
+            type="text"
+            name="link"
+            placeholder="0"
+            value={detail.link}
+            required
+            label="Link url"
+            disabled
+          />
+          {/* <ISinput
+            onChange={handleInputChange}
             type="date"
-            name="fullName"
+            name="year"
             placeholder="Write your full name"
             required
             label="Date"
             value={detail.year}
-            disabled
           />
 
           <JoditInput
-            // value={content}
-            tabIndex={3} // tabIndex of textarea
-            name="email"
+            tabIndex={3}
+            name="description_1"
             label="Description 1"
             required
-            readonly
             value={detail.description_1}
-            // onBlur={(newContent) => {
-            //   setLetsConnectForm((item) => {
-            //     return { ...item, messages: newContent };
-            //   });
-            // }}
+            onBlur={(newContent) =>
+              setDetail((prev) => ({ ...prev, description_1: newContent }))
+            }
           />
           <JoditInput
-            // value={content}
-            tabIndex={3} // tabIndex of textarea
-            name="email"
+            tabIndex={3}
+            name="description_2"
             label="Description 2"
             required
-            readonly
             value={detail.description_2}
-            // onBlur={(newContent) => {
-            //   setLetsConnectForm((item) => {
-            //     return { ...item, messages: newContent };
-            //   });
-            // }}
-          />
+            onBlur={(newContent) =>
+              setDetail((prev) => ({ ...prev, description_2: newContent }))
+            }
+          /> */}
         </div>
-        <ImagesInput
-          // onChange={handleInputChange}
+
+        {/* <ImagesInput
+          onChange={(fileName, base64) => {
+            setDetail((prev) => ({
+              ...prev,
+              image: base64,
+              imageName: fileName,
+            }));
+          }}
           type="image"
-          name="fullName"
+          name="image"
           label="Image"
           value={detail}
-          disabled
-        />
+        /> */}
       </div>
     </div>
   );
 };
 
-export default DetailPage;
+export default UpdatePage;

@@ -15,12 +15,14 @@ import {
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 import ISinput from "../components/input/ISinput";
 import ImagesInput from "../components/input/ImagesInput";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 export default function Page() {
   const { data: session } = useSession(); // Get session data to check login state
+  const toast = useToast(); // Chakra UI toast hook
   const [homePageDatas, setHomePageDatas] = useState({
     latestProject: {
       items: [],
@@ -28,6 +30,7 @@ export default function Page() {
       currentPage: 0,
     },
     profile: {
+      id: "",
       name: "",
       description: "",
       image: "",
@@ -39,6 +42,100 @@ export default function Page() {
       latestProject: false,
     },
   });
+  const [isDisabled, setISdisabled] = useState({
+    save: true,
+    edit: false,
+    add: false,
+  });
+  const changeIsdisabled = (name, value) => {
+    setISdisabled((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
+  useEffect(() => {
+    let body = {
+      id: homePageDatas.profile._id,
+      name: homePageDatas.profile.name,
+      description: homePageDatas.profile.description,
+      imageName: homePageDatas.profile.imageName,
+      cvName: homePageDatas.profile.cvName,
+    };
+
+    // Check that all required fields are non-empty
+    const isFormValid = Object.values(body).every(
+      (value) => value && value !== "" && value !== 0
+    );
+    changeIsdisabled("save", !isFormValid); // Enable the save button if the form is valid
+  }, [homePageDatas.profile]);
+
+  const handleSave = async () => {
+    changeIsdisabled("save", true);
+    let body = {
+      ...homePageDatas?.profile,
+      id: homePageDatas?.profile?._id, // Add a comma here to separate the fields
+    };
+
+    // Show loading toast
+    const toastId = toast({
+      title: "Updating...",
+      description: "Your update is in progress.",
+      status: "loading",
+      duration: null, // Keep loading until action finishes
+      isClosable: false,
+    });
+
+    try {
+      let res = await api.put(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/profile/update`,
+        body
+      );
+      if (res && res.data.statusCode === 200) {
+        // Close the loading toast and show success toast
+        changeIsdisabled("save", false);
+        toast.update(toastId, {
+          title: "Update Successful",
+          description: "Your data has been updated successfully.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          onCloseComplete: () => {
+            onClose();
+          },
+        });
+      } else {
+        // Show error toast
+        changeIsdisabled("save", false);
+        toast.update(toastId, {
+          title: "Update Failed",
+          description: "Something went wrong during the update.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      // Show error toast
+      changeIsdisabled("save", false);
+      toast.update(toastId, {
+        title: "Error",
+        description: "An error occurred while updating.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+  const handleDownload = () => {
+    // Create a temporary link element
+    const link = document.createElement("a");
+    link.href = `${
+      homePageDatas.profile?.cv || "/data/pdf/aditya_frontend.pdf"
+    }`; // Correct path to the PDF
+    link.download = "aditya_frontend.pdf"; // Filename to download
+    document.body.appendChild(link);
+    link.click(); // Trigger the download
+    document.body.removeChild(link); // Clean up
+  };
 
   const [latestProjectQuery, setLatestProjectQuery] = useState({
     category: 0,
@@ -50,12 +147,14 @@ export default function Page() {
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
-    setHomePageDatas((prev) => {
-      return {
-        ...prev,
-        profile: { ...prev.profile, [name]: files ? files[0] : value },
-      };
-    });
+    console.log(homePageDatas.profile);
+    setHomePageDatas((prev) => ({
+      ...prev,
+      profile: {
+        ...prev.profile,
+        [name]: files ? files[0] : value, // Handle file input or regular input
+      },
+    }));
   };
 
   // const handleSubmit = (e) => {
@@ -167,6 +266,7 @@ export default function Page() {
               <div className="absolute top-0 bottom-0 right-0 left-0 m-auto w-20 h-20">
                 <div
                   className="h-full w-full rounded-lg cursor-pointer"
+                  onClick={handleDownload}
                   style={{
                     backgroundImage: `url(${cvImage.src || ""})`,
                     backgroundSize: "cover",
@@ -232,6 +332,7 @@ export default function Page() {
                 name="image"
                 label="Image"
                 value={homePageDatas?.profile}
+                valueName={homePageDatas?.profile?.imageName}
               />
               <ImagesInput
                 onChange={(fileName, base64) => {
@@ -248,6 +349,7 @@ export default function Page() {
                 name="cv"
                 label="CV"
                 value={homePageDatas?.profile}
+                valueName={homePageDatas?.profile?.cvName}
               />
               <ISinput
                 onChange={handleInputChange}
@@ -270,7 +372,13 @@ export default function Page() {
               />
 
               <ModalFooter>
-                <Button colorScheme="blue" mr={3} type="submit">
+                <Button
+                  colorScheme="blue"
+                  mr={3}
+                  type="submit"
+                  onClick={handleSave}
+                  isDisabled={isDisabled.save}
+                >
                   Save
                 </Button>
                 <Button variant="ghost" onClick={onClose}>

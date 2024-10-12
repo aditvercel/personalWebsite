@@ -73,7 +73,6 @@ const UpdatePage = () => {
   const handleSave = async () => {
     changeIsdisabled("save", true);
     let body = {
-      id: slug,
       title: detail.title,
       percentage: detail.percentage,
     };

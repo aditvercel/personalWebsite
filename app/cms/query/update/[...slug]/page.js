@@ -11,10 +11,23 @@ import JoditInput from "@/app/components/input/JoditInput";
 import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
 const UpdatePage = () => {
+  const params = useParams();
+  const { slug } = params; // Access slug directly from params
+  const router = useRouter(); // Router for navigation
+  const toast = useToast(); // Chakra UI toast hook
+
   const [isDisabled, setISdisabled] = useState({
     save: true, // Initially disabled
     edit: false,
     add: false,
+  });
+
+  const [detail, setDetail] = useState({
+    createdAt: "",
+    updatedAt: "",
+    top_title: "",
+    bottom_title: "",
+    link: "",
   });
 
   const changeIsdisabled = (name, value) => {
@@ -22,22 +35,6 @@ const UpdatePage = () => {
       return { ...prev, [name]: value };
     });
   };
-
-  const params = useParams();
-  const { slug } = params; // Access slug directly from params
-  const router = useRouter(); // Router for navigation
-  const toast = useToast(); // Chakra UI toast hook
-
-  const [detail, setDetail] = useState({
-    createdAt: "",
-    description_1: "",
-    description_2: "",
-    image: "",
-    title_1: "",
-    updatedAt: "",
-    year: "",
-    imageName: "",
-  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,15 +61,12 @@ const UpdatePage = () => {
   // Disable the Save button if any detail field is empty
   useEffect(() => {
     let body = {
-      description_1: detail.description_1,
-      description_2: detail.description_2,
-      image: detail.image,
-      imageName: detail.imageName,
-      title_1: detail.title_1,
-      year: detail.year,
+      top_title: detail.top_title,
+      bottom_title: detail.bottom_title,
+      link: detail.link,
     };
     const isFormValid = Object.values(body).every(
-      (value) => value.trim() !== ""
+      (value) => value !== "" && value !== 0 && value !== null
     );
     changeIsdisabled("save", !isFormValid);
   }, [detail]);
@@ -81,12 +75,9 @@ const UpdatePage = () => {
     changeIsdisabled("save", true);
     let body = {
       id: slug,
-      description_1: detail.description_1,
-      description_2: detail.description_2,
-      image: detail.image,
-      imageName: detail.imageName,
-      title_1: detail.title_1,
-      year: detail.year,
+      top_title: detail.top_title,
+      bottom_title: detail.bottom_title,
+      link: detail.link,
     };
 
     // Show loading toast
@@ -153,13 +144,31 @@ const UpdatePage = () => {
           <ISinput
             onChange={handleInputChange}
             type="text"
-            name="title_1"
+            name="top_title"
             placeholder="Write your full name"
-            value={detail.title_1}
+            value={detail.top_title}
             required
-            label="Title"
+            label="Top title"
           />
           <ISinput
+            onChange={handleInputChange}
+            type="text"
+            name="bottom_title"
+            placeholder="0"
+            value={detail.bottom_title}
+            required
+            label="Bottom title"
+          />
+          <ISinput
+            onChange={handleInputChange}
+            type="text"
+            name="link"
+            placeholder="0"
+            value={detail.link}
+            required
+            label="Link url"
+          />
+          {/* <ISinput
             onChange={handleInputChange}
             type="date"
             name="year"
@@ -188,10 +197,10 @@ const UpdatePage = () => {
             onBlur={(newContent) =>
               setDetail((prev) => ({ ...prev, description_2: newContent }))
             }
-          />
+          /> */}
         </div>
 
-        <ImagesInput
+        {/* <ImagesInput
           onChange={(fileName, base64) => {
             setDetail((prev) => ({
               ...prev,
@@ -203,7 +212,7 @@ const UpdatePage = () => {
           name="image"
           label="Image"
           value={detail}
-        />
+        /> */}
       </div>
     </div>
   );

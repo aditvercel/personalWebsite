@@ -32,6 +32,9 @@ const handler = NextAuth({
       },
     }),
   ],
+  pages: {
+    signOut: `${process.env.NEXTAUTH_URL}/cms`, // Redirect here after logout
+  },
   // Other configurations...
 });
 

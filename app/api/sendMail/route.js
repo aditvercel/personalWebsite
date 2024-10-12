@@ -3,10 +3,32 @@ import { NextResponse } from "next/server";
 import { encrypt, decrypt } from "@/utils/axiosInstance"; // Ensure this path is correct
 import verifiedEmail from "@/model/verifiedEmail";
 import { connectToDB } from "@/utils/ConnectDB";
+import { Ratelimit } from "@upstash/ratelimit"; // Import rate limiting package
+import { Redis } from "@upstash/redis"; // Import Redis package
 
 // POST request to send an email
 export async function POST(request) {
   await connectToDB();
+  const ratelimit = new Ratelimit({
+    redis: Redis.fromEnv(),
+    limiter: Ratelimit.slidingWindow(10, "10 s"), // 10 requests per 10 seconds
+    analytics: true,
+    prefix: "@upstash/ratelimit", // Optional prefix for Redis keys
+  });
+  const identifier = request.headers.get("x-forwarded-for") || "api"; // Use the client's IP or a constant string
+
+  // Rate limiting logic
+  const { success } = await ratelimit.limit(identifier);
+  if (!success) {
+    return NextResponse.json(
+      {
+        status: "error",
+        statusCode: 429,
+        message: "Too many requests, please try again later.",
+      },
+      { status: 429 }
+    );
+  }
 
   // Create a transporter for sending emails
   const transporter = nodemailer.createTransport({
