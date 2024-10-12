@@ -57,21 +57,30 @@ export default function ISinput(props) {
   };
 
   const handleChange = (e) => {
-    const value = e.target.value; // Get the current input value
-    handleValidation(value); // Validate input
+    let value = e.target.value; // Get the current input value
 
-    // Update validation state based on current input value
-    const hasError = isError(); // Check for errors
+    handleValidation(value); // Validate input based on your custom validation logic
 
-    // Update the parent component if there's a change
+    const hasError = isError(); // Check for custom validation errors
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const isValidEmail = props.type === "email" ? emailRegex.test(value) : true;
+
+    // For non-email fields, remove the last character if there is an error
+    if (props.type !== "email" && hasError) {
+      value = "";
+      // value = value.slice(0, -1); // Remove the last character
+    }
+
+    // Notify the parent component with the updated value and validation state
     if (props.onChange) {
       props.onChange({
         ...e,
         target: {
           ...e.target,
           name: props.name,
-          value: value,
-          isValid: props.type === "email" && hasError ? false : true,
+          value: props.type !== "email" && hasError ? value : value, // Adjust value for non-email fields
+          isValid: props.type === "email" ? isValidEmail : !hasError, // Handle validation for both email and other fields
         },
       });
     }
