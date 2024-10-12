@@ -80,15 +80,15 @@ const UpdatePage = () => {
     changeIsdisabled("save", !isFormValid); // Disable if the form is invalid
   }, [detail]);
 
-  // const handleSave = async () => {
-  //   changeIsdisabled("save", true);
-  //   let body = {
-  //     id: slug,
-  //     title: detail.title,
-  //     platform: detail.platform,
-  //     link: detail.link,
-  //     phone: detail.phone,
-  //   };
+  const handleSave = async () => {
+    changeIsdisabled("save", true);
+    let body = {
+      id: slug,
+      title: detail.title,
+      platform: detail.platform,
+      link: detail.link,
+      phone: detail.phone,
+    };
 
     // Show loading toast
     const toastId = toast({
