@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef } from "react";
-import { ImageOutlined, Description } from "@mui/icons-material";
+import { Description } from "@mui/icons-material";
 
 export default function FileInput(props) {
   const [fileName, setFileName] = useState("");

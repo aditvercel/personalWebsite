@@ -35,7 +35,7 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 import { Kbd } from "@chakra-ui/react";
-import { ChevronDownIcon, HamburgerIcon, SearchIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { Search2Icon, ExternalLinkIcon } from "@chakra-ui/icons";
 import ButtonFilled from "../buttons/buttonFilled";
 import api from "@/utils/axiosInstance";

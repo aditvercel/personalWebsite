@@ -63,7 +63,7 @@ export async function POST(request) {
 
   try {
     // Query the current number of items in testimonial
-    const itemCount = await testimonial.countDocuments();
+    // const itemCount = await testimonial.countDocuments();
 
     // Check if the item count is less than 3
     // if (itemCount >= 3) {

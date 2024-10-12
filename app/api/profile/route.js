@@ -1,7 +1,7 @@
 import { connectToDB } from "@/utils/ConnectDB";
 import profile from "@/model/profile";
 import { NextResponse } from "next/server";
-import { encrypt, decrypt } from "@/utils/axiosInstance";
+import { encrypt } from "@/utils/axiosInstance";
 
 // GET request handler
 export async function GET(request) {

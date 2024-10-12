@@ -7,7 +7,7 @@ import { useParams } from "next/navigation"; // Use next/navigation in App Route
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // For navigation
 import api from "@/utils/axiosInstance";
-import JoditInput from "@/app/components/input/JoditInput";
+
 import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
 const UpdatePage = () => {
@@ -23,8 +23,6 @@ const UpdatePage = () => {
     });
   };
 
-  const params = useParams();
-  const { slug } = params; // Access slug directly from params
   const router = useRouter(); // Router for navigation
   const toast = useToast(); // Chakra UI toast hook
 

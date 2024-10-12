@@ -1,7 +1,7 @@
 import { connectToDB } from "@/utils/ConnectDB";
 import contact from "@/model/contact";
 import { NextResponse } from "next/server";
-import { encrypt, decrypt } from "@/utils/axiosInstance";
+import { encrypt } from "@/utils/axiosInstance";
 import mongoose from "mongoose";
 
 // GET request handler

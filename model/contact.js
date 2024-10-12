@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 let Schema = mongoose.Schema;
 
-const benefitSchema = new Schema({
-  title: { type: String, required: true },
-});
+// const benefitSchema = new Schema({
+//   title: { type: String, required: true },
+// });
 
 const contactSchema = new Schema(
   {
