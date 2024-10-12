@@ -55,7 +55,6 @@ const UpdatePage = () => {
   ];
 
   const handleInputChange = (e) => {
-    console.log(detail);
     const { name, value } = e.target;
     setDetail((prevDetail) => ({
       ...prevDetail,

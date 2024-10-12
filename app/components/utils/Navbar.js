@@ -227,7 +227,6 @@ export default function Navbar() {
                 placeholder="Search..."
                 onChange={(e) => {
                   setSearchQueries(e.target.value);
-                  console.log(searchQueries);
                 }}
               />
             </InputGroup>

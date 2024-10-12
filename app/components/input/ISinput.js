@@ -68,8 +68,7 @@ export default function ISinput(props) {
 
     // For non-email fields, remove the last character if there is an error
     if (props.type !== "email" && hasError) {
-      value = "";
-      // value = value.slice(0, -1); // Remove the last character
+      value = value.slice(0, -1); // Remove the last character
     }
 
     // Notify the parent component with the updated value and validation state
@@ -187,7 +186,7 @@ export default function ISinput(props) {
             name={props.name}
             value={props.value}
             onChange={handleChange}
-            autoComplete={props.type === "email" ? "off" : "on"}
+            autoComplete="on"
           />
           <div className="grid grid-cols-2 gap-x-1">
             {props.noNumber && validationState.hasNumber && (

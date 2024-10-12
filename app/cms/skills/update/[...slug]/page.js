@@ -37,7 +37,6 @@ const UpdatePage = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setDetail((prev) => ({ ...prev, [name]: value }));
-    console.log(detail);
   };
 
   const getDetail = async () => {

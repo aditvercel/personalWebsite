@@ -25,7 +25,6 @@ export default function Footer() {
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, value, isValid } = e.target;
-    console.log(name, value, isValid);
     name === "email"
       ? setLetsConnectForm((prev) => ({
           ...prev,
