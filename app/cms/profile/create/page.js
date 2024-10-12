@@ -1,5 +1,4 @@
 "use client"; // This is crucial for client-side hooks like useRouter
-
 import ImagesInput from "@/app/components/input/ImagesInput";
 import ISinput from "@/app/components/input/ISinput";
 import IStoolbar from "@/app/components/utils/IStoolbar";
