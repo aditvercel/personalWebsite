@@ -1,13 +1,10 @@
 "use client"; // This is crucial for client-side hooks like useRouter
-
-import ImagesInput from "@/app/components/input/ImagesInput";
 import ISinput from "@/app/components/input/ISinput";
 import IStoolbar from "@/app/components/utils/IStoolbar";
 import { useParams } from "next/navigation"; // Use next/navigation in App Router
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // For navigation
 import api from "@/utils/axiosInstance";
-import JoditInput from "@/app/components/input/JoditInput";
 import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
 const UpdatePage = () => {
@@ -73,6 +70,7 @@ const UpdatePage = () => {
   const handleSave = async () => {
     changeIsdisabled("save", true);
     let body = {
+      id: slug,
       title: detail.title,
       percentage: detail.percentage,
     };
