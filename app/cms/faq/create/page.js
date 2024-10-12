@@ -2,7 +2,6 @@
 
 import ISinput from "@/app/components/input/ISinput";
 import IStoolbar from "@/app/components/utils/IStoolbar";
-import { useParams } from "next/navigation"; // Use next/navigation in App Router
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // For navigation
 import api from "@/utils/axiosInstance";
@@ -31,21 +30,6 @@ const UpdatePage = () => {
     createdAt: "",
     updatedAt: "",
   });
-
-  let categoryItems = [
-    {
-      text: "Popular",
-      value: "POPULAR",
-    },
-    {
-      text: "Mobile App",
-      value: 2,
-    },
-    {
-      text: "Graphic Design",
-      value: 3,
-    },
-  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -237,4 +221,5 @@ const UpdatePage = () => {
   );
 };
 
+// eslint-disable-next-line import/no-unused-modules
 export default UpdatePage;

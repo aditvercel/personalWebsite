@@ -187,7 +187,7 @@ export default function Page() {
                 <Tr>
                   <Th>NO.</Th>
                   {Object.keys(homePageDatas.latestProjectDatas[0]).map(
-                    (key, index) => (
+                    (key) => (
                       <Th key={crypto.randomUUID()}>{key}</Th>
                     )
                   )}

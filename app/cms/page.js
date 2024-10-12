@@ -137,7 +137,7 @@ export default function Page() {
     document.body.removeChild(link); // Clean up
   };
 
-  const [latestProjectQuery, setLatestProjectQuery] = useState({
+  const [latestProjectQuery] = useState({
     category: 0,
     page: 1,
     totalPages: 0,
@@ -290,7 +290,7 @@ export default function Page() {
         <div className="border bg-white w-[600px] h-[50vw] rounded-lg  p-5">
           <div className="mb-3 font-semibold text-lg">Project</div>
           <div className="w-full h-[95%] overflow-y-scroll grid gap-3 justify-center">
-            {homePageDatas.latestProject?.items?.map((item, index) => (
+            {homePageDatas.latestProject?.items?.map((item) => (
               <Link
                 href={`/cms/latestProject/detail/${item._id}`}
                 key={crypto.randomUUID()}

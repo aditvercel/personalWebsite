@@ -1,10 +1,11 @@
 import { connectToDB } from "@/utils/ConnectDB";
 import faq from "@/model/faq";
 import { NextResponse } from "next/server";
-import { encrypt, decrypt } from "@/utils/axiosInstance";
+import { encrypt } from "@/utils/axiosInstance";
 import mongoose from "mongoose";
 
 // GET request handler
+// eslint-disable-next-line import/no-unused-modules
 export async function GET(request) {
   await connectToDB();
 

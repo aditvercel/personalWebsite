@@ -82,7 +82,7 @@ export default function Page() {
           scrollable
           disableToolbar
         >
-          {homePageDatas.journeyDatas.map((item, index) => (
+          {homePageDatas.journeyDatas.map((item) => (
             <div
               key={crypto.randomUUID()}
               className=" text-black grid align-middle justify-center self-center text-center"

@@ -129,7 +129,7 @@ export default function CMSlayout({ children }) {
                       allowToggle
                       className="gap-[20px] grid text-sm justify-center p-0"
                     >
-                      {cmsNavbar.map((item, index) =>
+                      {cmsNavbar.map((item) =>
                         item.child && item.child.length > 0 ? (
                           <AccordionItem key={crypto.randomUUID()}>
                             <AccordionButton className="flex items-center justify-start p-0">
@@ -160,7 +160,7 @@ export default function CMSlayout({ children }) {
 
                             <AccordionPanel pb={4}>
                               <div className="mt-5">
-                                {item.child.map((itemChild, index) => (
+                                {item.child.map((itemChild) => (
                                   <Link
                                     href={itemChild.link}
                                     key={crypto.randomUUID()}

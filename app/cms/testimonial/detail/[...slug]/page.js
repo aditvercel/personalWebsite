@@ -4,9 +4,7 @@ import ISinput from "@/app/components/input/ISinput";
 import IStoolbar from "@/app/components/utils/IStoolbar";
 import { useParams } from "next/navigation"; // Use next/navigation in App Router
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // For navigation
 import api from "@/utils/axiosInstance";
-import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
 const UpdatePage = () => {
   const [isDisabled, setISdisabled] = useState({
@@ -23,8 +21,6 @@ const UpdatePage = () => {
 
   const params = useParams();
   const { slug } = params; // Access slug directly from params
-  const router = useRouter(); // Router for navigation
-  const toast = useToast(); // Chakra UI toast hook
 
   const [detail, setDetail] = useState({
     title_1: "",

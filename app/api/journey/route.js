@@ -1,7 +1,7 @@
 import { connectToDB } from "@/utils/ConnectDB";
 import journey from "@/model/journey";
 import { NextResponse } from "next/server";
-import { encrypt, decrypt } from "@/utils/axiosInstance";
+import { encrypt } from "@/utils/axiosInstance";
 import { v2 as cloudinary } from "cloudinary";
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

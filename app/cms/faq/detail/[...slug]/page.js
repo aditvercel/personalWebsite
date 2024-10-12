@@ -1,14 +1,10 @@
 "use client"; // This is crucial for client-side hooks like useRouter
 
-import ImagesInput from "@/app/components/input/ImagesInput";
 import ISinput from "@/app/components/input/ISinput";
 import IStoolbar from "@/app/components/utils/IStoolbar";
 import { useParams } from "next/navigation"; // Use next/navigation in App Router
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // For navigation
 import api from "@/utils/axiosInstance";
-import JoditInput from "@/app/components/input/JoditInput";
-import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
 const UpdatePage = () => {
   const [isDisabled, setISdisabled] = useState({
@@ -25,8 +21,6 @@ const UpdatePage = () => {
 
   const params = useParams();
   const { slug } = params; // Access slug directly from params
-  const router = useRouter(); // Router for navigation
-  const toast = useToast(); // Chakra UI toast hook
 
   const [detail, setDetail] = useState({
     title_1: "",
@@ -34,21 +28,6 @@ const UpdatePage = () => {
     createdAt: "",
     updatedAt: "",
   });
-
-  let categoryItems = [
-    {
-      text: "Web Development",
-      value: 1,
-    },
-    {
-      text: "Mobile App",
-      value: 2,
-    },
-    {
-      text: "Graphic Design",
-      value: 3,
-    },
-  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -90,64 +69,6 @@ const UpdatePage = () => {
     );
     changeIsdisabled("save", !isFormValid); // Disable if the form is invalid
   }, [detail]);
-
-  const handleSave = async () => {
-    changeIsdisabled("save", true);
-    let body = {
-      title_1: detail.title_1,
-      description: detail.description,
-    };
-
-    // Show loading toast
-    const toastId = toast({
-      title: "Updating...",
-      description: "Your update is in progress.",
-      status: "loading",
-      duration: null, // Keep loading until action finishes
-      isClosable: false,
-    });
-
-    try {
-      let res = await api.post(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq/create`,
-        body
-      );
-      if (res && res.data.statusCode === 200) {
-        // Close the loading toast and show success toast
-        changeIsdisabled("save", false);
-        toast.update(toastId, {
-          title: "Update Successful",
-          description: "Your data has been updated successfully.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-          onCloseComplete: () => {
-            router.back(); // Navigate back only when the toast is closed
-          },
-        });
-      } else {
-        // Show error toast
-        changeIsdisabled("save", false);
-        toast.update(toastId, {
-          title: "Update Failed",
-          description: "Something went wrong during the update.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
-      // Show error toast
-      changeIsdisabled("save", false);
-      toast.update(toastId, {
-        title: "Error",
-        description: "An error occurred while updating.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  };
 
   return (
     <div className="relative">

@@ -187,7 +187,7 @@ export default function Page() {
               <Thead className="bg-gray-400 h-[60px]">
                 <Tr>
                   <Th>NO.</Th>
-                  {Object.keys(homePageDatas.faqDatas[0]).map((key, index) => (
+                  {Object.keys(homePageDatas.faqDatas[0]).map((key) => (
                     <Th key={crypto.randomUUID()}>{key}</Th>
                   ))}
                   <Th>Action</Th>
