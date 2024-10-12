@@ -1,3 +1,4 @@
+"use client";
 import JoditEditor from "jodit-react";
 import React from "react";
 
