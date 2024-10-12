@@ -2,7 +2,6 @@
 
 import ISinput from "@/app/components/input/ISinput";
 import IStoolbar from "@/app/components/utils/IStoolbar";
-import { useParams } from "next/navigation"; // Use next/navigation in App Router
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // For navigation
 import api from "@/utils/axiosInstance";

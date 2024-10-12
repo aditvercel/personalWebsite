@@ -37,21 +37,6 @@ const UpdatePage = () => {
     updatedAt: "",
   });
 
-  let categoryItems = [
-    {
-      text: "Web Development",
-      value: 1,
-    },
-    {
-      text: "Mobile App",
-      value: 2,
-    },
-    {
-      text: "Graphic Design",
-      value: 3,
-    },
-  ];
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setDetail((prevDetail) => ({

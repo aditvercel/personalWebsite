@@ -80,68 +80,6 @@ const UpdatePage = () => {
     changeIsdisabled("save", !isFormValid); // Disable if the form is invalid
   }, [detail]);
 
-  const handleSave = async () => {
-    changeIsdisabled("save", true);
-    let body = {
-      id: slug,
-      title: detail.title,
-      platform: detail.platform,
-      link: detail.link,
-      phone: detail.phone,
-    };
-
-    // Show loading toast
-    const toastId = toast({
-      title: "Updating...",
-      description: "Your update is in progress.",
-      status: "loading",
-      duration: null, // Keep loading until action finishes
-      isClosable: false,
-    });
-
-    try {
-      console.log(body);
-      let res = await api.post(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/contact/create`,
-        body
-      );
-      if (res && res.data.statusCode === 200) {
-        // Close the loading toast and show success toast
-        changeIsdisabled("save", false);
-        toast.update(toastId, {
-          title: "Update Successful",
-          description: "Your data has been updated successfully.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-          onCloseComplete: () => {
-            router.back(); // Navigate back only when the toast is closed
-          },
-        });
-      } else {
-        // Show error toast
-        changeIsdisabled("save", false);
-        toast.update(toastId, {
-          title: "Update Failed",
-          description: "Something went wrong during the update.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
-      // Show error toast
-      changeIsdisabled("save", false);
-      toast.update(toastId, {
-        title: "Error",
-        description: "An error occurred while updating.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  };
-
   return (
     <div className="relative">
       <IStoolbar

@@ -145,7 +145,7 @@ export default function ISinput(props) {
             name={props.name}
           >
             {/* hoping items = [{value : number , text : string }] */}
-            {props.items?.map((item, index) => {
+            {props.items?.map((item) => {
               return (
                 <option key={crypto.randomUUID()} value={item.value}>
                   {item.text}

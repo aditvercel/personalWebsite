@@ -102,7 +102,7 @@ I want to ask you about...`;
             </div>
             <div className=" font-bold">What you get :</div>
             <div className="mt-3 grid pl-5 gap-y-3 font-medium">
-              {props.whatYouGet?.map((item, index) => (
+              {props.whatYouGet?.map((item) => (
                 <div
                   className="flex gap-2 align-middle items-center"
                   key={crypto.randomUUID()}

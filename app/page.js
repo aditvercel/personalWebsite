@@ -319,7 +319,7 @@ export default function Home() {
         className="mt-10 w-full bg-[#131b2e] p-2 md:p-10 grid md:grid-cols-3 grid-cols-2 justify-center items-center align-middle gap-5 rounded-lg border-[10px] border-[#111a2d]"
         id="keys"
       >
-        {aboutDatas.map((item, index) => (
+        {aboutDatas.map((item) => (
           <div
             className=" grid p-2 rounded-md mb-5 min-h-[150px]"
             key={crypto.randomUUID()}
@@ -350,7 +350,7 @@ export default function Home() {
             My Skill&apos;s
           </div>
           <div className="w-full grid grid-cols-3 md:grid-cols-4 mt-10 gap-x-5 md:gap-y-16 gap-y-10">
-            {homePageDatas.mySkills.map((item, index) => (
+            {homePageDatas.mySkills.map((item) => (
               <div key={crypto.randomUUID()}>
                 <div>{item.title}</div>
                 <div className=" flex gap-2">
@@ -430,7 +430,7 @@ export default function Home() {
         <div className="mt-10">
           <div className="grid grid-cols-2 md:grid-cols-3 align-middle justify-center items-center gap-y-2 md:gap-x-3 md:gap-y-5">
             <AnimatePresence>
-              {homePageDatas.latestProject?.items?.map((item, index) => (
+              {homePageDatas.latestProject?.items?.map((item) => (
                 <div key={crypto.randomUUID()}>
                   <Skeleton
                     isLoaded={homePageDatas.skeletons.latestProject}
@@ -477,7 +477,7 @@ export default function Home() {
           </div>
         </div>
         <div className="grid md:grid-cols-3 gap-x-5">
-          {homePageDatas?.packageService?.map((item, index) => {
+          {homePageDatas?.packageService?.map((item) => {
             return (
               <div key={crypto.randomUUID()}>
                 <WorkSolutionCards
@@ -502,7 +502,7 @@ export default function Home() {
           <div className="font-bold text-4xl textLight text-center">FAQs</div>
           <div className="m-w-full">
             <Accordion allowMultiple className="gap-y-1 grid mt-10 ">
-              {homePageDatas.faqs.map((item, index) => {
+              {homePageDatas.faqs.map((item) => {
                 return (
                   <AccordionItem
                     className="border-y border-[#131b2e] py-5"
@@ -550,7 +550,7 @@ export default function Home() {
           </div>
           <div>
             <Splide aria-label="My Favorite Images" ref={splideRef}>
-              {slides.map((slide, index) => (
+              {slides.map((slide) => (
                 <SplideSlide key={crypto.randomUUID()}>
                   <div className="border-border-red-500 w-full grid grid-cols-1 md:grid-cols-3 gap-3">
                     {slide.map((item, itemIndex) => (

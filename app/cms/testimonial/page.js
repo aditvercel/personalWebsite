@@ -34,10 +34,7 @@ import {
 import { useRef, useEffect, useState } from "react";
 import api from "@/utils/axiosInstance";
 import IStoolbar from "@/app/components/utils/IStoolbar";
-import {
-  convertToIndonesianDate,
-  convertToIndonesianDateMonthAndYear,
-} from "@/utils/formmattedValue";
+import { convertToIndonesianDate } from "@/utils/formmattedValue";
 import { Pagination } from "@mui/material";
 
 export default function Page() {
@@ -187,11 +184,9 @@ export default function Page() {
               <Thead className="bg-gray-400 h-[60px]">
                 <Tr>
                   <Th>NO.</Th>
-                  {Object.keys(homePageDatas.testimonialDatas[0]).map(
-                    (key, index) => (
-                      <Th key={crypto.randomUUID()}>{key}</Th>
-                    )
-                  )}
+                  {Object.keys(homePageDatas.testimonialDatas[0]).map((key) => (
+                    <Th key={crypto.randomUUID()}>{key}</Th>
+                  ))}
                   <Th>Action</Th>
                 </Tr>
               </Thead>

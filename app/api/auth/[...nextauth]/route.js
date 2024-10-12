@@ -5,7 +5,7 @@ import axios from "axios";
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         try {
           // Send credentials to the login API
           const res = await axios.post(

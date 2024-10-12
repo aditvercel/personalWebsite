@@ -34,10 +34,7 @@ import {
 import { useRef, useEffect, useState } from "react";
 import api from "@/utils/axiosInstance";
 import IStoolbar from "@/app/components/utils/IStoolbar";
-import {
-  convertToIndonesianDate,
-  convertToIndonesianDateMonthAndYear,
-} from "@/utils/formmattedValue";
+import { convertToIndonesianDate } from "@/utils/formmattedValue";
 import { Pagination } from "@mui/material";
 
 export default function Page() {

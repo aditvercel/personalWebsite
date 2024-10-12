@@ -52,7 +52,7 @@ export default function Navbar() {
     onClose: onDrawerClose,
   } = useDisclosure();
 
-  const [isPartiallyClosed, setIsPartiallyClosed] = useState(false);
+  const [isPartiallyClosed] = useState(false);
   const [queryDatas, setQueryDatas] = useState({
     items: [],
     loaded: false,
@@ -136,7 +136,7 @@ export default function Navbar() {
           </div>
         </Link>
         <div className=" hidden md:flex justify-evenly gap-10 text-sm">
-          {navbarMenuData.map((item, index) => (
+          {navbarMenuData.map((item) => (
             <Menu key={crypto.randomUUID()}>
               {item.link ? (
                 <Link href={item.link} className={` hover:text-[#00ffff]`}>
@@ -233,7 +233,7 @@ export default function Navbar() {
             </InputGroup>
             <div className="w-full mt-4 p-4 cursor-pointer rounded-lg grid gap-5">
               {searchQueries && !queryDatas.loaded
-                ? [...Array(3)].map((_, index) => (
+                ? [...Array(3)].map((_) => (
                     // Skeleton loading placeholder for when the items are still loading
                     <Skeleton
                       key={crypto.randomUUID()}
@@ -241,7 +241,7 @@ export default function Navbar() {
                       className="min-h-[80px] w-full border shadow-black shadow-sm p-4 rounded-xl bg-[#4a5567]"
                     />
                   ))
-                : queryDatas.items?.map((item, index) => (
+                : queryDatas.items?.map((item) => (
                     <Skeleton
                       key={crypto.randomUUID()}
                       isLoaded={queryDatas.items.length > 0}
@@ -294,7 +294,7 @@ export default function Navbar() {
           </DrawerHeader>
           <DrawerBody>
             <div className="grid text-md gap-6 mt-5 text-slate-400">
-              {navbarMenuData.map((item, index) => (
+              {navbarMenuData.map((item) => (
                 <Menu key={crypto.randomUUID()}>
                   {item.link ? (
                     <Link href={item.link} className="hover:text-[#00ffff]">
