@@ -6,7 +6,10 @@ import IStoolbar from "@/app/components/utils/IStoolbar";
 import { useParams } from "next/navigation"; // Use next/navigation in App Router
 import { useEffect, useState } from "react";
 import api from "@/utils/axiosInstance";
-import JoditInput from "@/app/components/input/JoditInput";
+import dynamic from "next/dynamic";
+const JoditInput = dynamic(() => import("@/app/components/input/JoditInput"), {
+  ssr: false,
+});
 
 const DetailPage = () => {
   const params = useParams();

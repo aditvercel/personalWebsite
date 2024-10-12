@@ -4,7 +4,11 @@ import ISinput from "@/app/components/input/ISinput";
 import IStoolbar from "@/app/components/utils/IStoolbar";
 import { useEffect, useState } from "react";
 import api from "@/utils/axiosInstance";
-import JoditInput from "@/app/components/input/JoditInput";
+import dynamic from "next/dynamic";
+const JoditInput = dynamic(() => import("@/app/components/input/JoditInput"), {
+  ssr: false,
+});
+
 import { useRouter } from "next/navigation";
 import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 

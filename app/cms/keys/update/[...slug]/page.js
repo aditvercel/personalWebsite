@@ -7,7 +7,11 @@ import { useParams } from "next/navigation"; // Use next/navigation in App Route
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // For navigation
 import api from "@/utils/axiosInstance";
-import JoditInput from "@/app/components/input/JoditInput";
+import dynamic from "next/dynamic";
+const JoditInput = dynamic(() => import("@/app/components/input/JoditInput"), {
+  ssr: false,
+});
+
 import { useToast } from "@chakra-ui/react"; // Chakra UI toast
 
 const UpdatePage = () => {
