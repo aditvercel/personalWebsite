@@ -1,6 +1,5 @@
 "use client"; // This is crucial for client-side hooks like useRouter
 
-import ImagesInput from "@/app/components/input/ImagesInput";
 import ISinput from "@/app/components/input/ISinput";
 import IStoolbar from "@/app/components/utils/IStoolbar";
 import { useParams } from "next/navigation"; // Use next/navigation in App Router
@@ -29,29 +28,13 @@ const UpdatePage = () => {
   const toast = useToast(); // Chakra UI toast hook
 
   const [detail, setDetail] = useState({
-    image: "",
-    imageName: "",
-    title_1: "",
-    description: "",
-    category: "",
+    title: "",
+    platform: "",
+    link: "",
+    phone: "",
     createdAt: "",
     updatedAt: "",
   });
-
-  let categoryItems = [
-    {
-      text: "Web Development",
-      value: 1,
-    },
-    {
-      text: "Mobile App",
-      value: 2,
-    },
-    {
-      text: "Graphic Design",
-      value: 3,
-    },
-  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,7 +47,7 @@ const UpdatePage = () => {
   const getDetail = async () => {
     try {
       let res = await api.get(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject/getById?id=${slug}`
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/contact/getById?id=${slug}`
       );
       if (res && res.data.statusCode === 200) {
         setDetail(res.data.result);
@@ -81,12 +64,12 @@ const UpdatePage = () => {
   // Disable the Save button if any detail field is empty
   useEffect(() => {
     let body = {
-      image: detail.image,
-      imageName: detail.imageName,
-      title_1: detail.title_1,
-      description: detail.description,
-      category: detail.category,
+      title: detail.title,
+      platform: detail.platform,
+      link: detail.link,
+      phone: detail.phone,
     };
+
     const isFormValid = Object.values(body).every(
       (value) => value !== "" && value !== 0 && value !== null
     );
@@ -96,13 +79,13 @@ const UpdatePage = () => {
   const handleSave = async () => {
     changeIsdisabled("save", true);
     let body = {
-      image: detail.image,
-      imageName: detail.imageName,
-      title_1: detail.title_1,
-      description: detail.description,
-      category: Number(detail.category),
+      id: slug,
+      title: detail.title,
+      platform: detail.platform,
+      link: detail.link,
+      phone: detail.phone,
     };
-
+    console.log(body);
     // Show loading toast
     const toastId = toast({
       title: "Updating...",
@@ -113,8 +96,8 @@ const UpdatePage = () => {
     });
 
     try {
-      let res = await api.post(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject/create`,
+      let res = await api.put(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/contact/update`,
         body
       );
       if (res && res.data.statusCode === 200) {
@@ -159,7 +142,7 @@ const UpdatePage = () => {
       <IStoolbar
         save={handleSave}
         back
-        title="Update Latest Project"
+        title="Update contact"
         disabled={isDisabled.save} // Disable save if form is invalid
       />
       <div className="bg-gray-100 py-10 px-20 relative">
@@ -167,14 +150,41 @@ const UpdatePage = () => {
           <ISinput
             onChange={handleInputChange}
             type="text"
-            name="title_1"
-            placeholder="Write your title_1 name"
-            value={detail.title_1}
+            name="title"
+            placeholder="Write your title name"
+            value={detail.title}
             required
             label="Title"
           />
-
           <ISinput
+            onChange={handleInputChange}
+            type="text"
+            name="platform"
+            placeholder="Write your platform name"
+            value={detail.platform}
+            required
+            label="Platform"
+          />
+          <ISinput
+            onChange={handleInputChange}
+            type="text"
+            name="link"
+            placeholder="Write your link name"
+            value={detail.link}
+            required
+            label="Link"
+          />
+          <ISinput
+            onChange={handleInputChange}
+            type="text"
+            name="phone"
+            placeholder="Write your phone name"
+            value={detail.phone}
+            required
+            label="Phone number"
+          />
+
+          {/* <ISinput
             onChange={handleInputChange}
             type="select"
             name="category"
@@ -183,7 +193,7 @@ const UpdatePage = () => {
             value={detail.category}
             required
             label="Category"
-          />
+          /> */}
           {/* <ISinput
             onChange={handleInputChange}
             type="date"
@@ -203,10 +213,9 @@ const UpdatePage = () => {
             onBlur={(newContent) =>
               setDetail((prev) => ({ ...prev, description_1: newContent }))
             }
-          />
-           */}
+          /> */}
         </div>
-        <ISinput
+        {/* <ISinput
           onChange={handleInputChange}
           type="textarea"
           name="description"
@@ -214,19 +223,19 @@ const UpdatePage = () => {
           required
           label="Description"
           value={detail.description}
-        />
-
-        {/* <JoditInput
-          tabIndex={3}
-          name="description"
-          label="Description"
-          required
-          value={detail.description}
-          onBlur={(newContent) =>
-            setDetail((prev) => ({ ...prev, description: newContent }))
-          }
         /> */}
-        <ImagesInput
+        <div className="mt-5">
+          {/* <JoditInput
+            tabIndex={3}
+            name="description"
+            label="Description"
+            required
+            value={detail.description}
+            onBlur={(newContent) =>
+              setDetail((prev) => ({ ...prev, description: newContent }))
+            }
+          /> */}
+          {/* <ImagesInput
           onChange={(fileName, base64) => {
             setDetail((prev) => ({
               ...prev,
@@ -238,7 +247,8 @@ const UpdatePage = () => {
           name="image"
           label="Image"
           value={detail}
-        />
+        /> */}
+        </div>
       </div>
     </div>
   );

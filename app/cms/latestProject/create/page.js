@@ -102,8 +102,8 @@ const UpdatePage = () => {
 
     // Show loading toast
     const toastId = toast({
-      title: "Updating...",
-      description: "Your update is in progress.",
+      title: "Creating...",
+      description: "Your latest project is being created.",
       status: "loading",
       duration: null, // Keep loading until action finishes
       isClosable: false,

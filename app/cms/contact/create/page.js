@@ -88,15 +88,14 @@ const UpdatePage = () => {
 
     // Show loading toast
     const toastId = toast({
-      title: "Updating...",
-      description: "Your update is in progress.",
+      title: "Creating...",
+      description: "Your contact is being created.",
       status: "loading",
       duration: null, // Keep loading until action finishes
       isClosable: false,
     });
 
     try {
-      console.log(body);
       let res = await api.post(
         `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/contact/create`,
         body
@@ -151,53 +150,40 @@ const UpdatePage = () => {
           <ISinput
             onChange={handleInputChange}
             type="text"
-            name="title_1"
-            placeholder="Write your title_1 name"
-            value={detail.title_1}
+            name="title"
+            placeholder="Write your title name"
+            value={detail.title}
             required
             label="Title"
           />
-
-          {/* <ISinput
+          <ISinput
             onChange={handleInputChange}
-            type="select"
-            name="category"
-            items={categoryItems}
-            placeholder="0"
-            value={detail.category}
+            type="text"
+            name="platform"
+            placeholder="Write your platform name"
+            value={detail.platform}
             required
-            label="Category"
-          /> */}
-          {/* <ISinput
+            label="Platform"
+          />
+          <ISinput
             onChange={handleInputChange}
-            type="date"
-            name="year"
-            placeholder="Write your full name"
+            type="text"
+            name="link"
+            placeholder="Write your link name"
+            value={detail.link}
             required
-            label="Date"
-            value={detail.year}
-          /> */}
-
-          {/* <JoditInput
-            tabIndex={3}
-            name="description_1"
-            label="Description 1"
+            label="Link"
+          />
+          <ISinput
+            onChange={handleInputChange}
+            type="text"
+            name="phone"
+            placeholder="Write your phone name"
+            value={detail.phone}
             required
-            value={detail.description_1}
-            onBlur={(newContent) =>
-              setDetail((prev) => ({ ...prev, description_1: newContent }))
-            }
-          /> */}
+            label="Phone number"
+          />
         </div>
-        {/* <ISinput
-          onChange={handleInputChange}
-          type="textarea"
-          name="description"
-          placeholder="Write your description"
-          required
-          label="Description"
-          value={detail.description}
-        /> */}
         <div className="mt-5">
           {/* <JoditInput
             tabIndex={3}

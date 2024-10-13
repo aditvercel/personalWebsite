@@ -67,10 +67,11 @@ export default function Footer() {
         if (response.status === 200) {
           // Success toast
           toast({
-            title: "Email sent.",
-            description: response.message,
+            title: "A message has been sent to your email.",
+            description:
+              "Please verify your email to ensure the message is forwarded to the developer.",
             status: "success",
-            duration: 5000,
+            duration: 10000,
             isClosable: true,
           });
           // Reset the form after successful submission
@@ -146,7 +147,7 @@ export default function Footer() {
         <div className="gap-x-1 md:relative md:left-[40px] border border-white p-2 md:p-5 rounded-lg shadow-black shadow-md md:max-w-full md:min-w-[450px]">
           <div className="flex justify-between">
             <div className="text-lg font-bold p-2 text-white">
-              Le&apos;s connect
+              Let&apos;s connect
             </div>
             <ButtonFilled
               title="SEND"

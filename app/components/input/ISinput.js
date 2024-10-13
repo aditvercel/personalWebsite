@@ -120,7 +120,7 @@ export default function ISinput(props) {
             placeholder={props.placeholder}
             onChange={handleChange}
             errorBorderColor="red.300"
-            isInvalid={isError}
+            isInvalid={isError()}
           />
           {!props.value && (
             <FormErrorMessage color={"red.300"}>

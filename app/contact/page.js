@@ -14,12 +14,6 @@ export default function Page() {
       try {
         const [res] = await Promise.all([
           api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/contact`),
-          api.post(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/contact`, {
-            title: "Linkedin",
-            platform: "linkedin",
-            link: "https://www.linkedin.com/in/aditya-marzuk-mulyo-saputra-8603771a1/",
-            phone: "082320664029",
-          }),
         ]);
 
         if (res.data.statusCode === 200) {

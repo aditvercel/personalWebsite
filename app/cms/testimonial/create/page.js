@@ -86,16 +86,14 @@ const UpdatePage = () => {
       job_title: detail.job_title,
       message: detail.message,
     };
-
     // Show loading toast
     const toastId = toast({
-      title: "Updating...",
-      description: "Your update is in progress.",
+      title: "Creating...",
+      description: "Your testimonial is being created.",
       status: "loading",
       duration: null, // Keep loading until action finishes
       isClosable: false,
     });
-
     try {
       let res = await api.post(
         `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/testimonial/create`,

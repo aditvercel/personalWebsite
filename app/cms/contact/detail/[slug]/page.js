@@ -103,7 +103,7 @@ const UpdatePage = () => {
             placeholder="Write your platform name"
             value={detail.platform}
             required
-            label="Title"
+            label="Platform"
             disabled
           />
           <ISinput
@@ -113,7 +113,7 @@ const UpdatePage = () => {
             placeholder="Write your link name"
             value={detail.link}
             required
-            label="Title"
+            label="Link"
             disabled
           />
           <ISinput
@@ -123,7 +123,7 @@ const UpdatePage = () => {
             placeholder="Write your phone name"
             value={detail.phone}
             required
-            label="Title"
+            label="Phone number"
             disabled
           />
 

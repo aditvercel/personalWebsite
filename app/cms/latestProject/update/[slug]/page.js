@@ -1,5 +1,6 @@
 "use client"; // This is crucial for client-side hooks like useRouter
 
+import ImagesInput from "@/app/components/input/ImagesInput";
 import ISinput from "@/app/components/input/ISinput";
 import IStoolbar from "@/app/components/utils/IStoolbar";
 import { useParams } from "next/navigation"; // Use next/navigation in App Router
@@ -28,11 +29,29 @@ const UpdatePage = () => {
   const toast = useToast(); // Chakra UI toast hook
 
   const [detail, setDetail] = useState({
+    image: "",
+    imageName: "",
     title_1: "",
     description: "",
+    category: "",
     createdAt: "",
     updatedAt: "",
   });
+
+  let categoryItems = [
+    {
+      text: "Web Development",
+      value: 1,
+    },
+    {
+      text: "Mobile App",
+      value: 2,
+    },
+    {
+      text: "Graphic Design",
+      value: 3,
+    },
+  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,7 +64,7 @@ const UpdatePage = () => {
   const getDetail = async () => {
     try {
       let res = await api.get(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq/getById?id=${slug}`
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject/getById?id=${slug}`
       );
       if (res && res.data.statusCode === 200) {
         setDetail(res.data.result);
@@ -62,8 +81,11 @@ const UpdatePage = () => {
   // Disable the Save button if any detail field is empty
   useEffect(() => {
     let body = {
+      image: detail.image,
+      imageName: detail.imageName,
       title_1: detail.title_1,
       description: detail.description,
+      category: detail.category,
     };
     const isFormValid = Object.values(body).every(
       (value) => value !== "" && value !== 0 && value !== null
@@ -74,9 +96,13 @@ const UpdatePage = () => {
   const handleSave = async () => {
     changeIsdisabled("save", true);
     let body = {
+      image: detail.image,
+      imageName: detail.imageName,
       title_1: detail.title_1,
       description: detail.description,
+      category: Number(detail.category),
     };
+
     // Show loading toast
     const toastId = toast({
       title: "Updating...",
@@ -87,8 +113,8 @@ const UpdatePage = () => {
     });
 
     try {
-      let res = await api.post(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq/create`,
+      let res = await api.put(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject/update`,
         body
       );
       if (res && res.data.statusCode === 200) {
@@ -133,7 +159,7 @@ const UpdatePage = () => {
       <IStoolbar
         save={handleSave}
         back
-        title="Update FAQ"
+        title="Update Latest Project"
         disabled={isDisabled.save} // Disable save if form is invalid
       />
       <div className="bg-gray-100 py-10 px-20 relative">
@@ -148,7 +174,7 @@ const UpdatePage = () => {
             label="Title"
           />
 
-          {/* <ISinput
+          <ISinput
             onChange={handleInputChange}
             type="select"
             name="category"
@@ -157,7 +183,7 @@ const UpdatePage = () => {
             value={detail.category}
             required
             label="Category"
-          /> */}
+          />
           {/* <ISinput
             onChange={handleInputChange}
             type="date"
@@ -177,7 +203,8 @@ const UpdatePage = () => {
             onBlur={(newContent) =>
               setDetail((prev) => ({ ...prev, description_1: newContent }))
             }
-          /> */}
+          />
+           */}
         </div>
         <ISinput
           onChange={handleInputChange}
@@ -188,18 +215,18 @@ const UpdatePage = () => {
           label="Description"
           value={detail.description}
         />
-        <div className="mt-5">
-          {/* <JoditInput
-            tabIndex={3}
-            name="description"
-            label="Description"
-            required
-            value={detail.description}
-            onBlur={(newContent) =>
-              setDetail((prev) => ({ ...prev, description: newContent }))
-            }
-          /> */}
-          {/* <ImagesInput
+
+        {/* <JoditInput
+          tabIndex={3}
+          name="description"
+          label="Description"
+          required
+          value={detail.description}
+          onBlur={(newContent) =>
+            setDetail((prev) => ({ ...prev, description: newContent }))
+          }
+        /> */}
+        <ImagesInput
           onChange={(fileName, base64) => {
             setDetail((prev) => ({
               ...prev,
@@ -211,8 +238,7 @@ const UpdatePage = () => {
           name="image"
           label="Image"
           value={detail}
-        /> */}
-        </div>
+        />
       </div>
     </div>
   );

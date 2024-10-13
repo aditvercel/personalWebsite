@@ -28,10 +28,8 @@ const UpdatePage = () => {
   const toast = useToast(); // Chakra UI toast hook
 
   const [detail, setDetail] = useState({
-    title: "",
-    platform: "",
-    link: "",
-    phone: "",
+    title_1: "",
+    description: "",
     createdAt: "",
     updatedAt: "",
   });
@@ -47,7 +45,7 @@ const UpdatePage = () => {
   const getDetail = async () => {
     try {
       let res = await api.get(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/contact/getById?id=${slug}`
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq/getById?id=${slug}`
       );
       if (res && res.data.statusCode === 200) {
         setDetail(res.data.result);
@@ -64,11 +62,8 @@ const UpdatePage = () => {
   // Disable the Save button if any detail field is empty
   useEffect(() => {
     let body = {
-      id: slug,
-      title: detail.title,
-      platform: detail.platform,
-      link: detail.link,
-      phone: detail.phone,
+      title_1: detail.title_1,
+      description: detail.description,
     };
     const isFormValid = Object.values(body).every(
       (value) => value !== "" && value !== 0 && value !== null
@@ -79,11 +74,8 @@ const UpdatePage = () => {
   const handleSave = async () => {
     changeIsdisabled("save", true);
     let body = {
-      id: slug,
-      title: detail.title,
-      platform: detail.platform,
-      link: detail.link,
-      phone: detail.phone,
+      title_1: detail.title_1,
+      description: detail.description,
     };
     // Show loading toast
     const toastId = toast({
@@ -95,8 +87,8 @@ const UpdatePage = () => {
     });
 
     try {
-      let res = await api.post(
-        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/contact/create`,
+      let res = await api.put(
+        `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/faq/update`,
         body
       );
       if (res && res.data.statusCode === 200) {
@@ -141,7 +133,7 @@ const UpdatePage = () => {
       <IStoolbar
         save={handleSave}
         back
-        title="Update contact"
+        title="Update FAQ"
         disabled={isDisabled.save} // Disable save if form is invalid
       />
       <div className="bg-gray-100 py-10 px-20 relative">
@@ -149,36 +141,9 @@ const UpdatePage = () => {
           <ISinput
             onChange={handleInputChange}
             type="text"
-            name="title"
-            placeholder="Write your title name"
-            value={detail.title}
-            required
-            label="Title"
-          />
-          <ISinput
-            onChange={handleInputChange}
-            type="text"
-            name="platform"
-            placeholder="Write your platform name"
-            value={detail.platform}
-            required
-            label="Title"
-          />
-          <ISinput
-            onChange={handleInputChange}
-            type="text"
-            name="link"
-            placeholder="Write your link name"
-            value={detail.link}
-            required
-            label="Title"
-          />
-          <ISinput
-            onChange={handleInputChange}
-            type="text"
-            name="phone"
-            placeholder="Write your phone name"
-            value={detail.phone}
+            name="title_1"
+            placeholder="Write your title_1 name"
+            value={detail.title_1}
             required
             label="Title"
           />
@@ -214,7 +179,7 @@ const UpdatePage = () => {
             }
           /> */}
         </div>
-        {/* <ISinput
+        <ISinput
           onChange={handleInputChange}
           type="textarea"
           name="description"
@@ -222,7 +187,7 @@ const UpdatePage = () => {
           required
           label="Description"
           value={detail.description}
-        /> */}
+        />
         <div className="mt-5">
           {/* <JoditInput
             tabIndex={3}

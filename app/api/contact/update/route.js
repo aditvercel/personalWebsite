@@ -1,5 +1,5 @@
 import { connectToDB } from "@/utils/ConnectDB";
-import packageService from "@/model/packageService";
+import contact from "@/model/contact";
 import { NextResponse } from "next/server";
 import { encrypt, decrypt } from "@/utils/axiosInstance";
 import { v2 as cloudinary } from "cloudinary";
@@ -18,7 +18,7 @@ export async function PUT(request) {
     const { id, image, cv, ...updateData } = JSON.parse(decryptedString);
 
     // Find the existing item
-    const existingItem = await packageService.findById(id);
+    const existingItem = await contact.findById(id);
     if (!existingItem) {
       return NextResponse.json(
         {
@@ -63,7 +63,7 @@ export async function PUT(request) {
     }
 
     // Update the item with the new data
-    const updatedItem = await packageService.findByIdAndUpdate(id, updateData, {
+    const updatedItem = await contact.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
     });

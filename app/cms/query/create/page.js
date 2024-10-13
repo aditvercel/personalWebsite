@@ -76,8 +76,8 @@ const UpdatePage = () => {
 
     // Show loading toast
     const toastId = toast({
-      title: "Create...",
-      description: "Your Data is in progress.",
+      title: "Creating...",
+      description: "Your query is being created.",
       status: "loading",
       duration: null, // Keep loading until action finishes
       isClosable: false,

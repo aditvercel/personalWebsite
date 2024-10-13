@@ -3,32 +3,10 @@ import { NextResponse } from "next/server";
 import { encrypt, decrypt } from "@/utils/axiosInstance"; // Ensure this path is correct
 import verifiedEmail from "@/model/verifiedEmail";
 import { connectToDB } from "@/utils/ConnectDB";
-import { Ratelimit } from "@upstash/ratelimit"; // Import rate limiting package
-import { Redis } from "@upstash/redis"; // Import Redis package
 
-// POST request to send an email
 export async function POST(request) {
+  // Added 'async' keyword before the function
   await connectToDB();
-  const ratelimit = new Ratelimit({
-    redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(10, "10 s"), // 10 requests per 10 seconds
-    analytics: true,
-    prefix: "@upstash/ratelimit", // Optional prefix for Redis keys
-  });
-  const identifier = request.headers.get("x-forwarded-for") || "api"; // Use the client's IP or a constant string
-
-  // Rate limiting logic
-  const { success } = await ratelimit.limit(identifier);
-  if (!success) {
-    return NextResponse.json(
-      {
-        status: "error",
-        statusCode: 429,
-        message: "Too many requests, please try again later.",
-      },
-      { status: 429 }
-    );
-  }
 
   // Create a transporter for sending emails
   const transporter = nodemailer.createTransport({
@@ -80,15 +58,29 @@ export async function POST(request) {
       const mailOptions = {
         from: process.env.EMAIL_USER, // Your email
         to: email, // Send to the user's email
-        subject: "Verify your email to send messages", // Email subject
+        subject: "New Message from MMZ Tech Solution", // Email subject
         html: `
-            <h3>fullName :${fullName}</h3>
+          <div style="align-self: center; padding: 60px; border-radius: 8px; max-width: 600px; margin: 60px auto; background-color: #ffffff;">
+            <div style="text-align: left; margin-bottom: 42px;">
+                <img src="https://uploads.tabular.email/u/88f987f4-4b2f-49a3-bfd1-56a8c4319a80/2236dbef-3656-4198-a38b-055016afc803.png" alt="Logo" style="width: 70px;">
+            </div>
+            <h1 style="font-family: 'Albert Sans', sans-serif; font-weight: 800; color: #333; font-size: 39px; margin-bottom: 16px;">
+                Confirm your Email
+            </h1>
+            <p style="font-family: 'Albert Sans', sans-serif; font-weight: 400; color: #333; font-size: 16px; line-height: 21px; margin-bottom: 20px;">
+               Please click the button below to confirm your email address. Only messages sent from verified email addresses will be forwarded to the developer.
+            </p>
+            <a href="${verificationUrl}" style="display: inline-block; padding: 10px 15px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: 700;">
+                Verify Email
+            </a>
+            <p style="font-family: 'Albert Sans', sans-serif; font-weight: 400; color: #333; font-size: 16px; margin-top: 35px;">
+                If the button does not work, copy and paste this URL into your browser:
+            </p>  
+            <p style="color: #007bff; text-decoration: underline;">${verificationUrl}</p>
+            <h3 style="font-family: 'Albert Sans', sans-serif;">Full Name: ${fullName}</h3>
             <p>${message}</p>
-            <p>Please verify your email by clicking the button below:</p>
-            <a href="${verificationUrl}" style="padding: 10px 15px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px;">Verify Email</a>
-            <p>If the button does not work, copy and paste this URL into your browser:</p>
-            <p><a href="${verificationUrl}">${verificationUrl}</a></p>
-          `, // HTML version with verification button and fallback link
+          </div>
+        `, // HTML version with verification button and fallback link
       };
 
       // Send the email
@@ -112,8 +104,21 @@ export async function POST(request) {
       const mailOptions = {
         from: process.env.EMAIL_USER, // Your email
         to: process.env.EMAIL_USER, // Sending email to yourself or a destination email
-        subject: "New Message from Adityamms Personal website", // Email subject
-        html: `<h3>You received a message from ${existingItem.fullName} (${existingItem.email})</h3><p>${existingItem.message}</p>`, // HTML version
+        subject: "New Message from MMZ Tech Solution", // Email subject
+        html: `
+         <div style="align-self: center; padding: 60px; border-radius: 8px; max-width: 600px; margin: 60px auto; background-color: #ffffff;">
+          <div style="text-align: left; margin-bottom: 42px;">
+              <img src="https://uploads.tabular.email/u/88f987f4-4b2f-49a3-bfd1-56a8c4319a80/2236dbef-3656-4198-a38b-055016afc803.png" alt="Logo" style="width: 70px;">
+          </div>
+          <h1 style="font-family: 'Albert Sans', sans-serif; font-weight: 800; color: #333; font-size: 39px; margin-bottom: 16px;">
+              You received a message
+          </h1>
+         
+          <h3 style="font-family: 'Albert Sans', sans-serif;">Full Name: ${existingItem.fullName}</h3>
+          <h3 style="font-family: 'Albert Sans', sans-serif;">Email: ${existingItem.email}</h3> <!-- Fixed label from Full Name to Email -->
+          <p>${existingItem.message}</p>
+      </div>
+        `, // HTML version
       };
 
       // Send the email
