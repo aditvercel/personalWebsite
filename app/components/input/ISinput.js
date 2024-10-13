@@ -18,10 +18,8 @@ export default function ISinput(props) {
   // const [zoom, setZoom] = useState(1); // Store zoom level
 
   const [validationState, setValidationState] = useState({
-    hasNumber: false,
     hasSymbol: false,
     hasSyntax: false,
-    hasValue: false,
   });
   // const handleBrowseClick = () => {
   //   if (fileInputRef.current) {
@@ -35,23 +33,18 @@ export default function ISinput(props) {
     }
   };
   const handleValidation = (value) => {
-    const hasNumber = /\d/; // Regular expression to check for numbers
     const hasSymbol = /[!@#$%^&*()_+{}\[\]:;"'<>,.?/~`|\\]/; // Regular expression to check for specific symbols
     const hasSyntax = /[><{}:]/; // Regular expression to check for specific syntax
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    const isInvalidNumber = props.noNumber && hasNumber.test(value);
     const isInvalidSymbol = props.noSymbol && hasSymbol.test(value);
     const isInvalidSyntax = props.noSyntax && hasSyntax.test(value);
     const isInvalidEmail = props.type === "email" && !emailRegex.test(value);
-    const isValue = value;
 
     setValidationState((prevState) => ({
       ...prevState,
-      hasNumber: isInvalidNumber,
       hasSymbol: isInvalidSymbol,
       hasSyntax: isInvalidSyntax,
-      hasValue: isValue,
       isInvalidEmail: isInvalidEmail,
     }));
   };
@@ -87,8 +80,6 @@ export default function ISinput(props) {
 
   const isError = () => {
     let check =
-      !validationState.hasValue ||
-      validationState.hasNumber ||
       validationState.hasSymbol ||
       validationState.hasSyntax ||
       validationState.isInvalidEmail;
@@ -189,12 +180,6 @@ export default function ISinput(props) {
             autoComplete="on"
           />
           <div className="grid grid-cols-2 gap-x-1">
-            {props.noNumber && validationState.hasNumber && (
-              <FormErrorMessage color={"red.300"}>
-                <div className="h-3 w-3 rounded-full bg-white mr-1"></div>{" "}
-                Numbers aren&apos;t allowed
-              </FormErrorMessage>
-            )}
             {props.noSymbol && validationState.hasSymbol && (
               <FormErrorMessage color={"red.300"}>
                 <div className="h-3 w-3 rounded-full bg-white mr-1"></div>
@@ -211,12 +196,6 @@ export default function ISinput(props) {
               <FormErrorMessage color={"red.300"}>
                 <div className="h-3 w-3 rounded-full bg-white mr-1"></div>
                 Invalid email format
-              </FormErrorMessage>
-            )}
-            {!props.value && (
-              <FormErrorMessage color={"red.300"}>
-                <div className="h-3 w-3 rounded-full bg-white mr-1"></div>
-                {props.label} required
               </FormErrorMessage>
             )}
           </div>
