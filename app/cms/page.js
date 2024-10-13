@@ -299,7 +299,7 @@ export default function Page() {
                   backgroundImage: `url(${item.image || ""})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
-                  border: "10px solid #e8e8e8",
+                  border: "4px solid #e8e8e8",
                 }}
               ></Link>
             ))}

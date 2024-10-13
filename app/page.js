@@ -560,13 +560,21 @@ export default function Home() {
                       >
                         <div className="mt-10 w-full bg-[#131b2e] py-5 px-5 gap-5 rounded-lg border-[10px] border-[#111a2d] relative h-[250px]">
                           <div className=" rounded-md mb-5 flex gap-5">
-                            <Image
+                            {/* <Image
                               src={item.image}
                               alt={item._id}
                               width={50}
                               height={50}
-                              className=" rounded-full"
-                            />
+                              className=" rounded-full w-[50px] h-[50px]"
+                            /> */}
+                            <div
+                              className="w-[52px] h-[50px] border-[1px] rounded-full border-solid border-[#e8e8e8]"
+                              style={{
+                                backgroundImage: `url(${item.image || ""})`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                              }}
+                            ></div>
                             <div className="grid">
                               <div className=" text-md font-bold">
                                 {item.name}
