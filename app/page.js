@@ -344,7 +344,10 @@ export default function Home() {
       </div>
       {/* About content*/}
 
-      <div className=" mt-16 md:justify-center md:items-center py-5">
+      <div
+        className=" mt-16 md:justify-center md:items-center py-5"
+        id="mySkills"
+      >
         <div>
           <div className="font-bold text-4xl textLight text-center md:mb-20">
             My Skill&apos;s

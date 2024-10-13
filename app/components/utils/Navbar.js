@@ -255,10 +255,10 @@ export default function Navbar() {
                               className="text-gray-300"
                             />
                             <div className="text-gray-300">
-                              <div className="text-sm">{item.top_title}</div>
                               <div className="text-lg font-medium">
-                                {item.bottom_title}
+                                {item.top_title}
                               </div>
+                              <div className="text-xs">{item.bottom_title}</div>
                             </div>
                           </div>
 
