@@ -41,6 +41,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
+        <meta
+          name="google-site-verification"
+          content="QTiLHSrvnJ1_wkv_3q4mvRoCCCXAr9ubkKTRJ3z_bTM"
+        />
         <link
           rel="icon"
           type="image/png"
