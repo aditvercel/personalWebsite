@@ -115,6 +115,16 @@ button.splide__arrow--prev {
   font-size: 13px;
 }
 
+/* Hide scrollbar for all browsers */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance !important;

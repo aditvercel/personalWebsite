@@ -13,18 +13,17 @@ function LatestProjectCards({ item }) {
       transition={{ duration: 0.3 }}
     >
       <div
-        className="w-[200px] h-[160px] md:w-[300px] md:h-[280px] bg-blue-950 rounded-xl p-5 grid items-end"
+        className="w-[170px] h-[160px] md:w-[300px] md:h-[280px] bg-blue-950 rounded-xl p-5 grid items-end border-[4px] border-solid border-[#e8e8e8]"
         style={{
           backgroundImage: `url(${item.image || ""})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          border: "10px solid #e8e8e8",
         }}
       >
         <div>
           {item.title_1 && (
             <div
-              className="mb-3 font-bold text-xl md:text-2xl text-black rounded-lg"
+              className=" font-bold text-sm md:text-2xl text-black rounded-lg"
               style={{
                 backgroundColor: "rgba(255, 255, 255, 0.4)",
                 WebkitBackdropFilter: "blur(1px)",

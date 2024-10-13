@@ -407,7 +407,7 @@ export default function Home() {
             the world of design and architecture
           </div>
         </div>
-        <div className="mt-10 flex items-center align-middle justify-center overflow-x-scroll md:overflow-hidden">
+        <div className="mt-10 flex items-center align-middle justify-center overflow-x-scroll md:overflow-hidden scrollbar-hide">
           <div className="w-[1300px] pl-[500px] md:pl-0 flex items-center justify-center align-middle self-center">
             <div className="flex items-center align-middle gap-2 lg:gap-5 justify-center w-[1500px] md:max-w-full self-center">
               {latestProjectFilter.map((category) => (
@@ -430,8 +430,8 @@ export default function Home() {
         <div className="mt-10">
           <div className="grid grid-cols-2 md:grid-cols-3 align-middle justify-center items-center gap-y-2 md:gap-x-3 md:gap-y-5">
             <AnimatePresence>
-              {homePageDatas.latestProject?.items?.map((item) => (
-                <div key={crypto.randomUUID()}>
+              {homePageDatas.latestProject?.items?.map((item, index) => (
+                <div key={index}>
                   <Skeleton
                     isLoaded={homePageDatas.skeletons.latestProject}
                     className="rounded-xl"
