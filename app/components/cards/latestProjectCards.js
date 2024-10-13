@@ -35,7 +35,7 @@ function LatestProjectCards({ item }) {
               {item.title_1}
             </div>
           )}
-          {item.description && (
+          {/* {item.description && (
             <div
               className="hidden md:flex text-black rounded-lg max-h-20 overflow-hidden text-ellipsis line-clamp-2"
               style={{
@@ -50,7 +50,7 @@ function LatestProjectCards({ item }) {
             >
               {item.description}
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </motion.div>

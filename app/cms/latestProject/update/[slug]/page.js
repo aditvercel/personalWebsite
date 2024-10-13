@@ -96,6 +96,7 @@ const UpdatePage = () => {
   const handleSave = async () => {
     changeIsdisabled("save", true);
     let body = {
+      id: slug,
       image: detail.image,
       imageName: detail.imageName,
       title_1: detail.title_1,

@@ -210,7 +210,9 @@ export default function Page() {
                             border: "10px solid #e8e8e8",
                           }}
                         ></div>
-                      ) : key === "description_1" || key === "description_2" ? (
+                      ) : key === "description_1" ||
+                        key === "description_2" ||
+                        key === "description" ? (
                         <div className="w-[300px] overflow-hidden text-ellipsis">
                           {item[key]}
                         </div>

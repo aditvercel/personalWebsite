@@ -16,6 +16,7 @@ export async function PUT(request) {
     const { encryptedData } = await request.json();
     const decryptedString = decrypt(encryptedData);
     const { id, image, cv, ...updateData } = JSON.parse(decryptedString);
+    console.log(decryptedString);
 
     // Find the existing item
     const existingItem = await latestProject.findById(id);
