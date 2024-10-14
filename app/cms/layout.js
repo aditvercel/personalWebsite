@@ -51,6 +51,22 @@ export default function CMSlayout({ children }) {
     const { name, value } = e.target;
     setLoginData((prev) => ({ ...prev, [name]: value }));
   };
+  function openAppOrPlayStore() {
+    const appUrl = process.env.NEXT_PUBLIC_NEXTAUTH_URL;
+    const playStoreUrl =
+      "https://play.google.com/store/apps/details?id=com.example.myapp";
+
+    // Coba buka aplikasi
+    window.location.href = appUrl;
+
+    // Set timer untuk cek apakah aplikasi terbuka
+    setTimeout(() => {
+      // Jika masih di halaman yang sama, arahkan ke Play Store
+      if (document.hidden) {
+        window.location.href = playStoreUrl;
+      }
+    }, 1000);
+  }
 
   // Handle login form submission
   const handleLogin = async () => {
@@ -61,7 +77,6 @@ export default function CMSlayout({ children }) {
       duration: null, // Keeps the toast open until manually closed
       isClosable: true,
     });
-
     try {
       // Use NextAuth's signIn function
       const result = await signIn("credentials", {
@@ -106,6 +121,7 @@ export default function CMSlayout({ children }) {
       <div className="grid gap-5 md:hidden text-white items-center align-middle justify-center font-bold text-5xl">
         <p className=" text-red-500"> CMS not accessable ! </p>
         your viewport to small
+        <button onClick={openAppOrPlayStore}>test deep link</button>
       </div>
       <div className="hidden md:flex">
         <div className="absolute w-full h-full left-0 top-[120px]">
