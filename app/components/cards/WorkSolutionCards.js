@@ -39,7 +39,7 @@ I want to ask you about...`;
 
   return (
     <>
-      <div className="mt-10 w-full bg-[#131b2e] py-5 px-5 gap-5 rounded-lg border-[10px] border-[#111a2d] min-w-[300px] min-h-[500px]">
+      <div className="mt-10 w-full bg-[#131b2e] py-5 px-5 gap-5 rounded-lg border-[10px] border-[#111a2d] min-w-[300px] md:min-h-[500px]">
         <div className=" rounded-md mb-5 ">
           <div className="flex justify-between align-middle items-center ">
             <div className=" font-bold text-2xl text-gray-300">

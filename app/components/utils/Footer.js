@@ -146,9 +146,15 @@ export default function Footer() {
 
         <div className="gap-x-1 md:relative md:left-[40px] border border-white p-2 md:p-5 rounded-lg shadow-black shadow-md md:max-w-full md:min-w-[450px]">
           <div className="flex justify-between">
-            <div className="text-lg font-bold p-2 text-white">
-              Let&apos;s connect
+            <div>
+              <div className="text-lg font-bold p-2 text-white">
+                Let&apos;s connect
+              </div>
+              <div className=" text-yellow-500 text-xs p-2 relative top-[-20px]">
+                only verified email address messages are sended
+              </div>
             </div>
+
             <ButtonFilled
               title="SEND"
               disabled={!isFormValid}

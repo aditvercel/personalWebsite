@@ -353,47 +353,31 @@ export default function Home() {
             My Skill&apos;s
           </div>
           <div className="w-full grid grid-cols-3 md:grid-cols-4 mt-10 gap-x-5 md:gap-y-16 gap-y-10">
-            {homePageDatas.mySkills.map((item) => (
-              <div key={crypto.randomUUID()}>
-                <div>{item.title}</div>
-                <div className=" flex gap-2">
-                  <Slider
-                    aria-label="slider-ex-2"
-                    colorScheme="blue"
-                    defaultValue={item.percentage}
-                    isDisabled={true}
-                  >
-                    <SliderTrack>
-                      <SliderFilledTrack />
-                    </SliderTrack>
-                    <SliderThumb />
-                  </Slider>
-                  <div className="w-20">{item.percentage}%</div>
-                </div>
-              </div>
-              // <div
-              //   className="flex items-center justify-center align-middle relative"
-              //   key={crypto.randomUUID()}
-              // >
-              //   <CircularProgress
-              //     key={crypto.randomUUID()}
-              //     value={item.percentage}
-              //     color="teal.400" // Color of the progress ring
-              //     trackColor="gray.200" // Color of the track (background of the progress ring)
-              //     size={32}
-              //   >
-              //     <CircularProgressLabel
-              //       color="white" // Color of the text inside the progress circle
-              //       className=" text-lg"
-              //     >
-              //       {item.percentage}%
-              //     </CircularProgressLabel>
-              //   </CircularProgress>
-              //   <div className="absolute bottom-[-30px] right-0 left-0 mr-auto text-lg text-center">
-              //     {item.title}
-              //   </div>
-              // </div>
-            ))}
+            {homePageDatas?.mySkills?.length > 0
+              ? homePageDatas.mySkills.map((item) => (
+                  <div key={crypto.randomUUID()}>
+                    <div>{item.title}</div>
+                    <div className="flex gap-2">
+                      <Slider
+                        aria-label="slider-ex-2"
+                        colorScheme="blue"
+                        defaultValue={item.percentage}
+                        isDisabled={true}
+                      >
+                        <SliderTrack>
+                          <SliderFilledTrack />
+                        </SliderTrack>
+                        <SliderThumb />
+                      </Slider>
+                      <div className="w-20">{item.percentage}%</div>
+                    </div>
+                  </div>
+                ))
+              : [...Array(8)].map((_, index) => (
+                  <div key={index}>
+                    <Skeleton height="10px" />
+                  </div>
+                ))}
           </div>
         </div>
       </div>
@@ -480,22 +464,28 @@ export default function Home() {
           </div>
         </div>
         <div className="grid md:grid-cols-3 gap-x-5">
-          {homePageDatas?.packageService?.map((item) => {
-            return (
-              <div key={crypto.randomUUID()}>
-                <WorkSolutionCards
-                  title={item.title_1}
-                  bestFor={item.title_2}
-                  description={item.deskripsi}
-                  price={item.hargaService}
-                  discount={10 / 100}
-                  whatYouGet={item.benefit}
-                  statusType={item.statusType}
-                  id={item._id}
-                />
-              </div>
-            );
-          })}
+          {homePageDatas?.packageService?.length > 0
+            ? homePageDatas?.packageService?.map((item) => {
+                return (
+                  <div key={crypto.randomUUID()}>
+                    <WorkSolutionCards
+                      title={item.title_1}
+                      bestFor={item.title_2}
+                      description={item.deskripsi}
+                      price={item.hargaService}
+                      discount={10 / 100}
+                      whatYouGet={item.benefit}
+                      statusType={item.statusType}
+                      id={item._id}
+                    />
+                  </div>
+                );
+              })
+            : [...Array(3)].map((_, index) => (
+                <div key={index} className="mt-10">
+                  <Skeleton height="400px" width="300px" />
+                </div>
+              ))}
         </div>
       </div>
       {/* Work solution*/}
@@ -505,43 +495,58 @@ export default function Home() {
           <div className="font-bold text-4xl textLight text-center">FAQs</div>
           <div className="m-w-full">
             <Accordion allowMultiple className="gap-y-1 grid mt-10 ">
-              {homePageDatas.faqs.map((item) => {
-                return (
-                  <AccordionItem
-                    className="border-y border-[#131b2e] py-5"
-                    key={crypto.randomUUID()}
-                  >
-                    {({ isExpanded }) => (
-                      <>
-                        <h2>
-                          <AccordionButton>
-                            <Box
-                              as="span"
-                              flex="1"
-                              textAlign="left"
-                              className=" font-medium text-lg text-gray-300"
+              {homePageDatas?.mySkills?.length > 0
+                ? homePageDatas.faqs.map((item) => {
+                    return (
+                      <AccordionItem
+                        className="border-y border-[#131b2e] py-5"
+                        key={crypto.randomUUID()}
+                      >
+                        {({ isExpanded }) => (
+                          <>
+                            <h2>
+                              <AccordionButton>
+                                <Box
+                                  as="span"
+                                  flex="1"
+                                  textAlign="left"
+                                  className=" font-medium text-lg text-gray-300"
+                                >
+                                  {item.title_1}
+                                </Box>
+                                {isExpanded ? (
+                                  <div className="p-2 rounded-full border border-black h-10 w-10 flex items-center justify-center bg-[#0fbbcf]">
+                                    <MinusIcon
+                                      fontSize="12px"
+                                      color={"black"}
+                                    />
+                                  </div>
+                                ) : (
+                                  <div className="p-2 rounded-full border border-[#3c556c] h-10 w-10 flex items-center justify-center ">
+                                    <AddIcon
+                                      fontSize="12px"
+                                      color={"#3c556c"}
+                                    />
+                                  </div>
+                                )}
+                              </AccordionButton>
+                            </h2>
+                            <AccordionPanel
+                              pb={4}
+                              className="mt-10 max-w-[90%]"
                             >
-                              {item.title_1}
-                            </Box>
-                            {isExpanded ? (
-                              <div className="p-2 rounded-full border border-black h-10 w-10 flex items-center justify-center bg-[#0fbbcf]">
-                                <MinusIcon fontSize="12px" color={"black"} />
-                              </div>
-                            ) : (
-                              <div className="p-2 rounded-full border border-[#3c556c] h-10 w-10 flex items-center justify-center ">
-                                <AddIcon fontSize="12px" color={"#3c556c"} />
-                              </div>
-                            )}
-                          </AccordionButton>
-                        </h2>
-                        <AccordionPanel pb={4} className="mt-10 max-w-[90%]">
-                          {item.description}
-                        </AccordionPanel>
-                      </>
-                    )}
-                  </AccordionItem>
-                );
-              })}
+                              {item.description}
+                            </AccordionPanel>
+                          </>
+                        )}
+                      </AccordionItem>
+                    );
+                  })
+                : [...Array(3)].map((_, index) => (
+                    <div key={index} className="mt-10">
+                      <Skeleton height="40px" />
+                    </div>
+                  ))}
             </Accordion>
           </div>
         </div>
