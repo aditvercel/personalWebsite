@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Input,
+  Tooltip,
   Text,
   VStack,
   HStack,
@@ -14,6 +15,7 @@ import {
 import { signIn, signOut, useSession } from "next-auth/react"; // Import signIn from NextAuth
 import api from "@/utils/axiosInstance"; // Assuming encrypt is defined
 import { decrypt } from "@/utils/axiosInstance";
+import Image from "next/image";
 
 const roomNames = ["General", "Business", "Tech"];
 const rooms = ["general", "random", "tech"]; // These should match with the API or backend
@@ -139,10 +141,13 @@ export default function Home() {
                           className="mt-auto w-full mb-2"
                         >
                           Sign in with Google
-                          <img
+                          <Image
                             src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png"
-                            className=" w-5 h-5 ml-1"
-                          ></img>
+                            className="w-5 h-5 ml-1"
+                            alt="google"
+                            width={20}
+                            height={20}
+                          ></Image>
                         </Button>
                       ) : (
                         <Button
@@ -224,11 +229,13 @@ export default function Home() {
                                 </div>
                               </div>
                               {msg.image ? (
-                                <img
+                                <Image
                                   src={msg.image}
                                   alt="Profile"
                                   className="h-[40px] w-[40px] rounded-full cursor-pointer"
                                   referrerpolicy="no-referrer"
+                                  width={20}
+                                  height={20}
                                 />
                               ) : (
                                 <div className=" text-xs h-[40px] w-[40px] rounded-full cursor-pointer flex items-center justify-center bg-gray-200">
@@ -250,13 +257,18 @@ export default function Home() {
                           value={message}
                           onChange={(e) => setMessage(e.target.value)}
                         />
-                        <Button
-                          colorScheme="blue"
-                          isDisabled={!session}
-                          onClick={sendMessage}
+                        <Tooltip
+                          label="You need to login to send a message"
+                          isDisabled={session}
                         >
-                          Send
-                        </Button>
+                          <Button
+                            colorScheme="blue"
+                            isDisabled={!session}
+                            onClick={sendMessage}
+                          >
+                            Send
+                          </Button>
+                        </Tooltip>
                       </HStack>
                     </VStack>
                   </Box>
