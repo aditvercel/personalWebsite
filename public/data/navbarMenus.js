@@ -68,6 +68,20 @@ const navbarMenuData = [
     ],
   },
   {
+    title: "Group chat",
+    link: "/chat",
+    child: [
+      //   {
+      //     title: "contoh",
+      //     link: "/contoh",
+      //   },
+      //   {
+      //     title: "contoh",
+      //     link: "/contoh",
+      //   },
+    ],
+  },
+  {
     title: "CMS",
     link: "/cms",
     child: [

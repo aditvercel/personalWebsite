@@ -285,7 +285,6 @@ export default function Navbar() {
         <DrawerOverlay onClick={onDrawerClose} />
         <DrawerContent
           transform={isPartiallyClosed ? "translateX(-80%)" : "translateX(0)"}
-          transition="transform 0.3s ease"
           className="w-[250px] bg-slate-700 text-black px-4 py-12"
         >
           <DrawerHeader className="text-slate-400 font-bold text-lg text-center mb-5">

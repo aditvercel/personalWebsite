@@ -67,6 +67,9 @@ export default function Page() {
     );
     changeIsdisabled("save", !isFormValid); // Enable the save button if the form is valid
   }, [homePageDatas.profile]);
+  // useEffect(() => {
+  //   console.log("session :", session?.user);
+  // }, [session]);
 
   const handleSave = async () => {
     changeIsdisabled("save", true);
@@ -241,7 +244,7 @@ export default function Page() {
                   <div className=" font-medium text-lg">
                     {homePageDatas.profile?.name || "Aditya Marzuk"}
                   </div>
-                  {session && (
+                  {session && session.user?.isAdmin && (
                     <div
                       className="cursor-pointer text-blue-500"
                       onClick={onOpen}
@@ -257,7 +260,7 @@ export default function Page() {
             </div>
             <div className="border bg-white h-[120px] w-[400px] rounded-lg relative p-2 flex justify-between">
               <div className="font-medium text-lg">CV</div>
-              {session && (
+              {session && session.user?.isAdmin && (
                 <div className="text-blue-500 cursor-pointer" onClick={onOpen}>
                   edit
                 </div>

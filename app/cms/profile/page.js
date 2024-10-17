@@ -43,7 +43,7 @@ import { Pagination } from "@mui/material";
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure(); // Chakra Disclosure for AlertDialog
   const { data: session } = useSession(); // Get session data to check login state
-  const loginTooltip = "You need to log in to perform this action.";
+  const loginTooltip = "You need to log in as ADMIN to perform this action.";
   const [homePageDatas, setHomePageDatas] = useState({
     journeyDatas: [],
     deletedItemId: "",
@@ -249,7 +249,7 @@ export default function Page() {
                             colorScheme="red"
                             size="sm"
                             aria-label="Delete"
-                            isDisabled={!session} // Disable button if not logged in
+                            isDisabled={!session || !session.user.isAdmin} // Disable button if not logged in
                             onClick={() => {
                               changeDeletedId(item._id); // Set deletedItemId
                               onOpen(); // Open the confirmation dialog
