@@ -6,7 +6,7 @@ import ChakraWrapper from "./components/utils/ChakraWrapper";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
 import ClientSessionWrapper from "./components/utils/ClientSessionWrapper"; // Import the client wrapper
-import photosaya from "@/public/images/photo_saya.png";
+import photosaya from "@/public/images/logo.png";
 export const metadata = {
   title: "Adityamms | Full-Stack Developer & Portfolio",
   description:
