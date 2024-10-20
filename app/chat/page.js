@@ -11,6 +11,7 @@ import {
   VStack,
   HStack,
   Heading,
+  Select,
 } from "@chakra-ui/react";
 import { signIn, signOut, useSession } from "next-auth/react"; // Import signIn from NextAuth
 import api from "@/utils/axiosInstance"; // Assuming encrypt is defined
@@ -35,7 +36,6 @@ export default function Home() {
         const response = await api.get(`/api/chat/history?room=${room}`);
         const messages = JSON.parse(decrypt(response.data.messages));
 
-        console.log(messages);
         setMessages(messages);
       } catch (error) {
         console.error("Error fetching chat history:", error);
@@ -105,18 +105,18 @@ export default function Home() {
   return (
     <>
       <div>
-        <div className="grid gap-5 md:hidden text-white items-center align-middle justify-center font-bold text-5xl">
+        {/* <div className="grid gap-5 md:hidden text-white items-center align-middle justify-center font-bold text-5xl">
           <p className=" text-red-500"> Chat not accessable ! </p>
           Its only supported on tablet or pc for now
-        </div>
-        <div className="hidden md:flex ">
+        </div> */}
+        <div>
           <div className="absolute w-full h-full left-0 top-[120px]">
             <div className="relative">
-              <div className="h-full w-full flex gap-x-10 pb-5 relative">
+              <div className="h-full w-full flex md:gap-x-10 relative justify-center">
                 {/* Drawer */}
                 <div className="relative">
                   <div
-                    className={`h-full w-[200px] flex flex-col items-center scrollbar-hide bg-white transition-all duration-300 ease-in-out z-10 p-2`}
+                    className={`h-full w-[200px]  flex-col items-center scrollbar-hide bg-white transition-all duration-300 ease-in-out z-10 p-2 hidden md:flex`}
                   >
                     <div className="mt-20 text-black h-full">
                       <div className="grid items-center justify-center">
@@ -161,20 +161,57 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-
                 {/* Main Content */}
-                <div className="w-full px-5 max-w-[90%] overflow-hidden bg-white p-5">
-                  <div className="mb-2 text-xl font-bold">
+                <div className="md:px-5 md:max-w-[90%] w-full overflow-hidden bg-white py-5">
+                  <div className="mb-2 text-xl font-bold md:ml-0 ml-5 hidden md:flex">
                     {roomNames[rooms.indexOf(room)]}
                   </div>
+                  <div className="px-2">
+                    {/* Google Sign-In Button */}
+                    {!session ? (
+                      <Button
+                        onClick={() => signIn("google")} // Call Google sign-in
+                        variant="outline"
+                        className="mt-auto w-full mb-2 md:hidden"
+                      >
+                        Sign in with Google
+                        <Image
+                          src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png"
+                          className="w-5 h-5 ml-1"
+                          alt="google"
+                          width={20}
+                          height={20}
+                        ></Image>
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => signOut()} // Call Google sign-in
+                        variant="outline"
+                        className="mt-auto w-full mb-2 md:hidden"
+                      >
+                        Sign Out
+                      </Button>
+                    )}
+                    <Select
+                      placeholder="Select a room"
+                      value={room} // Bind to current room
+                      onChange={(e) => setRoom(e.target.value)} // Update the room when selected
+                      className="md:hidden text-black"
+                    >
+                      {rooms.map((roomValue, index) => (
+                        <option key={index} value={roomValue}>
+                          {roomNames[index]} {/* Display the readable name */}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
                   <Box
                     p={2}
-                    borderWidth="1px"
-                    borderRadius="lg"
                     boxShadow="md"
-                    className="w-full border border-black"
+                    className="w-full md:border border-black h-[90svh]"
                   >
-                    <VStack spacing={4} align="stretch">
+                    <VStack spacing={4} align="stretch" className="h-full">
                       {/* Message List */}
                       <Box
                         h="300px"
@@ -184,7 +221,7 @@ export default function Home() {
                         borderRadius="md"
                         borderWidth="1px"
                         onScroll={handleScroll}
-                        className="scrollbar-hide"
+                        className="scrollbar-hide h-full"
                         style={{
                           backgroundImage:
                             "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
@@ -201,13 +238,11 @@ export default function Home() {
                               }`}
                             >
                               <div
-                                className={` div-2  px-2 py-2 relative inline-block rounded-lg w-fit 
-                                ${
+                                className={`div-2 px-2 py-2 relative inline-block rounded-lg w-fit ${
                                   msg.sender === session?.user.name
                                     ? "bg-[#e2ffc7] rounded-br-none"
                                     : "bg-white rounded-bl-none"
-                                }
-                                `}
+                                }`}
                               >
                                 <div
                                   className={`${
@@ -238,14 +273,12 @@ export default function Home() {
                                   height={20}
                                 />
                               ) : (
-                                <div className=" text-xs h-[40px] w-[40px] rounded-full cursor-pointer flex items-center justify-center bg-gray-200">
+                                <div className="text-xs h-[40px] w-[40px] rounded-full cursor-pointer flex items-center justify-center bg-gray-200">
                                   No Image
                                 </div>
                               )}
                             </div>
                           ))}
-
-                          {/* Empty div to scroll to */}
                           <div ref={messageEndRef} />
                         </div>
                       </Box>
@@ -272,7 +305,7 @@ export default function Home() {
                       </HStack>
                     </VStack>
                   </Box>
-                </div>
+                </div>{" "}
               </div>
             </div>
           </div>

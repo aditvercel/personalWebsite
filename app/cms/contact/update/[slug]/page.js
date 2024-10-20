@@ -85,7 +85,7 @@ const UpdatePage = () => {
       link: detail.link,
       phone: detail.phone,
     };
-    console.log(body);
+    // console.log(body);
     // Show loading toast
     const toastId = toast({
       title: "Updating...",

@@ -150,7 +150,7 @@ export default function Page() {
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
-    console.log(homePageDatas.profile);
+    // console.log(homePageDatas.profile);
     setHomePageDatas((prev) => ({
       ...prev,
       profile: {
