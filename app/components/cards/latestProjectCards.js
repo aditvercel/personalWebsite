@@ -13,7 +13,7 @@ function LatestProjectCards({ item }) {
       transition={{ duration: 0.3 }}
     >
       <div
-        className="w-[170px] h-[160px] md:w-[300px] md:h-[280px] bg-blue-950 rounded-xl p-5 grid items-end border-[4px] border-solid border-[#e8e8e8]"
+        className="w-[170px] h-[160px] md:w-[300px] md:h-[280px] bg-blue-950 rounded-xl p-5 grid items-end border-[4px] border-solid border-[#e8e8e8] "
         style={{
           backgroundImage: `url(${item.image || ""})`,
           backgroundSize: "cover",

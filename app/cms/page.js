@@ -4,6 +4,7 @@ import IStoolbar from "../components/utils/IStoolbar";
 import api from "@/utils/axiosInstance";
 import photosaya from "@/public/images/photo_saya.png";
 import cvImage from "@/public/images/cvImage.png";
+import cmsStack from "@/public/data/cmsStack";
 import {
   Modal,
   ModalOverlay,
@@ -20,6 +21,7 @@ import ISinput from "../components/input/ISinput";
 import ImagesInput from "../components/input/ImagesInput";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 export default function Page() {
   const { data: session } = useSession(); // Get session data to check login state
   const toast = useToast(); // Chakra UI toast hook
@@ -280,24 +282,45 @@ export default function Page() {
             </div>
           </div>
 
-          {/* payment History Coming soon */}
+          {/* Tech Stack */}
           <div>
-            <div className="mb-3 font-semibold text-lg mt-10">
-              payment History Coming soon
+            <div className="mb-3 font-semibold text-lg mt-10">Stack</div>
+            <div className="grid grid-cols-4 justify-center items-center align-middle self-center gap-2 bg-white p-3 rounded-xl">
+              {cmsStack.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="h-[120px] w-[140px] border-black border p-3 rounded-lg shadow-sm shadow-black"
+                  >
+                    {item.icon ? (
+                      <Image
+                        src={item.icon}
+                        width={25}
+                        height={25}
+                        alt="icon"
+                        className="h-full w-full transition-transform transform duration-300 ease-in-out hover:scale-110"
+                      />
+                    ) : (
+                      <div className="h-full w-full flex items-center justify-center">
+                        No Icon
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-            <div className="bg-white h-[350px]"></div>
           </div>
         </div>
 
         {/*Project*/}
-        <div className="border bg-white w-[600px] h-[50vw] rounded-lg  p-5">
+        <div className="border bg-white w-[600px] h-[60vw] rounded-lg  p-5">
           <div className="mb-3 font-semibold text-lg">Project</div>
           <div className="w-full h-[95%] overflow-y-scroll grid gap-3 justify-center">
             {homePageDatas.latestProject?.items?.map((item) => (
               <Link
                 href={`/cms/latestProject/detail/${item._id}`}
                 key={crypto.randomUUID()}
-                className=" w-[200px] h-[140px] rounded-lg shadow-md shadow-black hover:shadow-blue-300 "
+                className=" w-[200px] h-[140px] rounded-lg shadow-md shadow-black hover:shadow-blue-300 transition-transform transform duration-300 ease-in-out hover:scale-110"
                 style={{
                   backgroundImage: `url(${item.image || ""})`,
                   backgroundSize: "cover",
