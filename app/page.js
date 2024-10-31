@@ -360,7 +360,7 @@ export default function Home() {
                       {item.title}
                     </div>
                     <div className="flex gap-2">
-                      <Slider
+                      {/* <Slider
                         aria-label="slider-ex-2"
                         colorScheme="blue"
                         defaultValue={item.percentage}
@@ -370,7 +370,8 @@ export default function Home() {
                           <SliderFilledTrack />
                         </SliderTrack>
                         <SliderThumb />
-                      </Slider>
+                      </Slider> */}
+                      <div className="w-full h-1 bg-blue-800 rounded-full"></div>
                       {item.percentage >= 80 && (
                         <div className="bg-blue-300 rounded-md p-2 text-white flex align-middle justify-center items-center absolute top-[0px] right-[0px]">
                           <div>Advanced</div>
