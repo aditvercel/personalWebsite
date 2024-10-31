@@ -355,8 +355,10 @@ export default function Home() {
           <div className="w-full grid grid-cols-3 md:grid-cols-4 mt-10 gap-x-5 md:gap-y-16 gap-y-10">
             {homePageDatas?.mySkills?.length > 0
               ? homePageDatas.mySkills.map((item) => (
-                  <div key={crypto.randomUUID()}>
-                    <div>{item.title}</div>
+                  <div key={crypto.randomUUID()} className="relative">
+                    <div className="font-medium text-lg mb-[10px]">
+                      {item.title}
+                    </div>
                     <div className="flex gap-2">
                       <Slider
                         aria-label="slider-ex-2"
@@ -369,7 +371,21 @@ export default function Home() {
                         </SliderTrack>
                         <SliderThumb />
                       </Slider>
-                      <div className="w-20">{item.percentage}%</div>
+                      {item.percentage >= 80 && (
+                        <div className="bg-blue-300 rounded-md p-2 text-white flex align-middle justify-center items-center absolute top-[0px] right-[0px]">
+                          <div>Advanced</div>
+                        </div>
+                      )}
+                      {item.percentage >= 50 && item.percentage < 80 && (
+                        <div className="bg-orange-300 rounded-md p-2 text-white flex align-middle justify-center items-center absolute top-[0px] right-[0px]">
+                          <div>Middle</div>
+                        </div>
+                      )}
+                      {item.percentage <= 50 && (
+                        <div className="bg-green-300 rounded-md p-2 text-white flex align-middle justify-center items-center absolute top-[0px] right-[0px]">
+                          <div>Beginner</div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))
