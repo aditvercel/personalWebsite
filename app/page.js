@@ -373,17 +373,17 @@ export default function Home() {
                       </Slider> */}
                       <div className="w-full h-1 bg-blue-800 rounded-full"></div>
                       {item.percentage >= 80 && (
-                        <div className="bg-blue-300 rounded-md p-2 text-white flex align-middle justify-center items-center absolute top-[0px] right-[0px]">
+                        <div className="bg-green-300 rounded-md p-2 text-white flex align-middle justify-center items-center absolute top-[10px] right-[-20px] md:top-[0px] md:right-[0px] scale-50 md:scale-100">
                           <div>Advanced</div>
                         </div>
                       )}
                       {item.percentage >= 50 && item.percentage < 80 && (
-                        <div className="bg-orange-300 rounded-md p-2 text-white flex align-middle justify-center items-center absolute top-[0px] right-[0px]">
+                        <div className="bg-yellow-300 rounded-md p-2 text-white flex align-middle justify-center items-center absolute top-[10px] right-[-20px] md:top-[0px] md:right-[0px] scale-50 md:scale-100">
                           <div>Middle</div>
                         </div>
                       )}
                       {item.percentage <= 50 && (
-                        <div className="bg-green-300 rounded-md p-2 text-white flex align-middle justify-center items-center absolute top-[0px] right-[0px]">
+                        <div className="bg-red-300 rounded-md p-2 text-white flex align-middle justify-center items-center absolute top-[10px] right-[-20px] md:top-[0px] md:right-[0px] scale-50 md:scale-100">
                           <div>Beginner</div>
                         </div>
                       )}
