@@ -1,5 +1,6 @@
 "use client"; // This is crucial for client-side hooks like useRouter
 
+import ImagesInput from "@/app/components/input/ImagesInput";
 import ISinput from "@/app/components/input/ISinput";
 import IStoolbar from "@/app/components/utils/IStoolbar";
 import { useParams } from "next/navigation"; // Use next/navigation in App Router
@@ -26,6 +27,8 @@ const UpdatePage = () => {
     updatedAt: "",
     title: "",
     percentage: "",
+    image : "",
+    imageName : "",
   });
 
   const changeIsdisabled = (name, value) => {
@@ -130,7 +133,7 @@ const UpdatePage = () => {
           /> */}
         </div>
 
-        {/* <ImagesInput
+        <ImagesInput
           onChange={(fileName, base64) => {
             setDetail((prev) => ({
               ...prev,
@@ -142,7 +145,7 @@ const UpdatePage = () => {
           name="image"
           label="Image"
           value={detail}
-        /> */}
+        />
       </div>
     </div>
   );
