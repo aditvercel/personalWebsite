@@ -1,13 +1,11 @@
 import mongoose from "mongoose";
 let Schema = mongoose.Schema;
 
-// const benefitSchema = new Schema({
-//   title: { type: String, required: true },
-// });
 
 const mySkillsSchema = new Schema(
   {
-    // icon: { type: String, required: true },
+    image: { type: String, required: true },
+    imageName: { type: String, required: true },
     title: { type: String, required: true },
     percentage: { type: Number, required: true },
   },

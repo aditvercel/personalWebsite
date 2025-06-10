@@ -4,7 +4,7 @@ import IStoolbar from "../components/utils/IStoolbar";
 import api from "@/utils/axiosInstance";
 import photosaya from "@/public/images/photo_saya.png";
 import cvImage from "@/public/images/cvImage.png";
-import cmsStack from "@/public/data/cmsStack";
+// import cmsStack from "@/public/data/cmsStack";
 import {
   Modal,
   ModalOverlay,
@@ -43,6 +43,7 @@ export default function Page() {
     skeletons: {
       latestProject: false,
     },
+    mySkillsDatas:[]
   });
   const [isDisabled, setISdisabled] = useState({
     save: true,
@@ -178,11 +179,10 @@ export default function Page() {
       }));
 
       try {
-        const [res, tes] = await Promise.all([
-          api.get(
-            `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject?category=${latestProjectQuery.category}&page=1`
-          ),
+        const [res,tes,yes] = await Promise.all([
+          api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/latestProject?category=${latestProjectQuery.category}&page=1`),
           api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/profile`),
+          api.get(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/mySkills`),
         ]);
 
         if (res.data.statusCode === 200) {
@@ -205,6 +205,14 @@ export default function Page() {
             profile: tes.data.result[0],
           }));
         }
+
+        if (yes.data.statusCode === 200) {
+          setHomePageDatas((item) => ({
+            ...item,
+            mySkillsDatas: yes.data.result,
+          }));
+
+        }
       } catch (err) {
         setHomePageDatas((item) => ({
           ...item,
@@ -219,9 +227,9 @@ export default function Page() {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   console.log(homePageDatas.profile);
-  // }, [homePageDatas.profile]);
+  useEffect(() => {
+    console.log("skill home datas",homePageDatas.mySkillsDatas)
+  }, [homePageDatas.mySkillsDatas]);
 
   return (
     <div className="relative">
@@ -286,15 +294,15 @@ export default function Page() {
           <div>
             <div className="mb-3 font-semibold text-lg mt-10">Stack</div>
             <div className="grid grid-cols-4 justify-center items-center align-middle self-center gap-2 bg-white p-3 rounded-xl">
-              {cmsStack.map((item, index) => {
+              {homePageDatas.mySkillsDatas.map((item, index) => {
                 return (
                   <div
                     key={index}
                     className="h-[120px] w-[140px] border-black border p-3 rounded-lg shadow-sm shadow-black"
                   >
-                    {item.icon ? (
+                    {item.image ? (
                       <Image
-                        src={item.icon}
+                        src={item.image}
                         width={25}
                         height={25}
                         alt="icon"
