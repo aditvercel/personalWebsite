@@ -7,6 +7,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
 import ClientSessionWrapper from "./components/utils/ClientSessionWrapper"; // Import the client wrapper
 import photosaya from "@/public/images/logo.png";
+import Script from 'next/script';
 export const metadata = {
   title: "Adityamms | Full-Stack Developer & Portfolio",
   description:
@@ -45,25 +46,33 @@ export default function RootLayout({ children }) {
           name="google-site-verification"
           content="QTiLHSrvnJ1_wkv_3q4mvRoCCCXAr9ubkKTRJ3z_bTM"
         />
-        <link
-          rel="icon"
-          type="image/png"
-          href="/favicon-48x48.png"
-          sizes="48x48"
-        />
+        <link rel="icon" type="image/png" href="/favicon-48x48.png" sizes="48x48" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="shortcut icon" href="/favicon.ico" />
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <meta name="apple-mobile-web-app-title" content="MyWebSite" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
       <body className={inter.className}>
+        {/* ✅ Load GA script first */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-MMCQK0J28W"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="ga-setup"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-MMCQK0J28W');
+            `,
+          }}
+        />
         <ClientSessionWrapper>
-          {/* Use client-side session wrapper */}
           <ThemeProvider theme={theme}>
             <ChakraWrapper>
               <Navbar />
