@@ -263,8 +263,8 @@ export default function Home() {
               <Image
                 src={homePageDatas.profile?.image || photosaya}
                 alt="me"
-                width={210}
-                height={200}
+                width={375}
+                height={375}
               />
             </div>
           </div>
@@ -373,7 +373,7 @@ export default function Home() {
                       </Slider> */}
                       <div className="w-full h-1 bg-blue-800 rounded-full"></div>
                       {item.percentage >= 80 && (
-                        <div className="bg-green-300 rounded-md p-2 text-white flex align-middle justify-center items-center absolute top-[10px] right-[-20px] md:top-[0px] md:right-[0px] scale-50 md:scale-100">
+                        <div className="bg-[rgb(0,102,11)] rounded-md p-2 text-white flex align-middle justify-center items-center absolute top-[10px] right-[-20px] md:top-[0px] md:right-[0px] scale-50 md:scale-100">
                           <div>Advanced</div>
                         </div>
                       )}
@@ -419,7 +419,7 @@ export default function Home() {
                   key={category.key}
                   className={`border border-blue-300 py-2 px-4 rounded-3xl md:min-w-[100px] min-w-[150px] text-center ${
                     selectedFilter === category.key
-                      ? "bg-blue-500 text-white"
+                      ? "bg-[rgb(9,73,180)] text-white"
                       : "bg-[#0f1628] text-blue-300"
                   }`}
                   onClick={() => handleChangeQuery(category.key)}
@@ -625,18 +625,26 @@ export default function Home() {
               ))}
             </Splide>
             <div className="flex justify-center items-center gap-10 mt-10">
-              <button
-                className="custom-arrow prev-arrow text-black bg-white rounded-full p-2 text-center align-middle"
-                onClick={() => splideRef.current.splide.go("<")}
-              >
-                <ChevronLeftIcon width={8} height={8} />
-              </button>
-              <button
-                className="custom-arrow next-arrow text-black bg-white rounded-full p-2 text-center align-middle"
-                onClick={() => splideRef.current.splide.go(">")}
-              >
-                <ChevronRightIcon width={8} height={8} />
-              </button>
+           <button
+  id="prevArrow"
+  type="button"
+  aria-label="Previous slide"
+  className="custom-arrow prev-arrow text-black bg-white rounded-full p-2 text-center align-middle focus:outline-none focus:ring-2 focus:ring-[#00ffff] focus:ring-offset-2"
+  onClick={() => splideRef.current.splide.go("<")}
+>
+  <ChevronLeftIcon width={8} height={8} aria-hidden="true" />
+</button>
+
+<button
+  id="nextArrow"
+  type="button"
+  aria-label="Next slide"
+  className="custom-arrow next-arrow text-black bg-white rounded-full p-2 text-center align-middle focus:outline-none focus:ring-2 focus:ring-[#00ffff] focus:ring-offset-2"
+  onClick={() => splideRef.current.splide.go(">")}
+>
+  <ChevronRightIcon width={8} height={8} aria-hidden="true" />
+</button>
+
             </div>
           </div>
         </div>

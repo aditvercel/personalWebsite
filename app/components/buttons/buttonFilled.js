@@ -2,7 +2,7 @@ import React from "react";
 
 export default function ButtonFilled(props) {
   const buttonStyles = {
-    backgroundColor: props.disabled ? "#8b8c92" : props.color || "#14baba",
+    backgroundColor: props.disabled ? "#535356" : props.color || "#14baba",
     color: props.textTitleColor || "#ffffff",
     cursor: props.disabled ? "not-allowed" : "pointer",
   };
