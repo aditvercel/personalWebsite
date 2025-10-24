@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
+const checkEnvirontment = () => {
+  if (process.env.NODE_ENV === 'production'){return ['error']}
+  else {return []}  
+}
 const nextConfig = {
+  compiler: {
+    removeConsole: {
+      exclude : checkEnvirontment
+    },
+  },
   images: {
     domains: ["res.cloudinary.com"], // Allow images from Cloudinary
     remotePatterns: [
@@ -30,5 +39,6 @@ const nextConfig = {
     ],
   },
 };
+
 
 export default nextConfig;
