@@ -143,10 +143,20 @@ export default function Navbar() {
                   {item.title}
                 </Link>
               ) : (
-                <MenuButton className={`hover:text-[#00ffff]`}>
-                  {item.title}
-                  {item.child.length ? <ChevronDownIcon /> : ""}
-                </MenuButton>
+                <MenuButton
+  id={`menuButton-${item.title.toLowerCase().replace(/\s+/g, "-")}`}
+  type="button"
+  aria-label={item.title} // ✅ ensures accessible name
+  aria-haspopup={item.child.length > 0 ? "menu" : undefined}
+  aria-controls={item.child.length > 0 ? `menu-${item.title.toLowerCase().replace(/\s+/g, "-")}` : undefined}
+  className="hover:text-[#00ffff] focus:outline-none focus:ring-2 focus:ring-[#00ffff] focus:ring-offset-2 flex items-center gap-1"
+>
+  <span>{item.title}</span>
+  {item.child.length > 0 && (
+    <ChevronDownIcon className="w-4 h-4" aria-hidden="true" />
+  )}
+</MenuButton>
+
               )}
               <Portal>
                 <MenuList className="bg-slate-700 w-40 px-0 py-0 rounded-md grid relative shadow-md shadow-black">

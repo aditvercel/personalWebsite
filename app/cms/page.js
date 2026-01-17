@@ -301,13 +301,12 @@ export default function Page() {
                     className="h-[120px] w-[140px] border-black border p-3 rounded-lg shadow-sm shadow-black"
                   >
                     {item.image ? (
-                      <Image
-                        src={item.image}
-                        width={25}
-                        height={25}
-                        alt="icon"
-                        className="h-full w-full transition-transform transform duration-300 ease-in-out hover:scale-110"
-                      />
+  <div
+  style={{ backgroundImage: `url(${item.image})` }}
+  className="h-full w-full bg-center bg-no-repeat bg-cover transition-transform transform duration-300 ease-in-out hover:scale-110"
+  role="img"
+  aria-label="icon"
+></div>
                     ) : (
                       <div className="h-full w-full flex items-center justify-center">
                         No Icon

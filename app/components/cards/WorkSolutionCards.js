@@ -75,11 +75,16 @@ I want to ask you about...`;
               Buy service
             </button>
 
-            <a href={url} target="_blank" rel="noopener noreferrer">
-              <button className="py-1 border-b border-[#13a5d4]">
-                Ask me a question
-              </button>
-            </a>
+          <a
+  href="https://wa.me/6282320664029?text=Hello%2C%20I%20would%20like%20to%20know..."
+  target="_blank"
+  rel="noopener noreferrer"
+  class="inline-block px-4 py-2 border-b-2 border-[#13a5d4] text-[#13a5d4] hover:text-[#00ffff] rounded focus:outline-none focus:ring-2 focus:ring-[#00ffff]"
+  aria-label="Chat with us on WhatsApp"
+>
+  Ask me a question
+</a>
+
           </div>
 
           <div className="font-medium mt-5 px-2 py-1 rounded-full border-gray-900 border  text-center shadow shadow-[#0f1628]"></div>
